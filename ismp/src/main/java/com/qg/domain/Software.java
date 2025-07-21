@@ -2,11 +2,13 @@ package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Software {
     private long id;
     private DateTime publishedTime;
+    @JsonProperty("author_id")
     private long authorId;
     private String info;
     private double price;
