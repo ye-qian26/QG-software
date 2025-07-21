@@ -32,6 +32,7 @@ public class SubscribeController {
             return new Result(Code.NOT_FOUND, "您还没有关注任何开发者！");
         }
     }
+
     /**
      * 关注某个开发者
      */
