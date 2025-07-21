@@ -11,10 +11,11 @@ public class Subscribe {
     @JsonProperty("developer_id")
     private Long developerId;
 
+
     public Subscribe() {
     }
 
-    public Subscribe(long id, long userId, long developerId) {
+    public Subscribe(Long id, Long userId, Long developerId) {
         this.id = id;
         this.userId = userId;
         this.developerId = developerId;
@@ -24,7 +25,7 @@ public class Subscribe {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -32,7 +33,7 @@ public class Subscribe {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -40,7 +41,7 @@ public class Subscribe {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -48,7 +49,7 @@ public class Subscribe {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -56,7 +57,7 @@ public class Subscribe {
      * 获取
      * @return developerId
      */
-    public long getDeveloperId() {
+    public Long getDeveloperId() {
         return developerId;
     }
 
@@ -64,12 +65,11 @@ public class Subscribe {
      * 设置
      * @param developerId
      */
-    public void setDeveloperId(long developerId) {
+    public void setDeveloperId(Long developerId) {
         this.developerId = developerId;
     }
 
     public String toString() {
         return "Subscribe{id = " + id + ", userId = " + userId + ", developerId = " + developerId + "}";
     }
-
 }

@@ -59,12 +59,12 @@ public class UserController {
 
         int orderSave = orderService.saveOrder(order);
 
-        int equipmentSave =
 
         if (transaction <= 0 || orderSave <= 0) {
             return new Result(CONFLICT,"交易失败,请稍后再试！");
         }
 
+        return null;
 
     }
 }

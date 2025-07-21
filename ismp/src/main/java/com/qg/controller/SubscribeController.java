@@ -45,4 +45,17 @@ public class SubscribeController {
             return new Result(Code.BAD_REQUEST, "开发者不存在或已关注！");
         }
     }
+
+    /**
+     * 取关某个开发者
+     */
+    @PostMapping
+    public Result deleteSubscribe(@RequestBody Subscribe subscribe) {
+        if (subscribeService.unsubscribe(subscribe)) {
+            System.out.println("==>取消关注成功！");
+            return new Result(Code.SUCCESS, "取消关注成功!");
+        } else {
+            return new Result(Code.BAD_REQUEST, "开发者不存在或未关注！");
+        }
+    }
 }
