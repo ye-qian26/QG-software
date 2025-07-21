@@ -1,9 +1,9 @@
 package com.qg.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.qg.domain.Software;
+import com.qg.domain.Order;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface SoftwareMapper extends BaseMapper<Software> {
+public interface OrderMapper extends BaseMapper<Order> {
 }

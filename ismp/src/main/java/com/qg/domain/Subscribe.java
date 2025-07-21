@@ -1,12 +1,15 @@
 package com.qg.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Subscribe {
 
-    private long id;
-    private long userId;
-    private long developerId;
+    private Long id;
+    @JsonProperty("user_id")
+    private Long userId;
+    @JsonProperty("developer_id")
+    private Long developerId;
 
     public Subscribe() {
     }
