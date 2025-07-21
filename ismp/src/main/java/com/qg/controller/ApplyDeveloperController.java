@@ -34,9 +34,33 @@ public class ApplyDeveloperController {
 
     @DeleteMapping
     public Result deleteApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
-        boolean flag = applyDeveloperService.removeById(applyDeveloper.getId());
+        boolean flag = applyDeveloperService.delete(applyDeveloper);
         Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
         String msg = flag ? "" : "删除失败，请稍后重试！";
+        return new Result(code, msg);
+    }
+
+    @GetMapping("/selectByUserId/{userId}")
+    public Result selectByUserId(@PathVariable Long userId) {
+        List<ApplyDeveloper> applyDevelopers = applyDeveloperService.selectByUserId(userId);
+        Integer code = applyDevelopers != null && !applyDevelopers.isEmpty() ? Code.SUCCESS : Code.NOT_FOUND;
+        String msg = applyDevelopers != null && !applyDevelopers.isEmpty() ? "" : "未查询到相关数据";
+        return new Result(code, applyDevelopers, msg);
+    }
+
+    @GetMapping("/selectById/{id}")
+    public Result selectById(@PathVariable Long id) {
+        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(id);
+        Integer code = applyDeveloper != null ? Code.SUCCESS : Code.NOT_FOUND;
+        String msg = applyDeveloper != null ? "" : "未查询到相关数据";
+        return new Result(code, applyDeveloper, msg);
+    }
+
+    @PutMapping("/updateStatus")
+    public Result updateStatus(@RequestBody ApplyDeveloper applyDeveloper) {
+        boolean flag = applyDeveloperService.updateStatus(applyDeveloper);
+        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        String msg = flag ? "" : "更改状态失败，请稍后重试！";
         return new Result(code, msg);
     }
 

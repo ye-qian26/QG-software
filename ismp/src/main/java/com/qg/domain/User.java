@@ -5,7 +5,7 @@ package com.qg.domain;
 
 
 public class User {
-    private long id;
+    private Long id;
     private String name;
     private String password;
     private String avatar;
@@ -14,10 +14,11 @@ public class User {
     private String role;
     private double money;
 
+
     public User() {
     }
 
-    public User(long id, String name, String password, String avatar, String email, String phone, String role, double money) {
+    public User(Long id, String name, String password, String avatar, String email, String phone, String role, double money) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -32,7 +33,7 @@ public class User {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -40,7 +41,7 @@ public class User {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

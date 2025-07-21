@@ -1,19 +1,15 @@
 package com.qg.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qg.domain.ApplyDeveloper;
 import com.qg.mapper.ApplyDeveloperMapper;
 import com.qg.service.ApplyDeveloperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
+
+import static com.qg.util.Constants.*;
 
 @Service
 public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
@@ -25,7 +21,8 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
         // 创建 Lambda 查询包装器
         LambdaQueryWrapper<ApplyDeveloper> wrapper = new LambdaQueryWrapper<>();
         // 按创建时间降序排序（DESC）
-        wrapper.orderByDesc(ApplyDeveloper::getApplyTime);
+        wrapper.orderByDesc(ApplyDeveloper::getApplyTime)
+                .eq(ApplyDeveloper::getIsDeleted, IS_NOT_DELETED);
         // 执行查询
         return applyDeveloperMapper.selectList(wrapper);
     }
@@ -35,55 +32,32 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
         return applyDeveloperMapper.insert(applyDeveloper) > 0;
     }
 
-
+    @Override
+    public List<ApplyDeveloper> selectByUserId(Long userId) {
+        // 创建 Lambda 查询包装器
+        LambdaQueryWrapper<ApplyDeveloper> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ApplyDeveloper::getUserId, userId);
+        return applyDeveloperMapper.selectList(wrapper);
+    }
 
     @Override
-    public boolean saveBatch(Collection<ApplyDeveloper> entityList, int batchSize) {
+    public boolean delete(ApplyDeveloper applyDeveloper) {
+        return applyDeveloperMapper.deleteById(applyDeveloper.getId()) > 0;
+    }
+
+    @Override
+    public ApplyDeveloper selectById(Long id) {
+        return applyDeveloperMapper.selectById(id);
+    }
+
+    @Override
+    public boolean updateStatus(ApplyDeveloper applyDeveloper) {
+        if (applyDeveloper.getStatus() == 0) {
+            applyDeveloper.setStatus(IS_HANDLED);
+        } else {
+            applyDeveloper.setStatus(IS_NOT_HANDLED);
+        }
+        applyDeveloperMapper.updateById(applyDeveloper);
         return false;
-    }
-
-    @Override
-    public boolean saveOrUpdateBatch(Collection<ApplyDeveloper> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean updateBatchById(Collection<ApplyDeveloper> entityList, int batchSize) {
-        return false;
-    }
-
-    @Override
-    public boolean saveOrUpdate(ApplyDeveloper entity) {
-        return false;
-    }
-
-    @Override
-    public ApplyDeveloper getOne(Wrapper<ApplyDeveloper> queryWrapper, boolean throwEx) {
-        return null;
-    }
-
-    @Override
-    public Optional<ApplyDeveloper> getOneOpt(Wrapper<ApplyDeveloper> queryWrapper, boolean throwEx) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Map<String, Object> getMap(Wrapper<ApplyDeveloper> queryWrapper) {
-        return Map.of();
-    }
-
-    @Override
-    public <V> V getObj(Wrapper<ApplyDeveloper> queryWrapper, Function<? super Object, V> mapper) {
-        return null;
-    }
-
-    @Override
-    public BaseMapper<ApplyDeveloper> getBaseMapper() {
-        return null;
-    }
-
-    @Override
-    public Class<ApplyDeveloper> getEntityClass() {
-        return null;
     }
 }

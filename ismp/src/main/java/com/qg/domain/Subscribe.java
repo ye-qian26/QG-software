@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Subscribe {
 
+
     private Long id;
     @JsonProperty("user_id")
     private Long userId;

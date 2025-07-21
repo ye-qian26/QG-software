@@ -5,7 +5,7 @@ import com.qg.domain.ApplyDeveloper;
 
 import java.util.List;
 
-public interface ApplyDeveloperService extends IService<ApplyDeveloper> {
+public interface ApplyDeveloperService {
     /**
      * 按照申请时间查询所有申请
      */
@@ -13,4 +13,11 @@ public interface ApplyDeveloperService extends IService<ApplyDeveloper> {
 
     boolean add(ApplyDeveloper applyDeveloper);
 
+    List<ApplyDeveloper> selectByUserId(Long userId);
+
+    boolean delete(ApplyDeveloper applyDeveloper);
+
+    ApplyDeveloper selectById(Long id);
+
+    boolean updateStatus(ApplyDeveloper applyDeveloper);
 }
