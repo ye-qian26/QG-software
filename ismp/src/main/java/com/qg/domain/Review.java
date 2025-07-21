@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 
 
 public class Review {
-    private long id;
-    private long userId;
-    private long softwareId;
+    private Long id;
+    private Long userId;
+    private Long softwareId;
     private String content;
     private DateTime time;
     @TableLogic
@@ -18,7 +18,7 @@ public class Review {
     public Review() {
     }
 
-    public Review(long id, long userId, long softwareId, String content, DateTime time, int isDeleted) {
+    public Review(Long id, Long userId, Long softwareId, String content, DateTime time, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.softwareId = softwareId;
@@ -31,7 +31,7 @@ public class Review {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -39,7 +39,7 @@ public class Review {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,7 +47,7 @@ public class Review {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -55,7 +55,7 @@ public class Review {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -63,7 +63,7 @@ public class Review {
      * 获取
      * @return softwareId
      */
-    public long getSoftwareId() {
+    public Long getSoftwareId() {
         return softwareId;
     }
 
@@ -71,7 +71,7 @@ public class Review {
      * 设置
      * @param softwareId
      */
-    public void setSoftwareId(long softwareId) {
+    public void setSoftwareId(Long softwareId) {
         this.softwareId = softwareId;
     }
 

@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 
 
 public class Message {
-    private long id;
-    private long receiverId;
-    private long posterId;
+    private Long id;
+    private Long receiverId;
+    private Long posterId;
     private String content;
     private DateTime time;
     private Integer isRead;
@@ -18,7 +18,7 @@ public class Message {
     public Message() {
     }
 
-    public Message(long id, long receiverId, long posterId, String content, DateTime time, Integer isRead, int isDeleted) {
+    public Message(Long id, Long receiverId, Long posterId, String content, DateTime time, Integer isRead, int isDeleted) {
         this.id = id;
         this.receiverId = receiverId;
         this.posterId = posterId;
@@ -32,7 +32,7 @@ public class Message {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -40,7 +40,7 @@ public class Message {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -48,7 +48,7 @@ public class Message {
      * 获取
      * @return receiverId
      */
-    public long getReceiverId() {
+    public Long getReceiverId() {
         return receiverId;
     }
 
@@ -56,7 +56,7 @@ public class Message {
      * 设置
      * @param receiverId
      */
-    public void setReceiverId(long receiverId) {
+    public void setReceiverId(Long receiverId) {
         this.receiverId = receiverId;
     }
 
@@ -64,7 +64,7 @@ public class Message {
      * 获取
      * @return posterId
      */
-    public long getPosterId() {
+    public Long getPosterId() {
         return posterId;
     }
 
@@ -72,7 +72,7 @@ public class Message {
      * 设置
      * @param posterId
      */
-    public void setPosterId(long posterId) {
+    public void setPosterId(Long posterId) {
         this.posterId = posterId;
     }
 
