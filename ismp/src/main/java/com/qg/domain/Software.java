@@ -1,6 +1,7 @@
 package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,6 +17,7 @@ public class Software {
     private String introduction;
     private String version;
     private String installDetail;
+    @TableField("status")
     private Integer status;
     private String picture;
     private String type;
@@ -194,11 +196,19 @@ public class Software {
         this.installDetail = installDetail;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     /**
      * 获取
      * @return status
-     */
-    public Integer getStatus() {
+     *
+    public int getStatus() {
         return status;
     }
 
@@ -206,9 +216,7 @@ public class Software {
      * 设置
      * @param status
      */
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+
 
     /**
      * 获取
