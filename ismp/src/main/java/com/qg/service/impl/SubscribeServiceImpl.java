@@ -1,6 +1,7 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qg.domain.Constants;
 import com.qg.domain.Subscribe;
 import com.qg.domain.User;
 import com.qg.mapper.SubscribeMapper;
@@ -25,7 +26,9 @@ public class SubscribeServiceImpl implements SubscribeService {
      */
     @Override
     public boolean subscribe(Subscribe subscribe) {
-        return userMapper.selectById(subscribe.getDeveloperId()).getRole().equals("2")
+        return userMapper.selectById(subscribe.getDeveloperId())
+                .getRole()
+                .equals(Constants.USER_ROLE_DEVELOPER)
                 && subscribeMapper.insert(subscribe) > 0;
     }
 

@@ -7,9 +7,9 @@ public class Constants {
     /**
      * 用户标识
      */
-    public static final Integer USER_ROLE_ADMIN = 1;
-    public static final Integer USER_ROLE_DEVELOPER = 2;
-    public static final Integer USER_ROLE_USER = 3;
+    public static final String USER_ROLE_ADMIN = "1";
+    public static final String USER_ROLE_DEVELOPER = "2";
+    public static final String USER_ROLE_USER = "3";
 
     /**
      * 设备标识
@@ -42,15 +42,16 @@ public class Constants {
      * 0：未删除
      * 1：已删除
      */
-    public static final Integer SOFTWARE_DELETE_NO = 0;
-    public static final Integer REVIEW_DELETE_NO = 0;
-    public static final Integer ORDER_DELETE_NO = 0;
-    public static final Integer MESSAGE_DELETE_NO = 0;
-    public static final Integer BAN_DELETE_NO = 0;
-    public static final Integer SOFTWARE_DELETE_YES = 1;
-    public static final Integer REVIEW_DELETE_YES = 1;
-    public static final Integer ORDER_DELETE_YES = 1;
-    public static final Integer MESSAGE_DELETE_YES = 1;
-    public static final Integer BAN_DELETE_YES = 1;
+    public static final Integer IS_NOT_DELETED = 0;
+    public static final Integer IS_DELETED = 1;
+
+    /**
+     * 是否处理
+     * 0：未处理
+     * 1：已处理
+     */
+    public static final Integer IS_NOT_HANDLED = 0;
+    public static final Integer IS_HANDLED = 1;
+
 
 }
