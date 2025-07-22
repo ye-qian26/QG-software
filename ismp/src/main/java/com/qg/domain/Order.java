@@ -4,12 +4,14 @@ import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import java.sql.Date;
+
 @TableName("`order`")
 public class Order {
     private Long id;
     private Long softwareId;
-    private double price;
-    private DateTime time;
+    private Double price;
+    private Date time;
     private Long userId;
     private Long developerId;
     @TableLogic
@@ -18,7 +20,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long id, Long softwareId, double price, DateTime time, Long userId, Long developerId, int isDeleted) {
+    public Order(Long id, Long softwareId, Double price, Date time, Long userId, Long developerId, int isDeleted) {
         this.id = id;
         this.softwareId = softwareId;
         this.price = price;
@@ -64,7 +66,7 @@ public class Order {
      * 获取
      * @return price
      */
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -72,7 +74,7 @@ public class Order {
      * 设置
      * @param price
      */
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -80,7 +82,7 @@ public class Order {
      * 获取
      * @return time
      */
-    public DateTime getTime() {
+    public Date getTime() {
         return time;
     }
 
@@ -88,7 +90,7 @@ public class Order {
      * 设置
      * @param time
      */
-    public void setTime(DateTime time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 
