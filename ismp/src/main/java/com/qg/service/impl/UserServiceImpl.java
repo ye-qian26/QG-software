@@ -12,6 +12,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
+import java.util.UUID;
+
 import static com.qg.domain.Code.*;
 
 @Service
@@ -29,6 +31,10 @@ public class UserServiceImpl implements UserService {
         if(loginUser == null){
             return new Result(CONFLICT,"该邮箱未被注册");
         }
+
+        String token = UUID.randomUUID().toString();
+
+
         return new Result(SUCCESS, loginUser,"登录成功");
     }
 
