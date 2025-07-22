@@ -21,21 +21,36 @@ public class ApplyDeveloperServiceTests {
     }
 
     @Test
-    public void addApplyDeveloper(){
-        ApplyDeveloper applyDeveloper = new ApplyDeveloper();
+    public void add(){
         //3.获取当前时间
         LocalDateTime now = LocalDateTime.now();
+        System.out.println(now);
         //定义时间格式
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         //格式化时间
         String formattedDateTime = now.format(formatter);
-        //applyDeveloper.setApplyTime(formattedDateTime);
+        ApplyDeveloper applyDeveloper = new ApplyDeveloper();
+        applyDeveloper.setUserId(1L);
+        applyDeveloper.setApplyTime(formattedDateTime);
+        applyDeveloper.setReason("");
+        applyDeveloper.setMaterial("");
+        applyDeveloper.setStatus(0);
         applyDeveloperService.add(applyDeveloper);
-
     }
 
     @Test
-    public void deleteApplyDeveloper(){
+    public void delete(){
+        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
+        System.out.println(applyDeveloper);
+        boolean flag = applyDeveloperService.delete(applyDeveloper);
+        System.out.println(flag);
+    }
 
+    @Test
+    public void updateStatus(){
+        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
+        System.out.println(applyDeveloper);
+        applyDeveloperService.updateStatus(applyDeveloper);
+        System.out.println(applyDeveloper);
     }
 }

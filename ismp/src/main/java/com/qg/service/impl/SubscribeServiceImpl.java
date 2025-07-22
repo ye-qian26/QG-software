@@ -1,7 +1,7 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.qg.domain.Constants;
+import com.qg.utils.Constants;
 import com.qg.domain.Subscribe;
 import com.qg.domain.User;
 import com.qg.mapper.SubscribeMapper;
@@ -26,9 +26,19 @@ public class SubscribeServiceImpl implements SubscribeService {
      */
     @Override
     public boolean subscribe(Subscribe subscribe) {
-        return userMapper.selectById(subscribe.getDeveloperId())
-                .getRole()
-                .equals(Constants.USER_ROLE_DEVELOPER)
+        // 检查关注的开发者是否存在、是否真的是开发者
+        User developer = userMapper.selectById(subscribe.getDeveloperId());
+        if (developer == null || !developer.getRole().equals(Constants.USER_ROLE_DEVELOPER)) {
+            return false;
+        }
+
+        // 检查是否已关注
+        QueryWrapper<Subscribe> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", subscribe.getUserId())
+                .eq("developer_id", subscribe.getDeveloperId());
+
+        // 已关注，直接返回false; 未关注，执行关注操作
+        return subscribeMapper.selectCount(queryWrapper) <= 0
                 && subscribeMapper.insert(subscribe) > 0;
     }
 
@@ -37,13 +47,19 @@ public class SubscribeServiceImpl implements SubscribeService {
      */
     @Override
     public boolean unsubscribe(Subscribe subscribe) {
-        return subscribeMapper.delete(
-                new QueryWrapper<Subscribe>()
-                        // 查找用户id
-                        .eq("user_id", subscribe.getUserId())
-                        // 查找开发商的id
-                        .eq("developer_id", subscribe.getDeveloperId())
-        ) > 0;
+        // 检查是否为空
+        if (subscribe == null || subscribe.getUserId() == null || subscribe.getDeveloperId() == null) {
+            return false;
+        }
+
+        // 检查是否已关注
+        QueryWrapper<Subscribe> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", subscribe.getUserId())
+                .eq("developer_id", subscribe.getDeveloperId());
+
+        // 执行取消关注操作
+        return subscribeMapper.selectCount(queryWrapper) > 0
+                && subscribeMapper.delete(queryWrapper) > 0;
     }
 
     /**
