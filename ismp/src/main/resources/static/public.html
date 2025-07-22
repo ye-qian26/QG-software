@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传图片并预览</title>
+</head>
+
+<body>
+
+    <h2>上传图片并预览</h2>
+
+    <!-- 上传图片按钮 -->
+    <h3>选择图片</h3>
+    <form id="imageUploadForm">
+        <input type="file" id="imageUpload" accept="image/*" />
+        <button type="submit">上传图片</button>
+    </form>
+
+    <!-- 预览图片 -->
+    <h3>图片预览</h3>
+    <img id="imagePreview" style="max-width: 400px; display: none;" />
+
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // 监听文件选择事件
+        imageUpload.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                // 文件读取成功后，显示图片
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';  // 显示图片
+                };
+
+                // 读取文件
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 监听表单提交事件，模拟上传
+        document.getElementById('imageUploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const file = imageUpload.files[0];
+            if (file) {
+                uploadFile(file);
+            } else {
+                console.log('没有选择文件');
+            }
+        });
+
+        // 上传文件的函数
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => console.log('上传成功:', data))
+                .catch(error => console.error('上传失败:', error));
+        }
+    </script>
+
+</body>
+
+</html>

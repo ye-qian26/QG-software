@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
 import com.qg.domain.User;
+import com.qg.dto.UserDto;
 import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
 import com.qg.utils.HashSaltUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
+import java.util.UUID;
 
 import static com.qg.domain.Code.*;
 import static com.qg.utils.HashSaltUtil.verifyHashPassword;
@@ -23,24 +24,22 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public Result loginByPassword(String email, String password) {
+    public User loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
         if(loginUser == null){
-            return new Result(CONFLICT,"该邮箱未被注册");
+            return null;
         }
-        // 匹配数据库加密密码
-        if(!verifyHashPassword(password, loginUser.getPassword())){
-            return new Result(UNAUTHORIZED,"密码错误");
-        }
-        return new Result(SUCCESS, loginUser,"登录成功");
+
+        String token = UUID.randomUUID().toString();
+
+        return loginUser;
     }
 
     @Override
-    public Result loginByCode(String email, String code) {
-
+    public User loginByCode(String email, String code) {
         return null;
     }
 
@@ -119,5 +118,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public double getPriceById(Long id) {
         return userMapper.selectById(id).getMoney();
+    }
+
+    @Override
+    public User getUser(Long id) {
+        return userMapper.selectById(id);
     }
 }
