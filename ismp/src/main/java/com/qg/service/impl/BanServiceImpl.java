@@ -7,6 +7,8 @@ import com.qg.service.BanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -20,5 +22,40 @@ public class BanServiceImpl implements BanService {
         LambdaQueryWrapper<Ban> wrapper = new LambdaQueryWrapper<>();
         wrapper.orderByDesc(Ban::getId);
         return banMapper.selectList(wrapper);
+    }
+
+    @Override
+    public boolean add(Ban ban) {
+        return banMapper.insert(ban) > 0;
+    }
+
+    @Override
+    public boolean delete(Ban ban) {
+        return banMapper.deleteById(ban) > 0;
+    }
+
+    @Override
+    public Ban selectByUserId(Long userId) {
+        LambdaQueryWrapper<Ban> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ban::getUserId, userId);
+        return banMapper.selectOne(wrapper);
+    }
+
+    @Override
+    public boolean judgeBan(Long userId) {
+        LambdaQueryWrapper<Ban> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ban::getUserId, userId);
+        Ban ban = banMapper.selectOne(wrapper);
+        if (ban == null) {
+            return false;
+        } else {
+            String endTime = ban.getEndTime();
+            // 解析为 LocalDateTime
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime dbDateTime = LocalDateTime.parse(endTime, formatter);
+            // 获取当前时间
+            LocalDateTime nowDateTime = LocalDateTime.now();
+            return dbDateTime.isAfter(nowDateTime);
+        }
     }
 }

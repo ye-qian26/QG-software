@@ -12,13 +12,13 @@ public class User {
     private String email;
     private String phone;
     private String role;
-    private double money;
+    private Double money;
 
 
     public User() {
     }
 
-    public User(Long id, String name, String password, String avatar, String email, String phone, String role, double money) {
+    public User(Long id, String name, String password, String avatar, String email, String phone, String role, Double money) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -145,7 +145,7 @@ public class User {
      * 获取
      * @return money
      */
-    public double getMoney() {
+    public Double getMoney() {
         return money;
     }
 
@@ -153,7 +153,7 @@ public class User {
      * 设置
      * @param money
      */
-    public void setMoney(double money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 

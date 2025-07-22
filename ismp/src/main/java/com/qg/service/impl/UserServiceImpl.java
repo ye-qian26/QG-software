@@ -68,14 +68,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result delete(Integer id) {
+    public Result delete(Long id) {
         int i = userMapper.deleteById(id);
         return i > 0 ? new Result(SUCCESS, "删除成功！") : new Result(NOT_FOUND, "删除错误！");
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int transaction(long userId, long authorId, double price) {
+    public int transaction(Long userId, Long authorId, Double price) {
         LambdaQueryWrapper<User> lqw1 = new LambdaQueryWrapper<>();
         lqw1.eq(User::getId, userId);
         User customer = userMapper.selectOne(lqw1);
