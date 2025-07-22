@@ -2,9 +2,13 @@ package com.qg.controller;
 
 
 
+import cn.hutool.core.bean.BeanUtil;
+import com.qg.domain.Ban;
 import com.qg.domain.Result;
 import com.qg.domain.User;
 
+import com.qg.dto.UserDto;
+import com.qg.service.BanService;
 import com.qg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,17 +27,29 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BanService banService;
+
 
 
 
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
-        return userService.loginByPassword(email, password);
+        User user = userService.loginByPassword(email, password);
+        if (user == null) {
+            return new Result(BAD_REQUEST,"未注册");
+        }
+        Long id = user.getId();
+        if (banService.judgeBan(id)) {
+            Ban ban = banService.selectByUserId(id);
+            return new Result(FORBIDDEN, ban, "账号被封禁，无法登录");
+        }
+        return new Result(SUCCESS, BeanUtil.copyProperties(user, UserDto.class),"登录成功");
     }
 
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
-        return userService.loginByCode(email, code);
+        return new Result(FEATURES_ARE_NOT_DEVELOPED, "该功能尚未开发");
     }
 
     @PostMapping("/register")
@@ -61,4 +77,12 @@ public class UserController {
         return new Result(SUCCESS, String.valueOf(price), "获取成功！");
     }
 
+    @GetMapping("/getInformation/{id}")
+    public Result getInformation(@PathVariable Long id) {
+        User user = userService.getUser(id);
+        if (user == null ) {
+            return  new Result(BAD_GATEWAY,"获取失败");
+        }
+        return new Result(SUCCESS,user,"获取成功");
+    }
 }

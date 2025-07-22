@@ -2,12 +2,13 @@ package com.qg.service;
 
 import com.qg.domain.Result;
 import com.qg.domain.User;
+import com.qg.dto.UserDto;
 
 
 public interface UserService {
-    Result loginByPassword(String email, String password);
+    User loginByPassword(String email, String password);
 
-    Result loginByCode(String email, String code);
+    User loginByCode(String email, String code);
 
     Result register(User user);
 
@@ -20,4 +21,5 @@ public interface UserService {
 
     double getPriceById(Long id);
 
+    User getUser(Long id);
 }
