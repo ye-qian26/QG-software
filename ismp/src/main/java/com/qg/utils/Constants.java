@@ -1,4 +1,4 @@
-package com.qg.domain;
+package com.qg.utils;
 
 /**
  * 常量类

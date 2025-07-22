@@ -1,7 +1,6 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.qg.domain.ApplyDeveloper;
 import com.qg.domain.ApplySoftware;
 import com.qg.mapper.ApplySoftwareMapper;
 import com.qg.service.ApplySoftwareService;
@@ -10,7 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.qg.util.Constants.*;
+import static com.qg.utils.Constants.*;
+
 
 @Service
 public class ApplySoftwareServiceImpl implements ApplySoftwareService {
