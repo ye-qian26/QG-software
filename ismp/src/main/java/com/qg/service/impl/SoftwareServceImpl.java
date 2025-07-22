@@ -33,10 +33,8 @@ public class SoftwareServceImpl implements SoftwareService {
         QueryWrapper<Software> qw = new QueryWrapper<>();
         qw.lambda().eq(Software::getStatus,status);
         list = softwareMapper.selectList(qw);
+        //qw.eq("status",i);
         System.out.println(list);
-        /*Software software = new Software();
-        software=softwareMapper.selectById(1);
-        System.out.println(software);*/
         return list;
 
     }

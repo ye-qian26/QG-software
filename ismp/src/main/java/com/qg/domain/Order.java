@@ -2,22 +2,23 @@ package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-
+@TableName("`order`")
 public class Order {
-    private long id;
-    private long softwareId;
+    private Long id;
+    private Long softwareId;
     private double price;
     private DateTime time;
-    private long userId;
-    private long developerId;
+    private Long userId;
+    private Long developerId;
     @TableLogic
     private int isDeleted;
 
     public Order() {
     }
 
-    public Order(long id, long softwareId, double price, DateTime time, long userId, long developerId, int isDeleted) {
+    public Order(Long id, Long softwareId, double price, DateTime time, Long userId, Long developerId, int isDeleted) {
         this.id = id;
         this.softwareId = softwareId;
         this.price = price;
@@ -31,7 +32,7 @@ public class Order {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -39,7 +40,7 @@ public class Order {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -47,7 +48,7 @@ public class Order {
      * 获取
      * @return softwareId
      */
-    public long getSoftwareId() {
+    public Long getSoftwareId() {
         return softwareId;
     }
 
@@ -55,7 +56,7 @@ public class Order {
      * 设置
      * @param softwareId
      */
-    public void setSoftwareId(long softwareId) {
+    public void setSoftwareId(Long softwareId) {
         this.softwareId = softwareId;
     }
 
@@ -95,7 +96,7 @@ public class Order {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -103,7 +104,7 @@ public class Order {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -111,7 +112,7 @@ public class Order {
      * 获取
      * @return developerId
      */
-    public long getDeveloperId() {
+    public Long getDeveloperId() {
         return developerId;
     }
 
@@ -119,7 +120,7 @@ public class Order {
      * 设置
      * @param developerId
      */
-    public void setDeveloperId(long developerId) {
+    public void setDeveloperId(Long developerId) {
         this.developerId = developerId;
     }
 

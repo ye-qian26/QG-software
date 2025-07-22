@@ -1,36 +1,47 @@
 package com.qg.domain;
 
-import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 
 
 @TableName("apply_developer")
 public class ApplyDeveloper {
-    private long id;
-    private long userId;
-    private DateTime applyTime;
+    private Long id;
+    private Long userId;
+    private String applyTime;
     private String reason;
     private String material;
     private Integer status;
+    @TableLogic
+    private int isDeleted;
 
     public ApplyDeveloper() {
     }
 
-    public ApplyDeveloper(long id, long userId, DateTime applyTime, String reason, String material, Integer status) {
+    public ApplyDeveloper(Long id, Long userId, String applyTime, String reason, String material, Integer status, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.applyTime = applyTime;
         this.reason = reason;
         this.material = material;
         this.status = status;
+        this.isDeleted = isDeleted;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     /**
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -38,7 +49,7 @@ public class ApplyDeveloper {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,7 +57,7 @@ public class ApplyDeveloper {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -54,7 +65,7 @@ public class ApplyDeveloper {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -62,7 +73,7 @@ public class ApplyDeveloper {
      * 获取
      * @return applyTime
      */
-    public DateTime getApplyTime() {
+    public String getApplyTime() {
         return applyTime;
     }
 
@@ -70,7 +81,7 @@ public class ApplyDeveloper {
      * 设置
      * @param applyTime
      */
-    public void setApplyTime(DateTime applyTime) {
+    public void setApplyTime(String applyTime) {
         this.applyTime = applyTime;
     }
 
@@ -122,7 +133,16 @@ public class ApplyDeveloper {
         this.status = status;
     }
 
+    @Override
     public String toString() {
-        return "ApplyDeveloper{id = " + id + ", userId = " + userId + ", applyTime = " + applyTime + ", reason = " + reason + ", material = " + material + ", status = " + status + "}";
+        return "ApplyDeveloper{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", applyTime='" + applyTime + '\'' +
+                ", reason='" + reason + '\'' +
+                ", material='" + material + '\'' +
+                ", status=" + status +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

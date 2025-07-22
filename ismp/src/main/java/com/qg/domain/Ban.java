@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 
 
 public class Ban {
-    private long id;
-    private long userId;
-    private DateTime startTime;
-    private DateTime endTime;
+    private Long id;
+    private Long userId;
+    private String startTime;
+    private String endTime;
     private String reason;
     @TableLogic
     private int isDeleted;
@@ -17,7 +17,7 @@ public class Ban {
     public Ban() {
     }
 
-    public Ban(long id, long userId, DateTime startTime, DateTime endTime, String reason, int isDeleted) {
+    public Ban(Long id, Long userId, String startTime, String endTime, String reason, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.startTime = startTime;
@@ -30,7 +30,7 @@ public class Ban {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -38,7 +38,7 @@ public class Ban {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ public class Ban {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -54,7 +54,7 @@ public class Ban {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -62,7 +62,7 @@ public class Ban {
      * 获取
      * @return startTime
      */
-    public DateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
@@ -70,7 +70,7 @@ public class Ban {
      * 设置
      * @param startTime
      */
-    public void setStartTime(DateTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -78,7 +78,7 @@ public class Ban {
      * 获取
      * @return endTime
      */
-    public DateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
@@ -86,7 +86,7 @@ public class Ban {
      * 设置
      * @param endTime
      */
-    public void setEndTime(DateTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

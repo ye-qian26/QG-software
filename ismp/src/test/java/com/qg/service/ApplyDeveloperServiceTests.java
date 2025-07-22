@@ -21,21 +21,35 @@ public class ApplyDeveloperServiceTests {
     }
 
     @Test
-    public void addApplyDeveloper(){
+    public void add(){
+//        //3.获取当前时间
+//        LocalDateTime now = LocalDateTime.now();
+//        //定义时间格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        //格式化时间
+//        String formattedDateTime = now.format(formatter);
         ApplyDeveloper applyDeveloper = new ApplyDeveloper();
-        //3.获取当前时间
-        LocalDateTime now = LocalDateTime.now();
-        //定义时间格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        //格式化时间
-        String formattedDateTime = now.format(formatter);
-        //applyDeveloper.setApplyTime(formattedDateTime);
+        applyDeveloper.setUserId(1L);
+//        applyDeveloper.setApplyTime(formattedDateTime);
+        applyDeveloper.setReason("申请成为开发商理由");
+        applyDeveloper.setMaterial("材料");
+        applyDeveloper.setStatus(0);
         applyDeveloperService.add(applyDeveloper);
-
     }
 
     @Test
-    public void deleteApplyDeveloper(){
+    public void delete(){
+        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
+        System.out.println(applyDeveloper);
+        boolean flag = applyDeveloperService.delete(applyDeveloper);
+        System.out.println(flag);
+    }
 
+    @Test
+    public void updateStatus(){
+        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
+        System.out.println(applyDeveloper);
+        applyDeveloperService.updateStatus(applyDeveloper);
+        System.out.println(applyDeveloper);
     }
 }

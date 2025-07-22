@@ -1,6 +1,7 @@
 package com.qg.domain;
 
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName("apply_software")
@@ -11,18 +12,40 @@ public class ApplySoftware {
     private String material;
     private Integer status;
     private Long softwareId;
+    private String applyTime;
+
+    @TableLogic
+    private Integer isDeleted;
 
 
     public ApplySoftware() {
     }
 
-    public ApplySoftware(Long id, long userId, String reason, String material, Integer status, Long softwareId) {
+    public ApplySoftware(Long id, long userId, String reason, String material, Integer status, Long softwareId, String applyTime, Integer isDeleted) {
         this.id = id;
         this.userId = userId;
         this.reason = reason;
         this.material = material;
         this.status = status;
         this.softwareId = softwareId;
+        this.applyTime = applyTime;
+        this.isDeleted = isDeleted;
+    }
+
+    public String getApplyTime() {
+        return applyTime;
+    }
+
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     /**
@@ -129,7 +152,17 @@ public class ApplySoftware {
         this.softwareId = softwareId;
     }
 
+    @Override
     public String toString() {
-        return "ApplySoftware{id = " + id + ", userId = " + userId + ", reason = " + reason + ", material = " + material + ", status = " + status + ", softwareId = " + softwareId + "}";
+        return "ApplySoftware{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", reason='" + reason + '\'' +
+                ", material='" + material + '\'' +
+                ", status=" + status +
+                ", softwareId=" + softwareId +
+                ", applyTime='" + applyTime + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }
