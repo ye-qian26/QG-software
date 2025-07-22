@@ -16,4 +16,6 @@ public interface EquipmentService {
     boolean isAppointment(Long userId, Long softwareId);
 
     int addAppointment(Equipment equipment);
+
+    List<Equipment> selectAllAppointment();
 }
