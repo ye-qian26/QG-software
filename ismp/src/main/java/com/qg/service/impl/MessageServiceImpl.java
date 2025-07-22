@@ -28,6 +28,20 @@ public class MessageServiceImpl implements MessageService {
     private UserMapper userMapper;
 
     /**
+     * @param software 管理员修改软件信息后，通知开发商
+     */
+    @Override
+    public boolean adminUpdateSoftwareInformation(Software software) {
+        return messageMapper.insert(new Message(
+                null, software.getAuthorId()
+                , 1L, "管理员修改了您的软件信息，被修改的软件为：" +
+                software.getName() + software.getVersion() +
+                "，修改后的内容如下：\n" + software.getInfo(),
+                null, Constants.MESSAGE_NO_READ)
+        ) > 0;
+    }
+
+    /**
      * @param userId 查看某个用户是否有未读信息
      */
     @Override
@@ -100,8 +114,8 @@ public class MessageServiceImpl implements MessageService {
         }
         return messageMapper.insert(new Message(
                 null, applyDeveloper.getUserId()
-                , 1L, "很遗憾，申请成为开发者失败！"
-                , null, Constants.MESSAGE_NO_READ)
+                , 1L, "很遗憾，申请成为开发者失败！管理员驳回理由如下：\n"
+                + applyDeveloper.getReason(), null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
 
@@ -132,8 +146,8 @@ public class MessageServiceImpl implements MessageService {
         }
         return messageMapper.insert(new Message(
                 null, applySoftware.getUserId()
-                , 1L, "很遗憾，申请发布软件失败！"
-                , null, Constants.MESSAGE_NO_READ)
+                , 1L, "很遗憾，申请发布软件失败！管理员驳回理由如下：\n"
+                + applySoftware.getReason(),null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
 
