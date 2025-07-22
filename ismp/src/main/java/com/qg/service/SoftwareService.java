@@ -11,4 +11,10 @@ public interface SoftwareService {
     public List<Software> CheckSoftwareList(Integer status);
 
     public List<Software> getAllSoftwareList();
+
+    public int updateSoftware(Long id);
+
+    public int roleUpdate(Long id);
+
+
 }

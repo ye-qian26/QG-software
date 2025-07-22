@@ -22,12 +22,12 @@ public class Constants {
     /**
      * 软件标识
      * 0：未发行，待审核
-     * 1：已发布，可购买
-     * 2：已过审，未发行，可预约
+     * 1：已过审，未发行，可预约
+     * 2：已发布，可购买
      */
     public static final Integer SOFTWARE_STATUS_UNREVIEWED = 0;
-    public static final Integer SOFTWARE_STATUS_SALE = 1;
-    public static final Integer SOFTWARE_STATUS_ORDER = 2;
+    public static final Integer SOFTWARE_STATUS_ORDER = 1;
+    public static final Integer SOFTWARE_STATUS_SALE = 2;
 
     /**
      * 消息标识
