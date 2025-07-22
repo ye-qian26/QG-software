@@ -74,4 +74,13 @@ public class OrderController {
 
         return new Result(SUCCESS, orders, "订单查询成功！");
     }
+
+
+
+    //查看购买的订单
+    @GetMapping("/findAll")
+    public Result findAll() {
+        List<Order> orderList = orderService.selectAll();
+        return orderList!=null ? new Result(SUCCESS,orderList,"查询成功") : new Result(BAD_GATEWAY,"查询失败");
+    }
 }

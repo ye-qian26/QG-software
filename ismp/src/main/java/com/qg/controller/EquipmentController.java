@@ -91,4 +91,17 @@ public class EquipmentController {
 
         return addAppointment > 0 ?  new Result(SUCCESS,"预约成功") : new Result(INTERNAL_ERROR,"预约失败，请稍后重试");
     }
+
+
+    //管理员看预约
+    @GetMapping("/findAllAppointment")
+    public Result findAllAppointment() {
+        List<Equipment> equipmentList = equipmentService.selectAllAppointment();
+        return equipmentList != null ?  new Result(SUCCESS,equipmentList,"查看成功") : new Result(INTERNAL_ERROR,"查看失败，请稍后重试");
+    }
+
+
+
+
+
 }
