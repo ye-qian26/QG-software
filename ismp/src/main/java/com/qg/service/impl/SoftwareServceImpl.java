@@ -26,21 +26,35 @@ public class SoftwareServceImpl implements SoftwareService {
         return sum;
     }
 
-    //管理员审核的app信息获取
+    //管理员待审核/已审核的app信息获取
+    public List<Software> CheckSoftwareList(Integer status){
 
-    public List<Software> CheckSoftwareList(){
         List<Software> list = new ArrayList<Software>();
         QueryWrapper<Software> qw = new QueryWrapper<>();
-        qw.lambda().eq(Software::getStatus,0);
+        qw.lambda().eq(Software::getStatus,status);
         list = softwareMapper.selectList(qw);
-        //qw.eq("status",i);
         System.out.println(list);
+        /*Software software = new Software();
+        software=softwareMapper.selectById(1);
+        System.out.println(software);*/
         return list;
 
     }
 
 
+    //管理员查看所有的app信息
+    public List<Software> getAllSoftwareList(){
+        List<Software> list = new ArrayList<Software>();
+        list = softwareMapper.selectList(null);
+        System.out.println(list);
+        return list;
+    }
 
-    //用户查看软件信息
+
+
+
+
+
+
 
 }

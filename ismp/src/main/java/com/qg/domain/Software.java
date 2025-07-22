@@ -1,14 +1,20 @@
 package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
+import java.util.Date;
+
+
 public class Software {
+    @TableId(value = "id" ,type = IdType.AUTO)
     private long id;
-    private DateTime publishedTime;
+    private Date publishedTime;
     @JsonProperty("author_id")
     private long authorId;
     private String info;
@@ -18,6 +24,7 @@ public class Software {
     private String version;
     private String installDetail;
     @TableField("status")
+    //@TableField(value = "status", jdbcType = JdbcType.INTEGER) // 强制指定为INT类型
     private Integer status;
     private String picture;
     private String type;
@@ -36,7 +43,7 @@ public class Software {
         this.name = name;
     }
 
-    public Software(long id, DateTime publishedTime, long authorId, String info, double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, int isDeleted) {
+    public Software(long id, Date publishedTime, long authorId, String info, double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, int isDeleted) {
         this.id = id;
         this.publishedTime = publishedTime;
         this.authorId = authorId;
@@ -72,7 +79,7 @@ public class Software {
      * 获取
      * @return publishedTime
      */
-    public DateTime getPublishedTime() {
+    public Date getPublishedTime() {
         return publishedTime;
     }
 
@@ -80,7 +87,7 @@ public class Software {
      * 设置
      * @param publishedTime
      */
-    public void setPublishedTime(DateTime publishedTime) {
+    public void setPublishedTime(Date publishedTime) {
         this.publishedTime = publishedTime;
     }
 

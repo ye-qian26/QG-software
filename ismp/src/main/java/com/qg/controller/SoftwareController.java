@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/softwares")
@@ -17,36 +18,40 @@ public class SoftwareController {
     private SoftwareService softwareService;
 
     //软件发布
-    @PostMapping
+    @PostMapping("/addSoftware")
     public Result addSoftware(@RequestBody Software software) {
         //System.out.println(software.getAuthorId());
         int sum = softwareService.addSoftware(software);
-        if(sum>0){
-            Result result = new Result(Code.SUCCESS,"软件上传成功！");
+        if (sum > 0) {
+            Result result = new Result(Code.SUCCESS, "软件上传成功！");
+            return result;
+        } else {
+            Result result = new Result(Code.BAD_REQUEST, "软件上传失败！");
             return result;
         }
-        else {
-            Result result = new Result(Code.BAD_REQUEST,"软件上传失败！");
+    }
+
+    @GetMapping("/selectByStatus")
+    public Result CheckSoftwareList(@RequestParam Integer status) {
+        List<Software> softwareList = softwareService.CheckSoftwareList(status);
+        if (softwareList.size() > 0) {
+            Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
+            return result;
+        } else {
+            Result result = new Result(Code.BAD_REQUEST, "获取信息失败！");
             return result;
         }
     }
 
     @GetMapping
-    public Result CheckSoftwareList() {
-        List<Software> softwareList = softwareService.CheckSoftwareList();
-        if(softwareList.size()>0){
-            Result result = new Result(Code.SUCCESS,"获取信息成功！");
+    public Result getAllSoftwareList() {
+        List<Software> softwareList = softwareService.getAllSoftwareList();
+        if (softwareList.size() > 0) {
+            Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
-        }
-        else{
-            Result result = new Result(Code.BAD_REQUEST,"获取信息失败！");
+        } else {
+            Result result = new Result(Code.BAD_REQUEST, "获取信息失败！");
             return result;
         }
     }
-
-
-
-
-
-
 }
