@@ -3,6 +3,7 @@ package com.qg.domain;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 
+import java.sql.Date;
 
 
 public class Review {
@@ -10,7 +11,7 @@ public class Review {
     private Long userId;
     private Long softwareId;
     private String content;
-    private DateTime time;
+    private Date time;
     @TableLogic
     private int isDeleted;
 
@@ -18,7 +19,7 @@ public class Review {
     public Review() {
     }
 
-    public Review(Long id, Long userId, Long softwareId, String content, DateTime time, int isDeleted) {
+    public Review(Long id, Long userId, Long softwareId, String content, Date time, int isDeleted) {
         this.id = id;
         this.userId = userId;
         this.softwareId = softwareId;
@@ -95,7 +96,7 @@ public class Review {
      * 获取
      * @return time
      */
-    public DateTime getTime() {
+    public Date getTime() {
         return time;
     }
 
@@ -103,7 +104,7 @@ public class Review {
      * 设置
      * @param time
      */
-    public void setTime(DateTime time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 

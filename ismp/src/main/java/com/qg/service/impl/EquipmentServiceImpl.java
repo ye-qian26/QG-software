@@ -62,4 +62,12 @@ public class EquipmentServiceImpl implements EquipmentService {
         equipment.setStatus(EQUIPMENT_STATUS_ORDER);
         return equipmentMapper.insert(equipment);
     }
+
+    @Override
+    public List<Equipment> selectAllAppointment() {
+        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Equipment::getStatus, EQUIPMENT_STATUS_ORDER);
+        return equipmentMapper.selectList(queryWrapper);
+    }
+
 }
