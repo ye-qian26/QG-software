@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.qg.utils.Constants.*;
+
 //import static com.qg.util.Constants.*;
 
 @Service
@@ -18,14 +20,13 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
 
     @Override
     public List<ApplyDeveloper> selectAllOrderByTime() {
-//        // 创建 Lambda 查询包装器
-//        LambdaQueryWrapper<ApplyDeveloper> wrapper = new LambdaQueryWrapper<>();
-//        // 按创建时间降序排序（DESC）
-//        wrapper.orderByDesc(ApplyDeveloper::getApplyTime)
-//                .eq(ApplyDeveloper::getIsDeleted, IS_NOT_DELETED);
-//        // 执行查询
-//        return applyDeveloperMapper.selectList(wrapper);
-        return null;
+        // 创建 Lambda 查询包装器
+        LambdaQueryWrapper<ApplyDeveloper> wrapper = new LambdaQueryWrapper<>();
+        // 按创建时间降序排序（DESC）
+        wrapper.orderByDesc(ApplyDeveloper::getApplyTime)
+                .eq(ApplyDeveloper::getIsDeleted, IS_NOT_DELETED);
+        // 执行查询
+        return applyDeveloperMapper.selectList(wrapper);
     }
 
     @Override
@@ -53,12 +54,27 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
 
     @Override
     public boolean updateStatus(ApplyDeveloper applyDeveloper) {
-//        if (applyDeveloper.getStatus() == 0) {
-//            applyDeveloper.setStatus(IS_HANDLED);
-//        } else {
-//            applyDeveloper.setStatus(IS_NOT_HANDLED);
-//        }
-//        applyDeveloperMapper.updateById(applyDeveloper);
-        return false;
+        if (applyDeveloper.getStatus() == 0) {
+            applyDeveloper.setStatus(IS_HANDLED);
+        } else {
+            applyDeveloper.setStatus(IS_NOT_HANDLED);
+        }
+        return applyDeveloperMapper.updateById(applyDeveloper) > 0;
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return applyDeveloperMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public boolean updateStatusById(Long id) {
+        ApplyDeveloper applyDeveloper = applyDeveloperMapper.selectById(id);
+        if (applyDeveloper.getStatus() == 0) {
+            applyDeveloper.setStatus(IS_HANDLED);
+        } else {
+            applyDeveloper.setStatus(IS_NOT_HANDLED);
+        }
+        return applyDeveloperMapper.updateById(applyDeveloper) > 0;
     }
 }

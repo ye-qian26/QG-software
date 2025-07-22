@@ -20,4 +20,8 @@ public interface ApplyDeveloperService {
     ApplyDeveloper selectById(Long id);
 
     boolean updateStatus(ApplyDeveloper applyDeveloper);
+
+    boolean deleteById(Long id);
+
+    boolean updateStatusById(Long id);
 }

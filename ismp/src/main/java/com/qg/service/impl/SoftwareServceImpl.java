@@ -7,13 +7,11 @@ import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.mapper.SoftwareMapper;
 import com.qg.service.SoftwareService;
-import com.qg.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 @Service
 public class SoftwareServceImpl implements SoftwareService {
@@ -24,17 +22,16 @@ public class SoftwareServceImpl implements SoftwareService {
     public int addSoftware(Software software) {
 
         int sum = 0;
-        sum = softwareMapper.insert(software);
+        sum=softwareMapper.insert(software);
         return sum;
     }
 
-    //管理员审核的app信息获取
+    //管理员待审核/已审核的app信息获取
+    public List<Software> CheckSoftwareList(Integer status){
 
-    public List<Software> CheckSoftwareList() {
         List<Software> list = new ArrayList<Software>();
         QueryWrapper<Software> qw = new QueryWrapper<>();
-        qw.eq("status", Constants.IS_NOT_HANDLED);
-        System.out.println(softwareMapper.selectList(qw));
+        qw.lambda().eq(Software::getStatus,status);
         list = softwareMapper.selectList(qw);
         //qw.eq("status",i);
         System.out.println(list);
@@ -43,6 +40,19 @@ public class SoftwareServceImpl implements SoftwareService {
     }
 
 
-    //用户查看软件信息
+    //管理员查看所有的app信息
+    public List<Software> getAllSoftwareList(){
+        List<Software> list = new ArrayList<Software>();
+        list = softwareMapper.selectList(null);
+        System.out.println(list);
+        return list;
+    }
+
+
+
+
+
+
+
 
 }

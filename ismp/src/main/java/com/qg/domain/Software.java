@@ -1,11 +1,16 @@
 package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
+
+
+
+
 
 
 public class Software {
@@ -19,13 +24,13 @@ public class Software {
     private String introduction;
     private String version;
     private String installDetail;
+    @TableField("status")
     private Integer status;
     private String picture;
     private String type;
     private String name;
     @TableLogic
     private int isDeleted;
-
 
     public Software() {
     }

@@ -1,3 +1,9 @@
+logging:
+  level:
+    org.apache.ibatis: TRACE  # 显示参数类型绑定细节
+    com.baomidou.mybatisplus: DEBUG
+    java.sql.PreparedStatement: DEBUG  # 显示JDBC层类型
+
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -18,5 +24,6 @@ mybatis-plus:
       logic-not-delete-value: 0
       logic-delete-field: is_deleted
       logic-delete-value: 1
+
 
 

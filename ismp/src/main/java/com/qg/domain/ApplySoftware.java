@@ -152,7 +152,17 @@ public class ApplySoftware {
         this.softwareId = softwareId;
     }
 
+    @Override
     public String toString() {
-        return "ApplySoftware{id = " + id + ", userId = " + userId + ", reason = " + reason + ", material = " + material + ", status = " + status + ", softwareId = " + softwareId + "}";
+        return "ApplySoftware{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", reason='" + reason + '\'' +
+                ", material='" + material + '\'' +
+                ", status=" + status +
+                ", softwareId=" + softwareId +
+                ", applyTime='" + applyTime + '\'' +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }
