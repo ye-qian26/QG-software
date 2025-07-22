@@ -1,6 +1,6 @@
 package com.qg.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
 import com.qg.domain.User;
@@ -11,6 +11,8 @@ import com.qg.utils.HashSaltUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 import static com.qg.domain.Code.*;
 import static com.qg.utils.HashSaltUtil.verifyHashPassword;
@@ -30,6 +32,8 @@ public class UserServiceImpl implements UserService {
         if(loginUser == null){
             return null;
         }
+
+        String token = UUID.randomUUID().toString();
 
         return loginUser;
     }
