@@ -2,8 +2,9 @@ package com.qg.domain;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-
+@TableName("`order`")
 public class Order {
     private Long id;
     private Long softwareId;
