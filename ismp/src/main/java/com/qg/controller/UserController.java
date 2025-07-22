@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.qg.domain.Code.CONFLICT;
 import static com.qg.domain.Code.SUCCESS;
-import static com.qg.domain.Constants.EQUIPMENT_STATUS_BOUGHT;
+import com.qg.utils.Constants;
 
 @RestController
 @RequestMapping("/users")
@@ -61,7 +61,7 @@ public class UserController {
         double price = order.getPrice();
         long softwareId = order.getSoftwareId();
 
-        Integer status = EQUIPMENT_STATUS_BOUGHT;
+        Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
         Equipment equipment = new Equipment(userId,softwareId,status);
 
 

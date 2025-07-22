@@ -49,9 +49,10 @@ public class SubscribeController {
     /**
      * 取关某个开发者
      */
-    @PostMapping
-    public Result deleteSubscribe(@RequestBody Subscribe subscribe) {
-        if (subscribeService.unsubscribe(subscribe)) {
+    @PostMapping("/{user_id}/{developer_id}")
+    public Result deleteSubscribe(@PathVariable("user_id") Long userId,
+                                  @PathVariable("developer_id") Long developerId) {
+        if (subscribeService.unsubscribe(new Subscribe(null, userId, developerId))) {
             System.out.println("==>取消关注成功！");
             return new Result(Code.SUCCESS, "取消关注成功!");
         } else {
