@@ -14,7 +14,7 @@ public class Software {
     @JsonProperty("author_id")
     private Long authorId;
     private String info;
-    private double price;
+    private Double price;
     private String link;
     private String introduction;
     private String version;
@@ -30,7 +30,7 @@ public class Software {
     public Software() {
     }
 
-    public Software(Long id, String publishedTime, Long authorId, String info, double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, String name, int isDeleted) {
+    public Software(Long id, String publishedTime, Long authorId, String info, Double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, String name, int isDeleted) {
         this.id = id;
         this.publishedTime = publishedTime;
         this.authorId = authorId;
@@ -115,7 +115,7 @@ public class Software {
      * 获取
      * @return price
      */
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -123,7 +123,7 @@ public class Software {
      * 设置
      * @param price
      */
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
