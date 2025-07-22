@@ -5,14 +5,12 @@ import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.service.BanService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/ban")
+@RequestMapping("/bans")
 public class BanController {
 
     @Autowired
@@ -26,5 +24,35 @@ public class BanController {
         return new Result(code, bans, msg);
     }
 
+    @PostMapping
+    public Result add(@RequestBody Ban ban){
+        boolean flag = banService.add(ban);
+        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        String msg = flag ? "" : "冻结账户失败，请稍后重试！";
+        return new Result(code, msg);
+    }
 
+    @DeleteMapping
+    public Result delete(@RequestBody Ban ban){
+        boolean flag = banService.delete(ban);
+        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        String msg = flag ? "" : "删除信息失败，请稍后重试！";
+        return new Result(code, msg);
+    }
+
+    @GetMapping("/selectByUserId/{userId}")
+    public Result selectByUserId(@PathVariable Long userId){
+        Ban ban = banService.selectByUserId(userId);
+        Integer code = ban != null ? Code.SUCCESS : Code.NOT_FOUND;
+        String msg = ban != null ? "" : "该用户账户未被冻结";
+        return new Result(code, ban, msg);
+    }
+
+    @GetMapping("/judgeBan/{userId}")
+    public Result judgeBan(@PathVariable Long userId){
+        boolean flag = banService.judgeBan(userId);
+        Integer code = flag ? Code.SUCCESS : Code.NOT_FOUND;
+        String msg = flag ? "" : "该用户账户未被冻结";
+        return new Result(code, msg);
+    }
 }
