@@ -9,11 +9,11 @@ import com.qg.service.EquipmentService;
 import com.qg.service.OrderService;
 import com.qg.service.UserService;
 import jakarta.websocket.server.PathParam;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import static com.qg.domain.Code.CONFLICT;
-import static com.qg.domain.Code.SUCCESS;
+import static com.qg.domain.Code.*;
 import static com.qg.domain.Constants.EQUIPMENT_STATUS_BOUGHT;
 
 @RestController
@@ -44,12 +44,12 @@ public class UserController {
         return userService.register(user);
     }
 
-    @PostMapping("/updata")
+    @PutMapping("/updata")
     public Result update(@RequestBody User user) {
         return userService.update(user);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         return userService.delete(id);
     }
@@ -76,7 +76,15 @@ public class UserController {
         }
 
         return new Result(SUCCESS, "交易成功！");
+    }
 
+    @GetMapping("/getPrice")
+    public Result getPriceById(@RequestParam Long id) {
+        if (id <= 0){
+            return new Result(BAD_REQUEST,"获取失败！");
+        }
+        double price = userService.getPriceById(id);
 
+        return new Result(SUCCESS,String.valueOf(price),"获取成功！");
     }
 }

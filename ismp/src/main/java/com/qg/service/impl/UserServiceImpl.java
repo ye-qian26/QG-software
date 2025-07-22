@@ -101,4 +101,9 @@ public class UserServiceImpl implements UserService {
         return 0;
 
     }
+
+    @Override
+    public double getPriceById(Long id) {
+        return userMapper.selectById(id).getMoney();
+    }
 }
