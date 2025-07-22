@@ -47,6 +47,7 @@ public class OrderController {
 
         int equipmentSave = equipmentService.saveEquipment(equipment);
 
+
         if (transaction <= 0 || orderSave <= 0 || equipmentSave <= 0) {
             return new Result(CONFLICT, "交易失败,请稍后再试！");
         }
@@ -72,5 +73,14 @@ public class OrderController {
         }
 
         return new Result(SUCCESS, orders, "订单查询成功！");
+    }
+
+
+
+    //查看购买的订单
+    @GetMapping("/findAll")
+    public Result findAll() {
+        List<Order> orderList = orderService.selectAll();
+        return orderList!=null ? new Result(SUCCESS,orderList,"查询成功") : new Result(BAD_GATEWAY,"查询失败");
     }
 }

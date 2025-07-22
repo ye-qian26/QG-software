@@ -28,4 +28,9 @@ public class OrderServiceImpl implements OrderService {
         List<Order> orders =  orderMapper.selectList(wrapper);
         return orders;
     }
+
+    @Override
+    public List<Order> selectAll() {
+        return  orderMapper.selectList(null);
+    }
 }

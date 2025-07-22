@@ -22,6 +22,8 @@ public class Code {
      * 5**
      * 服务器错误
      */
+
     public static final Integer INTERNAL_ERROR = 500;      // 服务器内部错误
+    public static final Integer FEATURES_ARE_NOT_DEVELOPED = 501;      // 功能未开发
     public static final Integer BAD_GATEWAY = 502;         // 网关错误
 }
