@@ -10,22 +10,20 @@ public class Message {
     private Long receiverId;
     private Long posterId;
     private String content;
-    private DateTime time;
+    private String time;
     private Integer isRead;
-    @TableLogic
-    private int isDeleted;
+
 
     public Message() {
     }
 
-    public Message(Long id, Long receiverId, Long posterId, String content, DateTime time, Integer isRead, int isDeleted) {
+    public Message(Long id, Long receiverId, Long posterId, String content, String time, Integer isRead) {
         this.id = id;
         this.receiverId = receiverId;
         this.posterId = posterId;
         this.content = content;
         this.time = time;
         this.isRead = isRead;
-        this.isDeleted = isDeleted;
     }
 
     /**
@@ -96,7 +94,7 @@ public class Message {
      * 获取
      * @return time
      */
-    public DateTime getTime() {
+    public String getTime() {
         return time;
     }
 
@@ -104,7 +102,7 @@ public class Message {
      * 设置
      * @param time
      */
-    public void setTime(DateTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -124,23 +122,7 @@ public class Message {
         this.isRead = isRead;
     }
 
-    /**
-     * 获取
-     * @return isDeleted
-     */
-    public int getIsDeleted() {
-        return isDeleted;
-    }
-
-    /**
-     * 设置
-     * @param isDeleted
-     */
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
-    }
-
     public String toString() {
-        return "Message{id = " + id + ", receiverId = " + receiverId + ", posterId = " + posterId + ", content = " + content + ", time = " + time + ", isRead = " + isRead + ", isDeleted = " + isDeleted + "}";
+        return "Message{id = " + id + ", receiverId = " + receiverId + ", posterId = " + posterId + ", content = " + content + ", time = " + time + ", isRead = " + isRead + "}";
     }
 }
