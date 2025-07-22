@@ -7,10 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Software {
-    private long id;
+    private Long id;
     private DateTime publishedTime;
     @JsonProperty("author_id")
-    private long authorId;
+    private Long authorId;
     private String info;
     private double price;
     private String link;
@@ -25,18 +25,11 @@ public class Software {
     @TableLogic
     private int isDeleted;
 
+
     public Software() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Software(long id, DateTime publishedTime, long authorId, String info, double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, int isDeleted) {
+    public Software(Long id, DateTime publishedTime, Long authorId, String info, double price, String link, String introduction, String version, String installDetail, Integer status, String picture, String type, String name, int isDeleted) {
         this.id = id;
         this.publishedTime = publishedTime;
         this.authorId = authorId;
@@ -49,6 +42,7 @@ public class Software {
         this.status = status;
         this.picture = picture;
         this.type = type;
+        this.name = name;
         this.isDeleted = isDeleted;
     }
 
@@ -56,7 +50,7 @@ public class Software {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -64,7 +58,7 @@ public class Software {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -88,7 +82,7 @@ public class Software {
      * 获取
      * @return authorId
      */
-    public long getAuthorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
@@ -96,7 +90,7 @@ public class Software {
      * 设置
      * @param authorId
      */
-    public void setAuthorId(long authorId) {
+    public void setAuthorId(Long authorId) {
         this.authorId = authorId;
     }
 
@@ -252,6 +246,22 @@ public class Software {
 
     /**
      * 获取
+     * @return name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 设置
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获取
      * @return isDeleted
      */
     public int getIsDeleted() {
@@ -267,6 +277,6 @@ public class Software {
     }
 
     public String toString() {
-        return "Software{id = " + id + ", publishedTime = " + publishedTime + ", authorId = " + authorId + ", info = " + info + ", price = " + price + ", link = " + link + ", introduction = " + introduction + ", version = " + version + ", installDetail = " + installDetail + ", status = " + status + ", picture = " + picture + ", type = " + type + ", isDeleted = " + isDeleted + "}";
+        return "Software{id = " + id + ", publishedTime = " + publishedTime + ", authorId = " + authorId + ", info = " + info + ", price = " + price + ", link = " + link + ", introduction = " + introduction + ", version = " + version + ", installDetail = " + installDetail + ", status = " + status + ", picture = " + picture + ", type = " + type + ", name = " + name + ", isDeleted = " + isDeleted + "}";
     }
 }

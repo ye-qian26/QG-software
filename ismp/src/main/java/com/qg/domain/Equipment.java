@@ -4,9 +4,9 @@ package com.qg.domain;
 
 
 public class Equipment {
-    private long id;
-    private long userId;
-    private long softwareId;
+    private Long id;
+    private Long userId;
+    private Long softwareId;
     private Integer status;
     private String code1;
     private String code2;
@@ -14,8 +14,13 @@ public class Equipment {
 
     public Equipment() {
     }
+    public Equipment(Long userId, Long softwareId, Integer status){
+        this.userId = userId;
+        this.softwareId = softwareId;
+        this.status = status;
+    }
 
-    public Equipment(long id, long userId, long softwareId, Integer status, String code1, String code2, String code3) {
+    public Equipment(Long id, Long userId, Long softwareId, Integer status, String code1, String code2, String code3) {
         this.id = id;
         this.userId = userId;
         this.softwareId = softwareId;
@@ -29,7 +34,7 @@ public class Equipment {
      * 获取
      * @return id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -37,7 +42,7 @@ public class Equipment {
      * 设置
      * @param id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,7 +50,7 @@ public class Equipment {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -53,7 +58,7 @@ public class Equipment {
      * 设置
      * @param userId
      */
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -61,7 +66,7 @@ public class Equipment {
      * 获取
      * @return softwareId
      */
-    public long getSoftwareId() {
+    public Long getSoftwareId() {
         return softwareId;
     }
 
@@ -69,7 +74,7 @@ public class Equipment {
      * 设置
      * @param softwareId
      */
-    public void setSoftwareId(long softwareId) {
+    public void setSoftwareId(Long softwareId) {
         this.softwareId = softwareId;
     }
 
