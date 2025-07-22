@@ -1,16 +1,15 @@
 package com.qg.service.impl;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
 import com.qg.domain.User;
+import com.qg.dto.UserDto;
 import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import static com.qg.domain.Code.*;
 
@@ -21,20 +20,19 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public Result loginByPassword(String email, String password) {
+    public User loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email).eq(User::getPassword,password);
         User loginUser = userMapper.selectOne(lqw);
         if(loginUser == null){
-            return new Result(CONFLICT,"该邮箱未被注册");
+            return null;
         }
-        return new Result(SUCCESS, loginUser,"登录成功");
+        return loginUser;
     }
 
     @Override
-    public Result loginByCode(String email, String code) {
-
+    public User loginByCode(String email, String code) {
         return null;
     }
 
@@ -105,5 +103,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public double getPriceById(Long id) {
         return userMapper.selectById(id).getMoney();
+    }
+
+    @Override
+    public User getUser(Long id) {
+        return userMapper.selectById(id);
     }
 }
