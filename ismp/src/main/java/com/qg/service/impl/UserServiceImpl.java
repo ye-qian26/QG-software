@@ -6,6 +6,7 @@ import com.qg.domain.Result;
 import com.qg.domain.User;
 import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
+import com.qg.utils.HashSaltUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 import static com.qg.domain.Code.*;
+import static com.qg.utils.HashSaltUtil.verifyHashPassword;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,10 +26,14 @@ public class UserServiceImpl implements UserService {
     public Result loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(User::getEmail, email).eq(User::getPassword,password);
+        lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
         if(loginUser == null){
             return new Result(CONFLICT,"该邮箱未被注册");
+        }
+        // 匹配数据库加密密码
+        if(!verifyHashPassword(password, loginUser.getPassword())){
+            return new Result(UNAUTHORIZED,"密码错误");
         }
         return new Result(SUCCESS, loginUser,"登录成功");
     }
@@ -48,6 +54,9 @@ public class UserServiceImpl implements UserService {
             return new Result(CONFLICT,"该邮箱已被注册！");
         }
 
+        // 对密码进行加密处理
+        user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
+
         userMapper.insert(user);
 
         return new Result(CREATED,"恭喜你，注册成功！");
@@ -58,6 +67,11 @@ public class UserServiceImpl implements UserService {
 
         if (user == null) {
             return new Result(BAD_REQUEST,"表单为空");
+        }
+
+        // 如果密码不为空，则加密
+        if (user.getPassword() != null) {
+            user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
         }
 
         if (userMapper.updateById(user) > 0) {
