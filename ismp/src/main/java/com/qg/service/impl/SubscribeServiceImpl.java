@@ -1,7 +1,7 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.qg.domain.Constants;
+import com.qg.utils.Constants;
 import com.qg.domain.Subscribe;
 import com.qg.domain.User;
 import com.qg.mapper.SubscribeMapper;
