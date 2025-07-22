@@ -47,6 +47,7 @@ public class OrderController {
 
         int equipmentSave = equipmentService.saveEquipment(equipment);
 
+
         if (transaction <= 0 || orderSave <= 0 || equipmentSave <= 0) {
             return new Result(CONFLICT, "交易失败,请稍后再试！");
         }
