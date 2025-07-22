@@ -13,10 +13,10 @@ public interface UserService {
 
     Result update(User user);
 
-    Result delete(Integer id);
+    Result delete(Long id);
 
 
-    int transaction(long userId, long authorId, double price);
+    int transaction(Long userId, Long authorId, Double price);
 
     double getPriceById(Long id);
 
