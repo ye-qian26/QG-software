@@ -17,4 +17,7 @@ public interface UserService {
 
 
     int transaction(long userId, long authorId, double price);
+
+    double getPriceById(Long id);
+
 }
