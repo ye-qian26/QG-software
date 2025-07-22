@@ -1,10 +1,12 @@
 package com.qg.controller;
 
+
 import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class SoftwareController {
 
     @GetMapping("/selectByStatus")
     public Result CheckSoftwareList(@RequestParam Integer status) {
-        List<Software> softwareList = softwareService.CheckSoftwareList(status);
+        List<Software> softwareList =  softwareService.CheckSoftwareList(status);
         if (softwareList.size() > 0) {
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
@@ -55,6 +57,35 @@ public class SoftwareController {
         }
     }
 
+    @PostMapping("/updateSoftware")
+    public Result updateSoftware(@RequestBody Software software) {
+        Long id = software.getId();
+        int sum = 0;
+        sum= softwareService.updateSoftware(id);
+        if (sum > 0) {
+            Result result = new Result(Code.SUCCESS, "信息修改成功！");
+            return result;
+        }else {
+            Result result = new Result(Code.BAD_REQUEST, "信息修改失败！");
+            return result;
+        }
+
+    }
+
+    @PostMapping("/roleUpdate")
+    public Result roleUpdate(@RequestBody Software software) {
+        Long id = software.getId();
+        int sum = 0;
+        sum= softwareService.roleUpdate(id);
+        if (sum > 0) {
+            Result result = new Result(Code.SUCCESS, "信息修改成功！");
+            return result;
+        }else {
+            Result result = new Result(Code.BAD_REQUEST, "信息修改失败！");
+            return result;
+        }
+
+    }
 
 
 

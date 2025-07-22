@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.qg.utils.Constants.SOFTWARE_STATUS_ORDER;
+import static com.qg.utils.Constants.SOFTWARE_STATUS_SALE;
+
 @Service
 public class SoftwareServceImpl implements SoftwareService {
     @Autowired
@@ -48,9 +51,19 @@ public class SoftwareServceImpl implements SoftwareService {
         return list;
     }
 
+    //第三方进行修改状态
+    public int updateSoftware(Long id){
+        int sum = 0;
+        sum=softwareMapper.updateStatus(id,SOFTWARE_STATUS_SALE);
+        return sum;
+    }
 
-
-
+    //管理员修改状态
+    public int roleUpdate(Long id){
+        int sum = 0;
+        sum=softwareMapper.updateStatus(id,SOFTWARE_STATUS_ORDER);
+        return sum;
+    }
 
 
 
