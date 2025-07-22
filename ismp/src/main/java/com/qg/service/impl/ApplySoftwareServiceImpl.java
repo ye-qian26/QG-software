@@ -58,7 +58,22 @@ public class ApplySoftwareServiceImpl implements ApplySoftwareService {
         } else {
             applySoftware.setStatus(IS_NOT_HANDLED);
         }
-        applySoftwareMapper.updateById(applySoftware);
-        return false;
+        return applySoftwareMapper.updateById(applySoftware) > 0;
+    }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return applySoftwareMapper.deleteById(id) > 0;
+    }
+
+    @Override
+    public boolean updateStatusById(Long id) {
+        ApplySoftware applySoftware = applySoftwareMapper.selectById(id);
+        if (applySoftware.getStatus() == 0) {
+            applySoftware.setStatus(IS_HANDLED);
+        } else {
+            applySoftware.setStatus(IS_NOT_HANDLED);
+        }
+        return applySoftwareMapper.updateById(applySoftware) > 0;
     }
 }

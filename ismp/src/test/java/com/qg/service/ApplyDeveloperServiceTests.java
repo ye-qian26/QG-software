@@ -22,18 +22,17 @@ public class ApplyDeveloperServiceTests {
 
     @Test
     public void add(){
-        //3.获取当前时间
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println(now);
-        //定义时间格式
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        //格式化时间
-        String formattedDateTime = now.format(formatter);
+//        //3.获取当前时间
+//        LocalDateTime now = LocalDateTime.now();
+//        //定义时间格式
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        //格式化时间
+//        String formattedDateTime = now.format(formatter);
         ApplyDeveloper applyDeveloper = new ApplyDeveloper();
         applyDeveloper.setUserId(1L);
-        applyDeveloper.setApplyTime(formattedDateTime);
-        applyDeveloper.setReason("");
-        applyDeveloper.setMaterial("");
+//        applyDeveloper.setApplyTime(formattedDateTime);
+        applyDeveloper.setReason("申请成为开发商理由");
+        applyDeveloper.setMaterial("材料");
         applyDeveloper.setStatus(0);
         applyDeveloperService.add(applyDeveloper);
     }

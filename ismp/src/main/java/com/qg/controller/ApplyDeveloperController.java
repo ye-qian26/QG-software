@@ -25,7 +25,7 @@ public class ApplyDeveloperController {
     }
 
     @PostMapping
-    public Result addApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+    public Result add(@RequestBody ApplyDeveloper applyDeveloper) {
         boolean flag = applyDeveloperService.add(applyDeveloper);
         Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
         String msg = flag ? "" : "添加失败，请稍后重试！";
@@ -33,8 +33,16 @@ public class ApplyDeveloperController {
     }
 
     @DeleteMapping
-    public Result deleteApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+    public Result delete(@RequestBody ApplyDeveloper applyDeveloper) {
         boolean flag = applyDeveloperService.delete(applyDeveloper);
+        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        String msg = flag ? "" : "删除失败，请稍后重试！";
+        return new Result(code, msg);
+    }
+
+    @DeleteMapping("/{id}")
+    public Result deleteById(@PathVariable Long id) {
+        boolean flag = applyDeveloperService.deleteById(id);
         Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
         String msg = flag ? "" : "删除失败，请稍后重试！";
         return new Result(code, msg);
@@ -48,7 +56,7 @@ public class ApplyDeveloperController {
         return new Result(code, applyDevelopers, msg);
     }
 
-    @GetMapping("/selectById/{id}")
+    @GetMapping("/{id}")
     public Result selectById(@PathVariable Long id) {
         ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(id);
         Integer code = applyDeveloper != null ? Code.SUCCESS : Code.NOT_FOUND;
@@ -64,4 +72,11 @@ public class ApplyDeveloperController {
         return new Result(code, msg);
     }
 
+    @PutMapping("/updateStatus/{id}")
+    public Result updateStatusById(@PathVariable Long id) {
+        boolean flag = applyDeveloperService.updateStatusById(id);
+        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        String msg = flag ? "" : "更改状态失败，请稍后重试！";
+        return new Result(code, msg);
+    }
 }

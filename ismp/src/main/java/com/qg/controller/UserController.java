@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.qg.domain.Code.CONFLICT;
 import static com.qg.domain.Code.SUCCESS;
-import static com.qg.domain.Constants.EQUIPMENT_STATUS_BOUGHT;
+import static com.qg.utils.Constants.EQUIPMENT_STATUS_BOUGHT;
 
 @RestController
 @RequestMapping("/users")

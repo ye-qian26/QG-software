@@ -21,4 +21,8 @@ public interface ApplySoftwareService {
     ApplySoftware selectById(Long id);
 
     boolean updateStatus(ApplySoftware ApplySoftware);
+
+    boolean deleteById(Long id);
+
+    boolean updateStatusById(Long id);
 }

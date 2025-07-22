@@ -133,7 +133,16 @@ public class ApplyDeveloper {
         this.status = status;
     }
 
+    @Override
     public String toString() {
-        return "ApplyDeveloper{id = " + id + ", userId = " + userId + ", applyTime = " + applyTime + ", reason = " + reason + ", material = " + material + ", status = " + status + "}";
+        return "ApplyDeveloper{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", applyTime='" + applyTime + '\'' +
+                ", reason='" + reason + '\'' +
+                ", material='" + material + '\'' +
+                ", status=" + status +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }
