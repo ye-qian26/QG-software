@@ -1,6 +1,5 @@
 package com.qg.utils;
-
-import org.mindrot.jbcrypt.BCrypt;
+import cn.hutool.crypto.digest.BCrypt;
 
 public class HashSaltUtil {
 

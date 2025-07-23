@@ -1,14 +1,14 @@
 package com.qg.dto;
 
 public class UserDto {
-    private int userId;
+    private int id;
     private String name;
 
     public UserDto() {
     }
 
-    public UserDto(int userId, String name) {
-        this.userId = userId;
+    public UserDto(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -16,16 +16,13 @@ public class UserDto {
      * 获取
      * @return userId
      */
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    /**
-     * 设置
-     * @param userId
-     */
-    public void setUserId(int userId) {
-        this.userId = userId;
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -45,6 +42,6 @@ public class UserDto {
     }
 
     public String toString() {
-        return "UserDto{userId = " + userId + ", name = " + name + "}";
+        return "UserDto{userId = " + id + ", name = " + name + "}";
     }
 }
