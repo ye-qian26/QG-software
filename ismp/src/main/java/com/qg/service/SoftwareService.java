@@ -16,5 +16,7 @@ public interface SoftwareService {
 
     public int roleUpdate(Long id);
 
+    public int deleteSoftware(Long id);
 
+    public int roleDelete(Long id);
 }

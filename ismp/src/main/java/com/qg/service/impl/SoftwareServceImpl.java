@@ -65,7 +65,18 @@ public class SoftwareServceImpl implements SoftwareService {
         return sum;
     }
 
+    //第三方逻辑删除
+    public int deleteSoftware(Long id){
+        int sum = 0;
+        sum=softwareMapper.deleteById(id);
+        return sum;
+    }
 
-
+    //管理员逻辑删除
+    public int roleDelete(Long id){
+        int sum = 0;
+        sum=softwareMapper.deleteById(id);
+        return sum;
+    }
 
 }

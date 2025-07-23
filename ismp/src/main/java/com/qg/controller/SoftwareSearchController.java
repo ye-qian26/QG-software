@@ -20,7 +20,10 @@ public class SoftwareSearchController {
     @Autowired
     private SoftwareSearchService softwareSearchService;
 
-    //轮播图接口
+    /**
+     * 轮播图接口
+     * @return
+     */
     @GetMapping("/SearchSoftwareNew")
     public Result SearchSoftwareNew(){
         List<Software> softwareList = softwareSearchService.SearchSoftwareNew();
@@ -33,7 +36,11 @@ public class SoftwareSearchController {
         }
     }
 
-    //类别的最新十个的接口
+    /**
+     * 类别的最新十个的接口
+     * @param type
+     * @return
+     */
     @GetMapping("/SearchTypeNew")
     public Result SearchTypeNew(@RequestParam String type){
         List<Software> softwareList = softwareSearchService.SearchTypeNew(type);
@@ -46,7 +53,11 @@ public class SoftwareSearchController {
         }
     }
 
-
+    /**
+     * 查看该类别的所有软件
+     * @param type
+     * @return
+     */
     @GetMapping("/SearchSoftwareType")
     public Result SearchSoftwareType(@RequestParam String type){
         List<Software> softwareList = softwareSearchService.SearchSoftwareType(type);
@@ -59,6 +70,11 @@ public class SoftwareSearchController {
         }
     }
 
+    /**
+     * 用户查看软件详情
+     * @param id
+     * @return
+     */
     @GetMapping("/SearchSoftware")
     public Result SearchSoftware(@RequestParam Long id){
         Software software = softwareSearchService.SearchSoftware(id);
@@ -71,6 +87,11 @@ public class SoftwareSearchController {
         }
     }
 
+    /**
+     * 查看该软件的多个版本
+     * @param id
+     * @return
+     */
     @GetMapping("/SearchSoftwareVersion")
     public Result SearchSoftwareVersion(@RequestParam Long id){
         List<Software> list = softwareSearchService.SearchSoftwareVersion(id);
