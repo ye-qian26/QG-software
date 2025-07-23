@@ -68,8 +68,7 @@ public class UserController {
      */
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
-        userService.loginByCode(email, code);
-        return null;
+        return userService.loginByCode(email, code);
     }
 
     /**
@@ -78,8 +77,8 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public Result register(@RequestBody User user) {
-        return userService.register(user);
+    public Result register(@RequestBody User user, @RequestParam String code) {
+        return userService.register(user, code);
     }
 
     /**
@@ -88,8 +87,8 @@ public class UserController {
      * @return
      */
     @PutMapping("/update")
-    public Result update(@RequestBody User user) {
-        return userService.update(user);
+    public Result update(@RequestBody User user, @RequestParam String code) {
+        return userService.update(user, code);
     }
 
     /**

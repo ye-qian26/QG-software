@@ -12,9 +12,9 @@ public interface UserService {
 
     Result loginByCode(String email, String code);
 
-    Result register(User user);
+    Result register(User user, String code);
 
-    Result update(User user);
+    Result update(User user, String code);
 
     Result delete(Long id);
 

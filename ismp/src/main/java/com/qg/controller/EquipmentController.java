@@ -31,6 +31,7 @@ public class EquipmentController {
             return new Result(BAD_REQUEST, "查看错误");
         }
 
+
         List<Equipment> equipmentList = equipmentService.selectPurchased(userId);
 
         if (equipmentList == null || equipmentList.size() == 0){
