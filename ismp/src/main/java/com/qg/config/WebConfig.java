@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+//@Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
+//    @Autowired
     private TokenInterceptor tokenInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/users/password",
                                      "/users/code",
                                      "/users/register",
+                                     "/users/sendCodeByEmail",
                                      "/softwares/SearchSoftwareNew",
                                      "/softwares/SearchTypeNew",
                                      "/softwares/SearchSoftwareType",

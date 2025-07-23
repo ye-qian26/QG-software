@@ -39,7 +39,12 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
-
+    /**
+     * 用户通过邮箱登录
+     * @param email
+     * @param password
+     * @return
+     */
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
         Map<String, Object> map = userService.loginByPassword(email, password);
@@ -56,27 +61,52 @@ public class UserController {
         return new Result(SUCCESS, map, "登录成功");
     }
 
+    /**
+     * 用户通过邮箱验证码登录
+     * @param email
+     * @param code
+     * @return
+     */
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
-        userService.loginByCode(email, code);
-        return null;
+        return userService.loginByCode(email, code);
     }
 
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
     @PostMapping("/register")
-    public Result register(@RequestBody User user) {
-        return userService.register(user);
+    public Result register(@RequestBody User user, @RequestParam String code) {
+        return userService.register(user, code);
     }
 
+    /**
+     * 用户修改信息
+     * @param user
+     * @return
+     */
     @PutMapping("/update")
-    public Result update(@RequestBody User user) {
-        return userService.update(user);
+    public Result update(@RequestBody User user, @RequestParam String code) {
+        return userService.update(user, code);
     }
 
+    /**
+     * 用户逻辑删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("/delete/{id}")
     public Result delete(@PathVariable Long id) {
         return userService.delete(id);
     }
 
+    /**
+     * 获取用户余额
+     * @param id
+     * @return
+     */
     @GetMapping("/getPrice/{id}")
     public Result getPriceById(@PathVariable Long id) {
         if (id <= 0) {
@@ -87,6 +117,11 @@ public class UserController {
         return new Result(SUCCESS, String.valueOf(price), "获取成功！");
     }
 
+    /**
+     * 用户查看个人信息
+     * @param id
+     * @return
+     */
     @GetMapping("/getInformation/{id}")
     public Result getInformation(@PathVariable Long id) {
         User user = userService.getUser(id);
@@ -96,6 +131,11 @@ public class UserController {
         return new Result(SUCCESS, user, "获取成功");
     }
 
+    /**
+     * 发送验证码到邮箱
+     * @param email
+     * @return
+     */
     @PostMapping("/sendCodeByEmail")
     public Result sendCodeByEmail(@RequestParam("email") String email) {
         System.out.println(email);

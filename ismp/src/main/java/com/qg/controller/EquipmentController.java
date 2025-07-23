@@ -20,13 +20,17 @@ public class EquipmentController {
     @Autowired
     private EquipmentService equipmentService;
 
-
-    //查看买了什么软件
+    /**
+     * 查看买了什么软件
+     * @param userId
+     * @return
+     */
     @GetMapping("/selectPurchased/{userId}")
     public Result selectPurchased(@PathVariable Long userId) {
         if (userId <= 0){
             return new Result(BAD_REQUEST, "查看错误");
         }
+
 
         List<Equipment> equipmentList = equipmentService.selectPurchased(userId);
 
@@ -38,7 +42,11 @@ public class EquipmentController {
     }
 
 
-    //查看某个软件是否已经买了
+    /**
+     * 查看某个软件是否已经买了
+     * @param equipment
+     * @return
+     */
     @GetMapping("/isPurchased")
     public Result isPurchased(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -53,7 +61,11 @@ public class EquipmentController {
         return new Result(SUCCESS, isPurchased, "查询成功") ;
     }
 
-    //查看预约
+    /**
+     * 用户查看已预约软件
+     * @param userId
+     * @return
+     */
     @GetMapping("/selectAppointment/{userId}")
     public Result selectAppointment(@PathVariable Long userId) {
         if (userId <= 0 ) {
@@ -64,7 +76,11 @@ public class EquipmentController {
         return new Result(SUCCESS,equipmentList, "查询成功");
     }
 
-    //查看是否预购
+    /**
+     * 查看是否预购
+     * @param equipment
+     * @return
+     */
     @GetMapping("/isAppointment")
     public Result isAppointment(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -79,7 +95,11 @@ public class EquipmentController {
         return new Result(SUCCESS, isAppointment, "查询成功") ;
     }
 
-    //加预约
+    /**
+     * 用户预约软件
+     * @param equipment
+     * @return
+     */
     @PostMapping("/addAppointment")
     public Result addAppointment(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -93,7 +113,10 @@ public class EquipmentController {
     }
 
 
-    //管理员看预约
+    /**
+     * 管理员看所有用户的预约软件
+     * @return
+     */
     @GetMapping("/findAllAppointment")
     public Result findAllAppointment() {
         List<Equipment> equipmentList = equipmentService.selectAllAppointment();
