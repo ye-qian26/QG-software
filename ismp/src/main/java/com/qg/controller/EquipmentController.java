@@ -35,6 +35,7 @@ public class EquipmentController {
 
         List<Software> softwareList = equipmentService.selectPurchased(userId);
 
+
         if (softwareList == null || softwareList.isEmpty()) {
             new Result(NOT_FOUND, "数据错误");
         }
@@ -43,7 +44,11 @@ public class EquipmentController {
     }
 
 
-    //查看某个软件是否已经买了
+    /**
+     * 查看某个软件是否已经买了
+     * @param equipment
+     * @return
+     */
     @GetMapping("/isPurchased")
     public Result isPurchased(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -73,7 +78,11 @@ public class EquipmentController {
         return new Result(SUCCESS, softwareList, "查询成功");
     }
 
-    //查看是否预购
+    /**
+     * 查看是否预购
+     * @param equipment
+     * @return
+     */
     @GetMapping("/isAppointment")
     public Result isAppointment(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -88,7 +97,11 @@ public class EquipmentController {
         return new Result(SUCCESS, isAppointment, "查询成功");
     }
 
-    //加预约
+    /**
+     * 用户预约软件
+     * @param equipment
+     * @return
+     */
     @PostMapping("/addAppointment")
     public Result addAppointment(@RequestBody Equipment equipment) {
         Long userId = equipment.getUserId();
@@ -102,7 +115,10 @@ public class EquipmentController {
     }
 
 
-    //管理员看预约
+    /**
+     * 管理员看所有用户的预约软件
+     * @return
+     */
     @GetMapping("/findAllAppointment")
     public Result findAllAppointment() {
         List<Software> softwareList = equipmentService.adminGetAllOrderSoftware();
