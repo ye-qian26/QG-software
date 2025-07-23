@@ -11,6 +11,18 @@ spring:
     url: jdbc:mysql://47.113.224.195:3306/ismp?useSSL=false&useServerPrepStmts=true&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: xieguangqiang
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: 2864201368@qq.com
+    password: onehhunksqknddfc
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 server:
   port: 8080
@@ -24,6 +36,7 @@ mybatis-plus:
       logic-not-delete-value: 0
       logic-delete-field: is_deleted
       logic-delete-value: 1
+
 
 
 
