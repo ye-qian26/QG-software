@@ -53,5 +53,11 @@ public class Constants {
     public static final Integer IS_NOT_HANDLED = 0;
     public static final Integer IS_HANDLED = 1;
 
-
+    /**
+     * token验证
+     * tokenkey的头
+     * token有效期
+      */
+    public static final String LOGIN_USER_KEY = "login:user:";
+    public static final long LOGIN_USER_TTL = 30;
 }
