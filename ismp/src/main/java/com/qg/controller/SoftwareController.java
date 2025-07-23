@@ -57,7 +57,7 @@ public class SoftwareController {
         }
     }
 
-    @PostMapping("/updateSoftware")
+    @PutMapping("/updateSoftware")
     public Result updateSoftware(@RequestBody Software software) {
         Long id = software.getId();
         int sum = 0;

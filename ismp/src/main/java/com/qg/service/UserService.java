@@ -4,9 +4,11 @@ import com.qg.domain.Result;
 import com.qg.domain.User;
 import com.qg.dto.UserDto;
 
+import java.util.Map;
+
 
 public interface UserService {
-    User loginByPassword(String email, String password);
+    Map<String,Object> loginByPassword(String email, String password);
 
     User loginByCode(String email, String code);
 

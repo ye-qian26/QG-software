@@ -16,6 +16,8 @@ import com.qg.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static com.qg.domain.Code.*;
 
 
@@ -39,7 +41,8 @@ public class UserController {
 
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
-        User user = userService.loginByPassword(email, password);
+        Map<String,Object> map = userService.loginByPassword(email, password);
+        User user = (User) map.get("user");
         if (user == null) {
             return new Result(BAD_REQUEST,"未注册");
         }
@@ -48,7 +51,8 @@ public class UserController {
             Ban ban = banService.selectByUserId(id);
             return new Result(FORBIDDEN, ban, "账号被封禁，无法登录");
         }
-        return new Result(SUCCESS, BeanUtil.copyProperties(user, UserDto.class),"登录成功");
+        map.put("user", BeanUtil.copyProperties(user, UserDto.class));
+        return new Result(SUCCESS, map ,"登录成功");
     }
 
     @GetMapping("/code")
