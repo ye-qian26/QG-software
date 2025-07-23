@@ -138,7 +138,7 @@ public class SoftwareController {
      * @param software
      * @return
      */
-    @DeleteMapping
+    @DeleteMapping("/deleteSoftware")
     public Result deleteSoftware(@RequestBody Software software) {
         Long id = software.getId();
         int sum = 0;
@@ -157,7 +157,7 @@ public class SoftwareController {
      * @param software
      * @return
      */
-    @DeleteMapping
+    @DeleteMapping("/roleDelete")
     public Result roleDelete(@RequestBody Software software) {
         Long id = software.getId();
         int sum = 0;
