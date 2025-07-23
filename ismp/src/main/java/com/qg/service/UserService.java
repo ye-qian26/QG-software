@@ -10,7 +10,7 @@ import java.util.Map;
 public interface UserService {
     Map<String,Object> loginByPassword(String email, String password);
 
-    User loginByCode(String email, String code);
+    Result loginByCode(String email, String code);
 
     Result register(User user);
 
