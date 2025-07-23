@@ -95,25 +95,49 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             return new Result(NOT_FOUND, "该用户尚未未注册");
         }
+        // 从redis中取出验证码
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
             return new Result(NOT_FOUND, "验证码错误");
         }
 
-
-        return null;
+        // 随机生成token，作为的登录令牌
+        String token = cn.hutool.core.lang.UUID.randomUUID().toString(true);
+        // 7.2.将User对象转换为HashMap存储
+        UserDto userDTO = BeanUtil.copyProperties(user, UserDto.class);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
+        // 7.3.存储
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 7.4.设置token有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userDTO);
+        map.put("token", token);
+        return new Result(SUCCESS, map, "");
     }
 
     @Override
-    public Result register(User user) {
+    public Result register(User user, String code) {
+        String email = user.getEmail();
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(User::getEmail, user.getEmail());
+        lqw.eq(User::getEmail, email);
         User one = userMapper.selectOne(lqw);
-
         if (one != null) {
             return new Result(CONFLICT,"该邮箱已被注册！");
         }
 
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
+        }
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
@@ -123,10 +147,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result update(User user) {
+    public Result update(User user, String code) {
 
         if (user == null) {
             return new Result(BAD_REQUEST,"表单为空");
+        }
+        String email = user.getEmail();
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
         }
 
         // 如果密码不为空，则加密

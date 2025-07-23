@@ -17,6 +17,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/users/password",
                                      "/users/code",
                                      "/users/register",
+                                     "/users/sendCodeByEmail",
                                      "/softwares/SearchSoftwareNew",
                                      "/softwares/SearchTypeNew",
                                      "/softwares/SearchSoftwareType",
