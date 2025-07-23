@@ -26,4 +26,6 @@ public interface UserService {
     User getUser(Long id);
 
     Result sendCodeByEmail(String email);
+
+    boolean updateAvatar(Long userId, String avatarUrl);
 }

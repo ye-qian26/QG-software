@@ -3,7 +3,6 @@ package com.qg.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
 import com.qg.domain.User;
@@ -12,12 +11,8 @@ import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
 import com.qg.utils.EmailService;
 import com.qg.utils.HashSaltUtil;
-import org.springframework.beans.BeanUtils;
 import com.qg.utils.RegexUtils;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 import static com.qg.domain.Code.*;
 import static com.qg.utils.Constants.LOGIN_USER_KEY;
 import static com.qg.utils.Constants.LOGIN_USER_TTL;
-import static com.qg.utils.HashSaltUtil.verifyHashPassword;
 import static com.qg.utils.RedisConstants.LOGIN_CODE_KEY;
 import static com.qg.utils.RedisConstants.LOGIN_CODE_TTL;
 
@@ -44,19 +38,18 @@ public class UserServiceImpl implements UserService {
     private StringRedisTemplate stringRedisTemplate;
 
 
-
     @Autowired
     private EmailService emailService;
 
 
     @Override
-    public Map<String,Object> loginByPassword(String email, String password) {
+    public Map<String, Object> loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
         System.out.println(loginUser);
-        if(loginUser == null){
+        if (loginUser == null) {
             return null;
         }
 
@@ -64,7 +57,7 @@ public class UserServiceImpl implements UserService {
         String token = UUID.randomUUID().toString();
         UserDto userDto = BeanUtil.copyProperties(loginUser, UserDto.class);
         System.out.println(userDto);
-        Map<String,Object> usermap =  BeanUtil.beanToMap(userDto, new HashMap<>(),
+        Map<String, Object> usermap = BeanUtil.beanToMap(userDto, new HashMap<>(),
                 CopyOptions.create()
                         .setIgnoreNullValue(true)
                         .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
@@ -72,8 +65,8 @@ public class UserServiceImpl implements UserService {
 
 
         String tokenKey = LOGIN_USER_KEY + token;
-        stringRedisTemplate.opsForHash().putAll(tokenKey,usermap);
-        stringRedisTemplate.expire(tokenKey,LOGIN_USER_TTL, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForHash().putAll(tokenKey, usermap);
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
 
         Map<String, Object> map = new HashMap<>();
         map.put("token", token);
@@ -111,7 +104,7 @@ public class UserServiceImpl implements UserService {
         User one = userMapper.selectOne(lqw);
 
         if (one != null) {
-            return new Result(CONFLICT,"该邮箱已被注册！");
+            return new Result(CONFLICT, "该邮箱已被注册！");
         }
 
         // 对密码进行加密处理
@@ -119,14 +112,14 @@ public class UserServiceImpl implements UserService {
 
         userMapper.insert(user);
 
-        return new Result(CREATED,"恭喜你，注册成功！");
+        return new Result(CREATED, "恭喜你，注册成功！");
     }
 
     @Override
     public Result update(User user) {
 
         if (user == null) {
-            return new Result(BAD_REQUEST,"表单为空");
+            return new Result(BAD_REQUEST, "表单为空");
         }
 
         // 如果密码不为空，则加密
@@ -135,10 +128,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userMapper.updateById(user) > 0) {
-            return new Result(SUCCESS,"修改成功！");
+            return new Result(SUCCESS, "修改成功！");
         }
 
-        return new Result(NOT_FOUND,"网络错误！");
+        return new Result(NOT_FOUND, "网络错误！");
     }
 
     @Override
@@ -201,5 +194,17 @@ public class UserServiceImpl implements UserService {
         emailService.sendSimpleEmail(email, "验证码", code);
         System.out.println("已发送验证码到邮箱到 " + email);
         return new Result(SUCCESS, "验证码发送成功~");
+    }
+
+
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param avatarUrl
+     * @return
+     */
+    @Override
+    public boolean updateAvatar(Long userId, String avatarUrl) {
+        return userMapper.updateAvatar(userId, avatarUrl) > 0;
     }
 }
