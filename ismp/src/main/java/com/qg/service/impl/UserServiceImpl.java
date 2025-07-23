@@ -28,8 +28,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.qg.domain.Code.*;
-import static com.qg.utils.Constants.LOGIN_USER_KEY;
-import static com.qg.utils.Constants.LOGIN_USER_TTL;
+import static com.qg.utils.RedisConstants.LOGIN_USER_KEY;
+import static com.qg.utils.RedisConstants.LOGIN_USER_TTL;
 import static com.qg.utils.HashSaltUtil.verifyHashPassword;
 import static com.qg.utils.RedisConstants.LOGIN_CODE_KEY;
 import static com.qg.utils.RedisConstants.LOGIN_CODE_TTL;
