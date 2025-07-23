@@ -4,12 +4,15 @@ package com.qg.service;
 import com.qg.domain.ApplyDeveloper;
 import com.qg.domain.ApplySoftware;
 import com.qg.domain.Message;
+import com.qg.domain.Software;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
 public interface MessageService {
+
+    boolean adminUpdateSoftwareInformation(Software software);
 
     List<Message> checkIfHaveNewMessage(Long userId);
 
