@@ -4,12 +4,15 @@ package com.qg.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.qg.domain.Ban;
+import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.domain.User;
 
 import com.qg.dto.UserDto;
 import com.qg.service.BanService;
 import com.qg.service.UserService;
+import com.qg.utils.EmailService;
+import com.qg.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +35,8 @@ public class UserController {
     @Autowired
     private BanService banService;
 
-
+    @Autowired
+    private EmailService emailService;
 
 
     @GetMapping("/password")
@@ -61,7 +65,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    @PutMapping("/updata")
+    @PutMapping("/update")
     public Result update(@RequestBody User user) {
         return userService.update(user);
     }
@@ -88,5 +92,12 @@ public class UserController {
             return  new Result(BAD_GATEWAY,"获取失败");
         }
         return new Result(SUCCESS,user,"获取成功");
+    }
+
+    @PostMapping("/sendCodeByEmail")
+    public Result sendCodeByEmail(@RequestParam("email") String email) {
+        System.out.println(email);
+        // 发送验证码到邮箱
+        return userService.sendCodeByEmail(email);
     }
 }

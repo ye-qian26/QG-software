@@ -17,6 +17,24 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+
+    /**
+     * 管理员修改软件信息后
+     * 通知开发商
+     */
+    @PostMapping("/adminUpdateInfo")
+    public Result adminUpdateSoftwareInformation(@RequestBody Software software) {
+        if (software == null) {
+            return new Result(Code.BAD_REQUEST, "软件信息为空");
+        }
+        if (messageService.adminUpdateSoftwareInformation(software)) {
+            return new Result(Code.SUCCESS, "已通知id为:"
+                    + software.getAuthorId() + "的开发者");
+        } else {
+            return new Result(Code.NOT_FOUND, "开发者不存在");
+        }
+    }
+
     /**
      * 用户获取所有通知信息
      */

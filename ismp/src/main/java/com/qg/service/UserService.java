@@ -24,4 +24,6 @@ public interface UserService {
     double getPriceById(Long id);
 
     User getUser(Long id);
+
+    Result sendCodeByEmail(String email);
 }

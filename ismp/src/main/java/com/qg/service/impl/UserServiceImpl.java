@@ -2,6 +2,7 @@ package com.qg.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
@@ -9,10 +10,14 @@ import com.qg.domain.User;
 import com.qg.dto.UserDto;
 import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
+import com.qg.utils.EmailService;
 import com.qg.utils.HashSaltUtil;
 import org.springframework.beans.BeanUtils;
+import com.qg.utils.RegexUtils;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,8 @@ import static com.qg.domain.Code.*;
 import static com.qg.utils.Constants.LOGIN_USER_KEY;
 import static com.qg.utils.Constants.LOGIN_USER_TTL;
 import static com.qg.utils.HashSaltUtil.verifyHashPassword;
+import static com.qg.utils.RedisConstants.LOGIN_CODE_KEY;
+import static com.qg.utils.RedisConstants.LOGIN_CODE_TTL;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,6 +42,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public Map<String,Object> loginByPassword(String email, String password) {
@@ -153,5 +165,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public Result sendCodeByEmail(String email) {
+        // 判断是否是无效邮箱地址
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+        // 符合，生成验证码
+        String code = RandomUtil.randomNumbers(6);
+        System.out.println("验证码：" + code);
+        // 保存验证码到 redis 中
+        stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+        // 发送验证码到邮箱
+        emailService.sendSimpleEmail(email, "验证码", code);
+        System.out.println("已发送验证码到邮箱到 " + email);
+        return new Result(SUCCESS, "验证码发送成功~");
     }
 }
