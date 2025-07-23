@@ -2,6 +2,7 @@ package com.qg.service.impl;
 
 import com.qg.domain.Software;
 import com.qg.mapper.SoftwareMapper;
+import com.qg.repository.SoftwareRedisRepository;
 import com.qg.service.SoftwareSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,53 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
     @Autowired
     private SoftwareMapper softwareMapper;
+    @Autowired
+    private SoftwareRedisRepository softwareRedisRepository;
 
     //主页轮播图接口
     public List<Software> SearchSoftwareNew() {
-        List<Software> list = new ArrayList<Software>();
-        list = softwareMapper.selectTop10ByStatusOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED);
-        return list;
+        System.out.println("package com.qg.service.impl.SearchSoftwareNew");
+        // 先尝试从Redis获取缓存数据
+        List<Software> cachedList = softwareRedisRepository.getPublishedPicture();
+        if (cachedList != null && !cachedList.isEmpty()) {
+            return cachedList;
+        }
+        System.out.println("缓存不存在");
+
+        // 缓存不存在，从数据库查询
+        List<Software> dbList = softwareMapper
+                .selectTop10ByStatusOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED);
+        System.out.println("数据库查询成功" + dbList);
+
+        // 将查询结果存入Redis缓存
+        if (dbList != null && !dbList.isEmpty()) {
+            softwareRedisRepository.cachePublishedPicture(dbList);
+            System.out.println("存入缓存成功");
+        }
+        return dbList;
     }
 
     //类别的最新10个接口
     public List<Software> SearchTypeNew(String type) {
-        List<Software> list = new ArrayList<Software>();
-        list = softwareMapper.selectTop10ByStatusAndTypeOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED, type);
-        return list;
+        System.out.println("package com.qg.service.impl.SearchTypeNew" + type);
+        // 先尝试从Redis获取缓存数据
+        List<Software> cachedList = softwareRedisRepository.getCachedTypeNew(type);
+        if (cachedList != null && !cachedList.isEmpty()) {
+            return cachedList;
+        }
+        System.out.println("缓存不存在");
+
+        // 缓存不存在，从数据库查询
+        List<Software> dbList = softwareMapper
+                .selectTop10ByStatusAndTypeOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED, type);
+        System.out.println("数据库查询成功" + dbList);
+
+        // 将查询结果存入Redis缓存
+        if (dbList != null && !dbList.isEmpty()) {
+            softwareRedisRepository.cacheTypeNew(type, dbList);
+            System.out.println("存入缓存成功");
+        }
+        return dbList;
     }
 
 
