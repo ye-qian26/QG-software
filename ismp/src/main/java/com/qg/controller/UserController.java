@@ -30,9 +30,6 @@ public class UserController {
     @Autowired
     private BanService banService;
 
-
-
-
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
         User user = userService.loginByPassword(email, password);
