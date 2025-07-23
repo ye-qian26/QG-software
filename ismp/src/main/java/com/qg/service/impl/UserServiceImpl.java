@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+
     @Override
     public User loginByPassword(String email, String password) {
 
@@ -53,7 +54,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loginByCode(String email, String code) {
+    public Result loginByCode(String email, String code) {
+        // 判断 邮箱 格式
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+        // 符合 格式
+        // 判断用户是否存在
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getEmail, email);
+        User user = userMapper.selectOne(lqw);
+        if (user == null) {
+            return new Result(NOT_FOUND, "该用户尚未未注册");
+        }
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
+        }
+
+
         return null;
     }
 

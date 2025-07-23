@@ -53,7 +53,8 @@ public class UserController {
 
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
-        return new Result(FEATURES_ARE_NOT_DEVELOPED, "该功能尚未开发");
+        userService.loginByCode(email, code);
+        return null;
     }
 
     @PostMapping("/register")
