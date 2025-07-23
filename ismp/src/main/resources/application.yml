@@ -23,6 +23,17 @@ spring:
           starttls:
             enable: true
             required: true
+  data:
+    redis:
+      host: 192.168.203.200
+      port: 6379
+      password: qnbz7089yq
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
 
 server:
   port: 8080

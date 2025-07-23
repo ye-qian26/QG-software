@@ -4,6 +4,7 @@ package com.qg.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.qg.domain.Ban;
+import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.domain.User;
 
@@ -60,7 +61,7 @@ public class UserController {
         return userService.register(user);
     }
 
-    @PutMapping("/updata")
+    @PutMapping("/update")
     public Result update(@RequestBody User user) {
         return userService.update(user);
     }
@@ -90,7 +91,9 @@ public class UserController {
     }
 
     @PostMapping("/sendCodeByEmail")
-    public Result sendCodeByEmail(@RequestParam String email) {
-        return null;
+    public Result sendCodeByEmail(@RequestParam("email") String email) {
+        System.out.println(email);
+        // 发送验证码到邮箱
+        return userService.sendCodeByEmail(email);
     }
 }
