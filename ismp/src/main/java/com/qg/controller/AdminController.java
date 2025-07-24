@@ -11,6 +11,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -55,6 +56,28 @@ public class AdminController {
             return new Result(Code.FORBIDDEN, "权限不足");
         }
         List<AdminManageUserVO> list = adminService.getAllUser();
+        if (list == null || list.isEmpty()) {
+            return new Result(Code.NOT_FOUND, "当前无用户信息");
+        } else {
+            return new Result(Code.SUCCESS, list, "获取用户信息成功");
+        }
+
+    }
+
+
+    /**
+     * 根据名字模糊查询用户
+     * @param request
+     * @param name
+     * @return
+     */
+    @GetMapping("/name")
+    public Result getUserByName(HttpServletRequest request, @RequestParam String name) {
+        String token = request.getHeader("Authorization");
+        if (!identify(token)) {
+            return new Result(Code.FORBIDDEN, "权限不足");
+        }
+        List<AdminManageUserVO> list = adminService.getUserByName(name);
         if (list == null || list.isEmpty()) {
             return new Result(Code.NOT_FOUND, "当前无用户信息");
         } else {
