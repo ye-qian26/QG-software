@@ -6,6 +6,7 @@ import com.qg.domain.Software;
 import java.util.List;
 
 public interface EquipmentService {
+
     int saveEquipment(Equipment equipment);
 
     List<Software> selectPurchased(Long userId);
@@ -18,5 +19,8 @@ public interface EquipmentService {
 
     int addAppointment(Equipment equipment);
 
+    boolean updateCode(Equipment equipment);
+
     List<Software> adminGetAllOrderSoftware();
+
 }
