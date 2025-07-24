@@ -51,7 +51,7 @@ public interface SubscribeMapper extends BaseMapper<Subscribe> {
      */
     @Select("SELECT u.id, u.name, u.avatar, u.role" +
             "FROM user u" +
-            " LEFT JOIN subscribe s ON u.id = s.user_id " +
+            "INNER JOIN subscribe s ON u.id = s.user_id" +
             "WHERE s.developer_id = #{userId}")
     List<FanVO> getMyFan(@Param("userId") Long userId);
 }
