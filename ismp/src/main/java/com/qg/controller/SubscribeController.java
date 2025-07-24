@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.qg.domain.Code.BAD_REQUEST;
+import static com.qg.domain.Code.SUCCESS;
+
 @RestController
 @RequestMapping("/subscribes")
 public class SubscribeController {
@@ -43,7 +46,7 @@ public class SubscribeController {
             System.out.println("==>关注成功！");
             return new Result(Code.SUCCESS, "关注成功!");
         } else {
-            return new Result(Code.BAD_REQUEST, "开发者不存在或已关注！");
+            return new Result(BAD_REQUEST, "开发者不存在或已关注！");
         }
     }
 
@@ -57,7 +60,18 @@ public class SubscribeController {
             System.out.println("==>取消关注成功！");
             return new Result(Code.SUCCESS, "取消关注成功!");
         } else {
-            return new Result(Code.BAD_REQUEST, "开发者不存在或未关注！");
+            return new Result(BAD_REQUEST, "开发者不存在或未关注！");
         }
+    }
+
+
+    @GetMapping("/isSubscribe")
+    public Result isSubscribe (@RequestParam Long userId,@RequestParam Long developerId) {
+        if (userId <= 0 || developerId <= 0) {
+            return new Result(BAD_REQUEST,"查询错误");
+        }
+        boolean flag = subscribeService.isSubscribe(userId,developerId);
+
+        return flag ? new Result(SUCCESS,true,"已关注") : new Result(SUCCESS, false , "未关注");
     }
 }
