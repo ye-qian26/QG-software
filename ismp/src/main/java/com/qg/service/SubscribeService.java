@@ -14,11 +14,8 @@ public interface SubscribeService {
 
     boolean unsubscribe(Subscribe subscribe);
 
-<<<<<<< HEAD
-    List<User> getAllSubscribe(Long userId);
-
     boolean isSubscribe(Long userId, Long developerId);
-=======
+
     List<SubscribeVO> getMySubscribe(Long userId);
->>>>>>> 30d6dca0f0a4f023df7c662cc063e2bfeee98a54
+
 }

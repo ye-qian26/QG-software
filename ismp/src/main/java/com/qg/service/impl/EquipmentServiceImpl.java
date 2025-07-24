@@ -8,8 +8,14 @@ import com.qg.domain.Software;
 import com.qg.mapper.EquipmentMapper;
 import com.qg.mapper.SoftwareMapper;
 import com.qg.service.EquipmentService;
+import com.qg.utils.NetWorkCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.List;
 
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_BOUGHT;
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_ORDER;
@@ -74,6 +80,11 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
+    @Override
+    public List<Equipment> selectAllAppointment() {
+        return equipmentMapper.selectList(null);
+    }
+
 
     /**
      * 管理员查看所有用户的预约软件
@@ -83,6 +94,14 @@ public class EquipmentServiceImpl implements EquipmentService {
     public IPage<Software> adminGetAllOrderSoftware(Integer current, Integer size) {
         Page<Software> page = new Page<>(current, size);
         return softwareMapper.adminGetAllOrderSoftware(page);
+    }
+
+    @Override
+    public boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException {
+        String netWorkCode = NetWorkCode.getNetWorkCode();
+        equipment.setCode1(netWorkCode);
+
+        return equipmentMapper.updateById(equipment) > 0;
     }
 
     @Override

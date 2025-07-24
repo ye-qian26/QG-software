@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.qg.domain.Equipment;
 import com.qg.domain.Software;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public interface EquipmentService {
@@ -24,5 +26,10 @@ public interface EquipmentService {
 
     boolean updateCode(Equipment equipment);
 
+
+
+    List<Software> adminGetAllOrderSoftware();
+
+    boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException;
 
 }
