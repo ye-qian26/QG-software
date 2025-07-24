@@ -211,6 +211,9 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectById(id);
     }
 
+
+
+
     @Override
     public Result sendCodeByEmail(String email) {
         // 判断是否是无效邮箱地址
@@ -239,4 +242,5 @@ public class UserServiceImpl implements UserService {
     public boolean updateAvatar(Long userId, String avatarUrl) {
         return userMapper.updateAvatar(userId, avatarUrl) > 0;
     }
+
 }
