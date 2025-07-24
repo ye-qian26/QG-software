@@ -1,6 +1,8 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qg.domain.Equipment;
 import com.qg.domain.Software;
 import com.qg.mapper.EquipmentMapper;
@@ -8,8 +10,6 @@ import com.qg.mapper.SoftwareMapper;
 import com.qg.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_BOUGHT;
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_ORDER;
@@ -34,8 +34,10 @@ public class EquipmentServiceImpl implements EquipmentService {
      * @return
      */
     @Override
-    public List<Software> selectPurchased(Long userId) {
-        return softwareMapper.getAllBuySoftware(userId);
+    public IPage<Software> selectPurchased(Long userId, Integer current, Integer size) {
+        System.out.println("==>userId" + userId + "==>current" + current + "==>size" + size);
+        Page<Software> page = new Page<>(current, size);
+        return softwareMapper.selectPurchased(page, userId);
     }
 
     @Override
@@ -53,8 +55,9 @@ public class EquipmentServiceImpl implements EquipmentService {
      * @return
      */
     @Override
-    public List<Software> selectAppointment(Long userId) {
-        return softwareMapper.getAllOrderSoftware(userId);
+    public IPage<Software> selectAppointment(Long userId, Integer current, Integer size) {
+        Page<Software> page = new Page<>(current, size);
+        return softwareMapper.getAllOrderSoftware(page, userId);
     }
 
     @Override
@@ -76,8 +79,10 @@ public class EquipmentServiceImpl implements EquipmentService {
      * 管理员查看所有用户的预约软件
      * @return
      */
-    public List<Software> adminGetAllOrderSoftware() {
-        return softwareMapper.adminGetAllOrderSoftware();
+    @Override
+    public IPage<Software> adminGetAllOrderSoftware(Integer current, Integer size) {
+        Page<Software> page = new Page<>(current, size);
+        return softwareMapper.adminGetAllOrderSoftware(page);
     }
 
     @Override
