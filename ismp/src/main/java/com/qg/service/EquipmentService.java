@@ -18,4 +18,7 @@ public interface EquipmentService {
     int addAppointment(Equipment equipment);
 
     List<Equipment> selectAllAppointment();
+
+    boolean updateCode(Equipment equipment);
+
 }

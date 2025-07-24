@@ -70,4 +70,9 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.selectList(queryWrapper);
     }
 
+    @Override
+    public boolean updateCode(Equipment equipment) {
+        return equipmentMapper.updateById(equipment) > 0;
+    }
+
 }

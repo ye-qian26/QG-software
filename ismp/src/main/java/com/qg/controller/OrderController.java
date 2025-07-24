@@ -9,8 +9,12 @@ import com.qg.service.EquipmentService;
 import com.qg.service.OrderService;
 import com.qg.service.UserService;
 import com.qg.utils.Constants;
+import com.qg.utils.NetWorkCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import static com.qg.domain.Code.*;
@@ -31,15 +35,20 @@ public class OrderController {
 
 
     @PostMapping("/buy")
-    public Result buy(@RequestBody Order order) {
+    public Result buy(@RequestBody Order order) throws SocketException, UnknownHostException {
         long userId = order.getUserId();
         long authorId = order.getDeveloperId();
         double price = order.getPrice();
         long softwareId = order.getSoftwareId();
 
         Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
-        Equipment equipment = new Equipment(userId, softwareId, status);
 
+
+        String networkCode = NetWorkCode.getNetWorkCode();
+
+        Equipment equipment = new Equipment(userId, softwareId, status, networkCode);
+
+        System.out.println(equipment);
 
         int transaction = userService.transaction(userId, authorId, price);
 
