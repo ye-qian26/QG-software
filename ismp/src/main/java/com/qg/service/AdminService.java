@@ -8,4 +8,6 @@ import java.util.List;
 @Transactional
 public interface AdminService {
     List<AdminManageUserVO> getAllUser();
+
+    List<AdminManageUserVO> getUserByName(String name);
 }

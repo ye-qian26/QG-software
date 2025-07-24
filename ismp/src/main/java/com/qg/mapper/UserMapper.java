@@ -42,9 +42,36 @@ public interface UserMapper extends BaseMapper<User> {
             "END AS status, " +
 
             "b.start_time as startTime, " +
-            "b.end_time as endTime, b.is_deleted " +
+            "b.end_time as endTime, " +
+            "b.is_deleted AS isDeleted " +
             "FROM user u " +
             "LEFT JOIN ban b ON u.id = b.user_id " +
             "GROUP BY u.id, b.id, u.name")
     List<AdminManageUserVO> getAllUser();
+
+
+    /**
+     * 用户名模糊查询
+     * @param name
+     * @return
+     */
+    @Select("SELECT u.id, b.id as banId, u.name, u.avatar, u.role, " +
+
+            // 判断用户当前时间是否处于冻结期内
+            "CASE WHEN b.id IS NOT NULL " +
+            "     AND b.end_time > NOW() " +
+            "     AND b.is_deleted = 0 " +
+            "     THEN 0 " +        // 0表示被冻结
+            "     ELSE 1 " +        // 1表示正常
+            "END AS status, " +
+
+            "b.start_time as startTime, " +
+            "b.end_time as endTime, " +
+            "b.is_deleted AS isDeleted " +
+            "FROM user u " +
+            "LEFT JOIN ban b ON u.id = b.user_id " +
+            "WHERE u.name LIKE CONCAT('%', #{name}, '%') " +
+            "GROUP BY u.id, b.id, u.name")
+    List<AdminManageUserVO> getUserByName(@Param("name") String name);
 }
+
