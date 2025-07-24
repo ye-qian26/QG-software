@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import static com.qg.domain.Code.*;
@@ -126,12 +128,16 @@ public class EquipmentController {
     }
 
 
-
-
-    @PutMapping
+    @PutMapping("/update")
     public Result update(@RequestBody Equipment equipment) {
         boolean flag = equipmentService.updateCode(equipment);
         return flag ? new Result(SUCCESS,"修改成功") : new Result(BAD_GATEWAY,"修改失败");
+    }
+
+    @PostMapping("/addNetWorkCode")
+    public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
+        boolean flag = equipmentService.addNetWorkCode(equipment);
+        return flag ? new Result(SUCCESS,"绑定成功") : new Result(BAD_GATEWAY,"绑定失败");
     }
 
 

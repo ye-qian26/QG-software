@@ -3,6 +3,8 @@ package com.qg.service;
 import com.qg.domain.Equipment;
 import com.qg.domain.Software;
 
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 public interface EquipmentService {
@@ -26,4 +28,5 @@ public interface EquipmentService {
 
     List<Software> adminGetAllOrderSoftware();
 
+    boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException;
 }
