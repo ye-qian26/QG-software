@@ -15,7 +15,8 @@ public class FileUploadHandler {
     public static final String UPLOAD_DIR = "uploads";
     public static final String IMAGE_DIR = "images";
     public static final String DOCUMENT_DIR = "documents";
-    public static final String PUBLIC_URL = "https://47.113.224.195";
+    public static final String INSTALL_DIR = "installs";
+    public static final String PUBLIC_URL = "http://47.113.224.195:30410";
 
     // 保存文件到指定目录
     public static String saveFile(MultipartFile file, String subDir) throws IOException {
@@ -55,6 +56,16 @@ public class FileUploadHandler {
         String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         return fileExtension.matches("\\.(pdf|docx|doc)$");
     }
+
+    // 验证安装包类型
+    public static boolean isValidInstallFile(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        if (fileName == null) return false;
+
+        String fileExtension = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
+        return fileExtension.matches("\\.(zip|tar|tar.gz)$");
+    }
+
 
     // 根据数据库中的相对路径生成完整URL
     public static String generatePublicUrl(String relativePath) {
