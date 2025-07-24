@@ -7,6 +7,7 @@ import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.service.ApplyDeveloperService;
 import com.qg.utils.FileUploadHandler;
+import com.qg.utils.JsonParserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,9 +52,7 @@ public class ApplyDeveloperController {
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
 
             // 1. 解析 JSON 字符串为 Software 对象
-            ObjectMapper objectMapper = new ObjectMapper();
-            ApplyDeveloper applyDeveloper = objectMapper.readValue(applyDeveloperJson, ApplyDeveloper.class);
-
+            ApplyDeveloper applyDeveloper = JsonParserUtil.fromJson(applyDeveloperJson, ApplyDeveloper.class);
             // 添加绝对路径到 applyDeveloper 中
             applyDeveloper.setMaterial(filePath);
 
