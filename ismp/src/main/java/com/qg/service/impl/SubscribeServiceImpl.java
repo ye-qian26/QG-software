@@ -1,17 +1,20 @@
 package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+
 import com.qg.utils.Constants;
 import com.qg.domain.Subscribe;
 import com.qg.domain.User;
 import com.qg.mapper.SubscribeMapper;
 import com.qg.mapper.UserMapper;
 import com.qg.service.SubscribeService;
+import com.qg.vo.SubscribeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class SubscribeServiceImpl implements SubscribeService {
@@ -20,6 +23,7 @@ public class SubscribeServiceImpl implements SubscribeService {
     private SubscribeMapper subscribeMapper;
     @Autowired
     private UserMapper userMapper;
+
 
     /**
      * 用户关注某个开发商
@@ -66,20 +70,8 @@ public class SubscribeServiceImpl implements SubscribeService {
      * 用户查看所有关注的开发商
      */
     @Override
-    public List<User> getAllSubscribe(Long userId) {
-        List<Subscribe> subscribeList = subscribeMapper.selectList(
-                // 查找关注开发者的id
-                new QueryWrapper<Subscribe>().eq("user_id", userId)
-        );
-
-        // 提取所有被关注用户的ID
-        List<Long> developerIds = subscribeList.stream()
-                .map(Subscribe::getDeveloperId)
-                .collect(Collectors.toList());
-
-        // 查询这些开发者的所有信息
-        return userMapper.selectBatchIds(developerIds);
-
+    public List<SubscribeVO> getMySubscribe(Long userId) {
+        return subscribeMapper.getMySubscribe(userId);
     }
 
 }
