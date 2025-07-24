@@ -1,10 +1,13 @@
 package com.qg.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.qg.domain.ApplyDeveloper;
 import com.qg.domain.ApplySoftware;
 import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.service.ApplySoftwareService;
 import com.qg.utils.FileUploadHandler;
+import com.qg.utils.JsonParserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,11 +38,11 @@ public class ApplySoftwareController {
 
     /**
      * 添加 发布软件 申请
-     * @param applySoftware
+     * @param applySoftwareJson
      * @return
      */
     @PostMapping
-    public Result add(@RequestBody ApplySoftware applySoftware, @RequestBody MultipartFile file) {
+    public Result add(@RequestParam("applySoftware") String applySoftwareJson, @RequestBody MultipartFile file) {
         try {
             // 判断 文件类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {
@@ -48,6 +51,9 @@ public class ApplySoftwareController {
             }
             // 保存文件到服务器上，并获取绝对路径
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            // 1. 解析 JSON 字符串为 Software 对象
+            ApplySoftware applySoftware = JsonParserUtil.fromJson(applySoftwareJson, ApplySoftware.class);
+
             // 将 绝对路径 保存 到 applySoftware 中
             applySoftware.setMaterial(filePath);
 

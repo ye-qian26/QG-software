@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Review;
 import com.qg.mapper.ReviewMapper;
 import com.qg.service.ReviewService;
+import com.qg.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +34,14 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.insert(review);
     }
 
+    /**
+     * 查看某个软件下的所有评论
+     * @param softwareId
+     * @return
+     */
     @Override
-    public List<Review> selectBySoftware(Long softwareId) {
-        LambdaQueryWrapper<Review> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Review::getSoftwareId, softwareId);
-        List<Review> reviews = reviewMapper.selectList(queryWrapper);
-        return reviews;
+    public List<ReviewVO> selectBySoftware(Long softwareId) {
+        return reviewMapper.getAllReviewBySoftwareId(softwareId);
     }
 
     @Override

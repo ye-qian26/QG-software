@@ -6,6 +6,7 @@ import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.service.SoftwareService;
 import com.qg.utils.FileUploadHandler;
+import com.qg.utils.JsonParserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 
 import static com.qg.utils.FileUploadHandler.IMAGE_DIR;
+import static com.qg.utils.FileUploadHandler.INSTALL_DIR;
 
 @RestController
 @RequestMapping("/softwares")
@@ -27,28 +29,32 @@ public class SoftwareController {
 
     /**
      * 软件发布
-     * @param software
-     * @param file
+     * @param softwareJson
+     * @param picture
      * @return
      */
     @PostMapping("/addSoftware")
-    public Result addSoftware(@RequestBody Software software,@RequestBody MultipartFile file) {
+    public Result addSoftware(@RequestParam("software") String softwareJson, @RequestParam("picture") MultipartFile picture, @RequestParam("file") MultipartFile file) {
         try {
 
-            System.out.println(file.getOriginalFilename());
+            System.out.println(picture.getOriginalFilename());
             // 判断 文件类型
-            if (!FileUploadHandler.isValidDocumentFile(file)) {
+            if (!FileUploadHandler.isValidImageFile(picture) || !FileUploadHandler.isValidInstallFile(file)) {
                 // 文档 类型错误
-                return new Result(Code.BAD_REQUEST, "文档类型错误");
+                return new Result(Code.BAD_REQUEST, "类型错误");
             }
             // 保存文件到服务器上，并获取绝对路径
-            String filePath = FileUploadHandler.saveFile(file, IMAGE_DIR);
+            String picturePath = FileUploadHandler.saveFile(picture, IMAGE_DIR);
+            String linkPath = FileUploadHandler.saveFile(file, INSTALL_DIR);
+            Software software = JsonParserUtil.fromJson(softwareJson, Software.class);
+
             //保存绝对路径到software的link变量里
-            software.setPicture(filePath);
+            software.setPicture(picturePath);
+            software.setLink(linkPath);
             //System.out.println(software.getAuthorId());
-            int sum = softwareService.addSoftware(software);
-            if (sum > 0) {
-                Result result = new Result(Code.SUCCESS, "软件上传成功！");
+            Software software1 = softwareService.addSoftware(software);
+            if (software1 != null) {
+                Result result = new Result(Code.SUCCESS, software1,"软件上传成功！");
                 return result;
             } else {
                 Result result = new Result(Code.BAD_REQUEST, "软件上传失败！");

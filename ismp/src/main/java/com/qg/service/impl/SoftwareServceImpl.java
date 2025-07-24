@@ -22,11 +22,17 @@ public class SoftwareServceImpl implements SoftwareService {
     private SoftwareMapper softwareMapper;
 
     //审核前需要先上传app信息
-    public int addSoftware(Software software) {
+    public Software addSoftware(Software software) {
 
         int sum = 0;
         sum=softwareMapper.insert(software);
-        return sum;
+        if(sum>0){
+            return software;
+        }
+        else{
+            return null;
+        }
+
     }
 
     //管理员待审核/已审核的app信息获取
@@ -78,5 +84,6 @@ public class SoftwareServceImpl implements SoftwareService {
         sum=softwareMapper.deleteById(id);
         return sum;
     }
+
 
 }
