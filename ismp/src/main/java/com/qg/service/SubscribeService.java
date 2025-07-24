@@ -3,6 +3,7 @@ package com.qg.service;
 import com.qg.domain.Subscribe;
 
 import com.qg.domain.User;
+import com.qg.vo.SubscribeVO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public interface SubscribeService {
 
     boolean unsubscribe(Subscribe subscribe);
 
-    List<User> getAllSubscribe(Long userId);
+    List<SubscribeVO> getMySubscribe(Long userId);
 }

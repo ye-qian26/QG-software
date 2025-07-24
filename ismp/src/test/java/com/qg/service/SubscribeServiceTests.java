@@ -12,6 +12,6 @@ public class SubscribeServiceTests {
 
     @Test
     public void subscribeTest() {
-        subscribeService.getAllSubscribe(2L).forEach(System.out::println);
+        subscribeService.getMySubscribe(2L).forEach(System.out::println);
     }
 }
