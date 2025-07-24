@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static com.qg.domain.Code.*;
@@ -24,6 +25,7 @@ import static com.qg.domain.Code.*;
 
 import static com.qg.domain.Code.SUCCESS;
 import static com.qg.utils.FileUploadHandler.DOCUMENT_DIR;
+import static com.qg.utils.FileUploadHandler.IMAGE_DIR;
 
 
 @RestController
@@ -40,6 +42,17 @@ public class UserController {
     @Autowired
     private EmailService emailService;
 
+    @PostMapping("/upload/pdf")
+    public Result uploadFile(@RequestParam("file") MultipartFile file) {
+        try {
+            System.out.println(file.getOriginalFilename());
+            String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            return new Result(Code.SUCCESS, filePath); // 返回文件路径
+        } catch (IOException e) {
+            return new Result(Code.INTERNAL_ERROR, "上传失败");
+        }
+    }
+
     /**
      * 用户通过邮箱登录
      * @param email
@@ -50,6 +63,11 @@ public class UserController {
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
         Map<String, Object> map = userService.loginByPassword(email, password);
+        System.out.println(email);
+        System.out.println(password);
+        if (map == null) {
+            return new Result(NOT_FOUND, "用户未注册");
+        }
         User user = (User) map.get("user");
         if (user == null) {
             return new Result(BAD_REQUEST, "未注册");
@@ -171,7 +189,7 @@ public class UserController {
                 return new Result(BAD_REQUEST, "图片大小不能超过2MB");
             }
 
-            String avatarUrl = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            String avatarUrl = FileUploadHandler.saveFile(file, IMAGE_DIR);
 
             // 判断头像是否上传成功返回相应的结果
             if (userService.updateAvatar(userId, avatarUrl)) {

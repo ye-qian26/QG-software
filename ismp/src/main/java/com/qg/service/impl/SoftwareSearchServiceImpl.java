@@ -32,7 +32,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
         // 缓存不存在，从数据库查询
         List<Software> dbList = softwareMapper
-                .selectTop10ByStatusOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED);
+                .selectTop10LatestPerNameExcludingStatus(SOFTWARE_STATUS_UNREVIEWED);
         System.out.println("数据库查询成功" + dbList);
 
         // 将查询结果存入Redis缓存
@@ -55,7 +55,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
         // 缓存不存在，从数据库查询
         List<Software> dbList = softwareMapper
-                .selectTop10ByStatusAndTypeOrderByIdDesc(SOFTWARE_STATUS_UNREVIEWED, type);
+                .selectTop8LatestPerName(SOFTWARE_STATUS_UNREVIEWED, type);
         System.out.println("数据库查询成功" + dbList);
 
         // 将查询结果存入Redis缓存
@@ -86,6 +86,12 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         String name=software.getName();
         List<Software> list=new ArrayList<>();
         list=softwareMapper.selectSoftwareVersion(name);
+        return list;
+    }
+
+    //同名软件只返回最新的版本
+    public List<Software> selectLastRecordsPerName(Long authorId) {
+        List<Software> list = softwareMapper.selectLastRecordsPerName(authorId);
         return list;
     }
 
