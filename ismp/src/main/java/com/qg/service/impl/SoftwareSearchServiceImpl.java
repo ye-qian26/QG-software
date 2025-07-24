@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qg.utils.Constants.SOFTWARE_STATUS_ORDER;
 import static com.qg.utils.Constants.SOFTWARE_STATUS_UNREVIEWED;
 
 @Service
@@ -94,6 +93,17 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
     public List<Software> selectLastRecordsPerName(Long authorId) {
         List<Software> list = softwareMapper.selectLastRecordsPerName(authorId);
         return list;
+    }
+
+
+    /**
+     * 根据软件名称模糊匹配
+     * @param fuzzyName
+     * @return
+     */
+    @Override
+    public List<Software> getSoftwareByFuzzyName(String fuzzyName) {
+        return softwareMapper.getSoftwareByFuzzyName(fuzzyName);
     }
 
 }

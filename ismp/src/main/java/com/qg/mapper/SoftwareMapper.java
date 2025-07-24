@@ -46,4 +46,41 @@ public interface SoftwareMapper extends BaseMapper<Software> {
             "ON t1.name = t2.name AND t1.id < t2.id AND t1.author_id = t2.author_id " +
             "WHERE t2.id IS NULL AND t1.author_id = #{author_id}")
     List<Software> selectLastRecordsPerName(@Param("author_id") Long author_id);
+
+    /**
+     * 获取用户的所有已预约软件
+     * @param userId
+     * @return
+     */
+    @Select("SELECT s.* FROM software s " +
+            "JOIN equipment e ON s.id = e.software_id " +
+            "WHERE e.user_id = #{userId} AND e.status = 0")
+    List<Software> getAllOrderSoftware(@Param("userId") Long userId);
+
+    /**
+     * 获取用户的所有已购买软件
+     * @param userId
+     * @return
+     */
+    @Select("SELECT s.* FROM software s " +
+            "JOIN equipment e ON s.id = e.software_id " +
+            "WHERE e.user_id = #{userId} AND e.status = 1")
+    List<Software> getAllBuySoftware(@Param("userId") Long userId);
+
+    /**
+     * 管理员查看所有用户的预约软件
+     * @return
+     */
+    @Select("SELECT s.* FROM software s " +
+            "JOIN equipment e ON s.id = e.software_id " +
+            "WHERE e.status = 0")
+    List<Software> adminGetAllOrderSoftware();
+
+    /**
+     * 根据软件名称模糊匹配
+     * @param name
+     * @return
+     */
+    @Select("SELECT * FROM software WHERE name LIKE CONCAT('%', #{name}, '%') AND is_deleted = 0")
+    List<Software> getSoftwareByFuzzyName(@Param("name") String name);
 }

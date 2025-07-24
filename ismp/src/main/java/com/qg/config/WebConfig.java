@@ -6,9 +6,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //@Configuration
-/*public class WebConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
-    @Autowired
+//    @Autowired
     private TokenInterceptor tokenInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -25,4 +25,4 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                                      "/softwares/SearchSoftwareVersion"
                         ); // 排除路径
     }
-}*/
+}

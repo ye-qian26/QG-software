@@ -2,7 +2,9 @@ package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Equipment;
+import com.qg.domain.Software;
 import com.qg.mapper.EquipmentMapper;
+import com.qg.mapper.SoftwareMapper;
 import com.qg.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Autowired
     EquipmentMapper equipmentMapper;
+    @Autowired
+    SoftwareMapper softwareMapper;
 
     @Override
     public int saveEquipment(Equipment equipment) {
@@ -24,11 +28,14 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
+    /**
+     * 获取用户的所有已购买软件
+     * @param userId
+     * @return
+     */
     @Override
-    public List selectPurchased(Long userId) {
-        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Equipment::getUserId, userId).eq(Equipment::getStatus, EQUIPMENT_STATUS_BOUGHT);
-        return equipmentMapper.selectList(queryWrapper);
+    public List<Software> selectPurchased(Long userId) {
+        return softwareMapper.getAllBuySoftware(userId);
     }
 
     @Override
@@ -40,13 +47,14 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipment != null;
     }
 
+    /**
+     * 获取用户的所有已预约软件
+     * @param userId
+     * @return
+     */
     @Override
-    public List<Equipment> selectAppointment(Long userId) {
-        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Equipment::getUserId, userId).eq(Equipment::getStatus, EQUIPMENT_STATUS_ORDER);
-        List<Equipment> equipments = equipmentMapper.selectList(queryWrapper);
-
-        return equipments;
+    public List<Software> selectAppointment(Long userId) {
+        return softwareMapper.getAllOrderSoftware(userId);
     }
 
     @Override
@@ -63,11 +71,18 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
+
+    /**
+     * 管理员查看所有用户的预约软件
+     * @return
+     */
+    public List<Software> adminGetAllOrderSoftware() {
+        return softwareMapper.adminGetAllOrderSoftware();
+    }
+
     @Override
-    public List<Equipment> selectAllAppointment() {
-        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Equipment::getStatus, EQUIPMENT_STATUS_ORDER);
-        return equipmentMapper.selectList(queryWrapper);
+    public boolean updateCode(Equipment equipment) {
+        return equipmentMapper.updateById(equipment) > 0;
     }
 
 }
