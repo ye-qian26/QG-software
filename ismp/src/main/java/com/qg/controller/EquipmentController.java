@@ -126,4 +126,15 @@ public class EquipmentController {
     }
 
 
+
+
+    @PutMapping
+    public Result update(@RequestBody Equipment equipment) {
+        boolean flag = equipmentService.updateCode(equipment);
+        return flag ? new Result(SUCCESS,"修改成功") : new Result(BAD_GATEWAY,"修改失败");
+    }
+
+
+
+
 }
