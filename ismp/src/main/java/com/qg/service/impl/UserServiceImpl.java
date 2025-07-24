@@ -1,21 +1,35 @@
 package com.qg.service.impl;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Result;
 import com.qg.domain.User;
 import com.qg.dto.UserDto;
 import com.qg.mapper.UserMapper;
 import com.qg.service.UserService;
+import com.qg.utils.EmailService;
 import com.qg.utils.HashSaltUtil;
+import com.qg.utils.RegexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static com.qg.domain.Code.*;
+
+import static com.qg.utils.RedisConstants.LOGIN_USER_KEY;
+import static com.qg.utils.RedisConstants.LOGIN_USER_TTL;
 import static com.qg.utils.HashSaltUtil.verifyHashPassword;
+
+import static com.qg.utils.RedisConstants.LOGIN_CODE_KEY;
+import static com.qg.utils.RedisConstants.LOGIN_CODE_TTL;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,49 +37,121 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+
+    @Autowired
+    private EmailService emailService;
+
+
     @Override
-    public User loginByPassword(String email, String password) {
+    public Map<String, Object> loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
-        if(loginUser == null){
+        System.out.println(loginUser);
+        if (loginUser == null) {
             return null;
         }
 
+        //token验证
         String token = UUID.randomUUID().toString();
+        UserDto userDto = BeanUtil.copyProperties(loginUser, UserDto.class);
+        System.out.println(userDto);
+        Map<String, Object> usermap = BeanUtil.beanToMap(userDto, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
+        //usermap.put("lastActiveTime", System.currentTimeMillis());
 
-        return loginUser;
+
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, usermap);
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("token", token);
+        map.put("user", loginUser);
+        return map;
     }
 
     @Override
-    public User loginByCode(String email, String code) {
-        return null;
-    }
-
-    @Override
-    public Result register(User user) {
+    public Result loginByCode(String email, String code) {
+        // 判断 邮箱 格式
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+        // 符合 格式
+        // 判断用户是否存在
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(User::getEmail, user.getEmail());
-        User one = userMapper.selectOne(lqw);
-
-        if (one != null) {
-            return new Result(CONFLICT,"该邮箱已被注册！");
+        lqw.eq(User::getEmail, email);
+        User user = userMapper.selectOne(lqw);
+        if (user == null) {
+            return new Result(NOT_FOUND, "该用户尚未未注册");
+        }
+        // 从redis中取出验证码
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
         }
 
+        // 随机生成token，作为的登录令牌
+        String token = cn.hutool.core.lang.UUID.randomUUID().toString(true);
+        // 7.2.将User对象转换为HashMap存储
+        UserDto userDTO = BeanUtil.copyProperties(user, UserDto.class);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
+        // 7.3.存储
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 7.4.设置token有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userDTO);
+        map.put("token", token);
+        return new Result(SUCCESS, map, "");
+    }
+
+    @Override
+    public Result register(User user, String code) {
+        String email = user.getEmail();
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getEmail, email);
+        User one = userMapper.selectOne(lqw);
+        if (one != null) {
+            return new Result(CONFLICT, "该邮箱已被注册！");
+        }
+
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
+        }
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
         userMapper.insert(user);
 
-        return new Result(CREATED,"恭喜你，注册成功！");
+        return new Result(CREATED, "恭喜你，注册成功！");
     }
 
     @Override
-    public Result update(User user) {
+    public Result update(User user, String code) {
 
         if (user == null) {
-            return new Result(BAD_REQUEST,"表单为空");
+            return new Result(BAD_REQUEST, "表单为空");
+        }
+        String email = user.getEmail();
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
         }
 
         // 如果密码不为空，则加密
@@ -74,10 +160,10 @@ public class UserServiceImpl implements UserService {
         }
 
         if (userMapper.updateById(user) > 0) {
-            return new Result(SUCCESS,"修改成功！");
+            return new Result(SUCCESS, "修改成功！");
         }
 
-        return new Result(NOT_FOUND,"网络错误！");
+        return new Result(NOT_FOUND, "网络错误！");
     }
 
     @Override
@@ -126,5 +212,35 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
+
+    @Override
+    public Result sendCodeByEmail(String email) {
+        // 判断是否是无效邮箱地址
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+        // 符合，生成验证码
+        String code = RandomUtil.randomNumbers(6);
+        System.out.println("验证码：" + code);
+        // 保存验证码到 redis 中
+        stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+        // 发送验证码到邮箱
+        emailService.sendSimpleEmail(email, "验证码", code);
+        System.out.println("已发送验证码到邮箱到 " + email);
+        return new Result(SUCCESS, "验证码发送成功~");
+    }
+
+
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param avatarUrl
+     * @return
+     */
+    @Override
+    public boolean updateAvatar(Long userId, String avatarUrl) {
+        return userMapper.updateAvatar(userId, avatarUrl) > 0;
+    }
 
 }

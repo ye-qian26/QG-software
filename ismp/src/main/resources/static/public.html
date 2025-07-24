@@ -59,7 +59,7 @@
             const formData = new FormData();
             formData.append('file', file);
 
-            fetch('/upload', {
+            fetch('/softwares/addSoftware', {
                 method: 'POST',
                 body: formData
             })

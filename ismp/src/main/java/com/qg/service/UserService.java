@@ -4,15 +4,17 @@ import com.qg.domain.Result;
 import com.qg.domain.User;
 import com.qg.dto.UserDto;
 
+import java.util.Map;
+
 
 public interface UserService {
-    User loginByPassword(String email, String password);
+    Map<String,Object> loginByPassword(String email, String password);
 
-    User loginByCode(String email, String code);
+    Result loginByCode(String email, String code);
 
-    Result register(User user);
+    Result register(User user, String code);
 
-    Result update(User user);
+    Result update(User user, String code);
 
     Result delete(Long id);
 
@@ -22,5 +24,10 @@ public interface UserService {
     double getPriceById(Long id);
 
     User getUser(Long id);
+
+
+    Result sendCodeByEmail(String email);
+
+    boolean updateAvatar(Long userId, String avatarUrl);
 
 }

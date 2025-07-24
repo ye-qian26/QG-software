@@ -1,31 +1,33 @@
 package com.qg.dto;
 
 public class UserDto {
-    private int userId;
+    private int id;
     private String name;
+    private Integer role;
 
     public UserDto() {
     }
 
-    public UserDto(int userId, String name) {
-        this.userId = userId;
+    public UserDto(int id, String name, Integer role) {
+        this.id = id;
         this.name = name;
+        this.role = role;
     }
 
     /**
      * 获取
-     * @return userId
+     * @return id
      */
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
     /**
      * 设置
-     * @param userId
+     * @param id
      */
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -44,7 +46,23 @@ public class UserDto {
         this.name = name;
     }
 
+    /**
+     * 获取
+     * @return role
+     */
+    public Integer getRole() {
+        return role;
+    }
+
+    /**
+     * 设置
+     * @param role
+     */
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
     public String toString() {
-        return "UserDto{userId = " + userId + ", name = " + name + "}";
+        return "UserDto{id = " + id + ", name = " + name + ", role = " + role + "}";
     }
 }
