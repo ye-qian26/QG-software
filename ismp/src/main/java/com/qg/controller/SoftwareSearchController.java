@@ -89,12 +89,12 @@ public class SoftwareSearchController {
 
     /**
      * 查看该软件的多个版本
-     * @param id
+     * @param name
      * @return
      */
     @GetMapping("/SearchSoftwareVersion")
-    public Result SearchSoftwareVersion(@RequestParam Long id) {
-        List<Software> list = softwareSearchService.SearchSoftwareVersion(id);
+    public Result SearchSoftwareVersion(@RequestParam String name) {
+        List<Software> list = softwareSearchService.SearchSoftwareVersion(name);
         if (list.size() > 0) {
             Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
             return result;
