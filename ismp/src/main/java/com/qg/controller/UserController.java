@@ -36,6 +36,7 @@ public class UserController {
     @Autowired
     private BanService banService;
 
+
     @Autowired
     private EmailService emailService;
 
@@ -45,6 +46,7 @@ public class UserController {
      * @param password
      * @return
      */
+
     @GetMapping("/password")
     public Result loginByPassword(@RequestParam String email, @RequestParam String password) {
         Map<String, Object> map = userService.loginByPassword(email, password);

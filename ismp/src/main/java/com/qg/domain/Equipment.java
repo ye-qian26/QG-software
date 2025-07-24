@@ -20,6 +20,14 @@ public class Equipment {
         this.status = status;
     }
 
+    public Equipment(Long userId, Long softwareId, Integer status, String code1) {
+        this.userId = userId;
+        this.softwareId = softwareId;
+        this.status = status;
+        this.code1 = code1;
+    }
+
+
     public Equipment(Long id, Long userId, Long softwareId, Integer status, String code1, String code2, String code3) {
         this.id = id;
         this.userId = userId;

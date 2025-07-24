@@ -80,4 +80,9 @@ public class EquipmentServiceImpl implements EquipmentService {
         return softwareMapper.adminGetAllOrderSoftware();
     }
 
+    @Override
+    public boolean updateCode(Equipment equipment) {
+        return equipmentMapper.updateById(equipment) > 0;
+    }
+
 }
