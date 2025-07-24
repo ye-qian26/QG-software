@@ -132,8 +132,6 @@ public class SoftwareController {
         }
 
     }
-<<<<<<< HEAD
-=======
 
     /**
      * 第三方逻辑下架软件
@@ -174,5 +172,4 @@ public class SoftwareController {
     }
 
 
->>>>>>> 30d6dca0f0a4f023df7c662cc063e2bfeee98a54
 }

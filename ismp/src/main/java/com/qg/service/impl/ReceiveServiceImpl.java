@@ -54,11 +54,12 @@ public class ReceiveServiceImpl implements ReceiveService {
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
 
         for (Equipment equipment : equipmentList) {
-            if (equipment.getCode1().equals(mac) || equipment.getCode2().equals(mac)  || equipment.getCode3().equals(mac)) {
-                System.out.println("验证成功");
+            System.out.println(equipment);
+            if (mac.equals(equipment.getCode1()) || mac.equals(equipment.getCode2()) || mac.equals(equipment.getCode3())) {
                 return "true";
             }
         }
+
 
         System.out.println("未知错误");
         return "false";
