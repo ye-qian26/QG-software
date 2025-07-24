@@ -1,5 +1,6 @@
 package com.qg.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qg.utils.Constants;
 import com.qg.domain.Subscribe;
@@ -80,6 +81,20 @@ public class SubscribeServiceImpl implements SubscribeService {
         // 查询这些开发者的所有信息
         return userMapper.selectBatchIds(developerIds);
 
+    }
+
+    @Override
+    public boolean isSubscribe(Long userId, Long developerId) {
+        LambdaQueryWrapper<Subscribe> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Subscribe::getUserId, userId).eq(Subscribe::getDeveloperId, developerId);
+
+        Subscribe subscribe = subscribeMapper.selectOne(queryWrapper);
+
+        if (subscribe == null) {
+            return false;
+        }
+
+        return true;
     }
 
 }
