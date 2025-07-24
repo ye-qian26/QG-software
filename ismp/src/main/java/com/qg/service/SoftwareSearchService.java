@@ -20,4 +20,6 @@ public interface SoftwareSearchService {
 
     //不同版本的展示
     public List<Software> SearchSoftwareVersion(Long id);
+
+    public List<Software> selectLastRecordsPerName(Long id);
 }

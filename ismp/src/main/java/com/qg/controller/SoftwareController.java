@@ -28,27 +28,27 @@ public class SoftwareController {
     /**
      * 软件发布
      * @param software
-     * @param file
+     * @param picture
      * @return
      */
     @PostMapping("/addSoftware")
-    public Result addSoftware(@RequestBody Software software,@RequestBody MultipartFile file) {
+    public Result addSoftware(@RequestBody Software software,@RequestBody MultipartFile picture) {
         try {
 
-            System.out.println(file.getOriginalFilename());
+            System.out.println(picture.getOriginalFilename());
             // 判断 文件类型
-            if (!FileUploadHandler.isValidDocumentFile(file)) {
+            if (!FileUploadHandler.isValidImageFile(picture)) {
                 // 文档 类型错误
                 return new Result(Code.BAD_REQUEST, "文档类型错误");
             }
             // 保存文件到服务器上，并获取绝对路径
-            String filePath = FileUploadHandler.saveFile(file, IMAGE_DIR);
+            String filePath = FileUploadHandler.saveFile(picture, IMAGE_DIR);
             //保存绝对路径到software的link变量里
             software.setPicture(filePath);
             //System.out.println(software.getAuthorId());
-            int sum = softwareService.addSoftware(software);
-            if (sum > 0) {
-                Result result = new Result(Code.SUCCESS, "软件上传成功！");
+            Software software1 = softwareService.addSoftware(software);
+            if (software1 != null) {
+                Result result = new Result(Code.SUCCESS, software1,"软件上传成功！");
                 return result;
             } else {
                 Result result = new Result(Code.BAD_REQUEST, "软件上传失败！");
@@ -138,7 +138,7 @@ public class SoftwareController {
      * @param software
      * @return
      */
-    @DeleteMapping
+    @DeleteMapping("/deleteSoftware")
     public Result deleteSoftware(@RequestBody Software software) {
         Long id = software.getId();
         int sum = 0;
@@ -157,7 +157,7 @@ public class SoftwareController {
      * @param software
      * @return
      */
-    @DeleteMapping
+    @DeleteMapping("/roleDelete")
     public Result roleDelete(@RequestBody Software software) {
         Long id = software.getId();
         int sum = 0;

@@ -103,4 +103,22 @@ public class SoftwareSearchController {
             return result;
         }
     }
+
+    /**
+     * 查看各个软件的最新版本
+     * @param authorId
+     * @return
+     */
+    @GetMapping("/selectLastRecordsPerName")
+    public Result selectLastRecordsPerName(@RequestParam Long authorId){
+        List<Software> list = softwareSearchService.selectLastRecordsPerName(authorId);
+        if (list.size() > 0) {
+            Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
+            return result;
+        }
+        else {
+            Result result = new Result(Code.BAD_REQUEST, "获取信息失败！");
+            return result;
+        }
+    }
 }
