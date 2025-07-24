@@ -42,7 +42,7 @@ public interface UserMapper extends BaseMapper<User> {
             "END AS status, " +
 
             "b.start_time as startTime, " +
-            "b.end_time as endTime " +
+            "b.end_time as endTime, b.is_deleted " +
             "FROM user u " +
             "LEFT JOIN ban b ON u.id = b.user_id " +
             "GROUP BY u.id, b.id, u.name")
