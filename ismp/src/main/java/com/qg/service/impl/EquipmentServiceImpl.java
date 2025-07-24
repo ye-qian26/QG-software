@@ -80,12 +80,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
-    @Override
-    public List<Equipment> selectAllAppointment() {
-        return equipmentMapper.selectList(null);
-    }
-
-
     /**
      * 管理员查看所有用户的预约软件
      * @return

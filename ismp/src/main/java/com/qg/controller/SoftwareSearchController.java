@@ -6,10 +6,7 @@ import com.qg.domain.Software;
 import com.qg.service.SoftwareSearchService;
 import com.qg.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -143,4 +140,23 @@ public class SoftwareSearchController {
             return result;
         }
     }
+
+
+    /**
+     *
+     * @param developerId
+     * @return
+     */
+    @GetMapping("/getSoftwareByDeveloperId/{developerId}")
+    public Result getSoftwareByDeveloperId(@PathVariable Long developerId){
+        System.out.println(developerId + "<==controller");
+        List<Software> list = softwareSearchService.getSoftwareByDeveloperId(developerId);
+        if (!list.isEmpty()) {
+            return new Result(Code.SUCCESS, list, "获取该开发商的所有产品成功！");
+        }
+        else {
+            return new Result(Code.BAD_REQUEST, "获取该开发商的所有产品失败！");
+        }
+    }
+
 }
