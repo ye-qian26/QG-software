@@ -1,8 +1,10 @@
 package com.qg.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qg.domain.ApplyDeveloper;
 import com.qg.domain.Code;
 import com.qg.domain.Result;
+import com.qg.domain.Software;
 import com.qg.service.ApplyDeveloperService;
 import com.qg.utils.FileUploadHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,11 @@ public class ApplyDeveloperController {
 
     /**
      * 添加 成为开发商 申请
-     * @param applyDeveloper
+     * @param applyDeveloperJson
      * @return
      */
     @PostMapping
-    public Result add(@RequestBody ApplyDeveloper applyDeveloper, @RequestBody MultipartFile file) {
+    public Result add(@RequestParam("applyDeveloper") String applyDeveloperJson, @RequestParam("file") MultipartFile file) {
         try {
             // 判断 文件 类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {
@@ -47,6 +49,11 @@ public class ApplyDeveloperController {
             }
             // 保存文件到服务器上，并获取绝对路径
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+
+            // 1. 解析 JSON 字符串为 Software 对象
+            ObjectMapper objectMapper = new ObjectMapper();
+            ApplyDeveloper applyDeveloper = objectMapper.readValue(applyDeveloperJson, ApplyDeveloper.class);
+
             // 添加绝对路径到 applyDeveloper 中
             applyDeveloper.setMaterial(filePath);
 
