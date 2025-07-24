@@ -21,7 +21,6 @@ public class ApplyDeveloperController {
     @Autowired
     private ApplyDeveloperService applyDeveloperService;
 
-    private FileUploadHandler fileUploadHandler;
     /**
      * 查询所有 成为开发商 申请（按时间降序排列）
      * @return
@@ -43,11 +42,11 @@ public class ApplyDeveloperController {
     public Result add(@RequestBody ApplyDeveloper applyDeveloper, @RequestBody MultipartFile file) {
         try {
             // 判断 文件 类型
-            if (!fileUploadHandler.isValidDocumentFile(file)) {
+            if (!FileUploadHandler.isValidDocumentFile(file)) {
                 return new Result(Code.BAD_REQUEST, "文档格式错误");
             }
             // 保存文件到服务器上，并获取绝对路径
-            String filePath = fileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
             // 添加绝对路径到 applyDeveloper 中
             applyDeveloper.setMaterial(filePath);
 

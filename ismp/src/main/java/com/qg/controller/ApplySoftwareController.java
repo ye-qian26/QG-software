@@ -21,7 +21,6 @@ public class ApplySoftwareController {
     @Autowired
     private ApplySoftwareService applySoftwareService;
 
-    private FileUploadHandler fileUploadHandler;
     /**
      * 查询所有 发布软件 申请 （按时间降序排序）
      * @return
@@ -43,12 +42,12 @@ public class ApplySoftwareController {
     public Result add(@RequestBody ApplySoftware applySoftware, @RequestBody MultipartFile file) {
         try {
             // 判断 文件类型
-            if (!fileUploadHandler.isValidDocumentFile(file)) {
+            if (!FileUploadHandler.isValidDocumentFile(file)) {
                 // 文档 类型错误
                 return new Result(Code.BAD_REQUEST, "文档类型错误");
             }
             // 保存文件到服务器上，并获取绝对路径
-            String filePath = fileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
             // 将 绝对路径 保存 到 applySoftware 中
             applySoftware.setMaterial(filePath);
 

@@ -18,7 +18,7 @@ public class FileUploadHandler {
     public static final String PUBLIC_URL = "https://47.113.224.195";
 
     // 保存文件到指定目录
-    public String saveFile(MultipartFile file, String subDir) throws IOException {
+    public static String saveFile(MultipartFile file, String subDir) throws IOException {
         // 创建存储目录
         Path uploadPath = Paths.get(UPLOAD_DIR).resolve(subDir);
         if (!Files.exists(uploadPath)) {
@@ -39,7 +39,7 @@ public class FileUploadHandler {
     }
 
     // 验证图片文件类型
-    public boolean isValidImageFile(MultipartFile file) {
+    public static boolean isValidImageFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         if (fileName == null) return false;
 
@@ -48,7 +48,7 @@ public class FileUploadHandler {
     }
 
     // 验证文档文件类型
-    public boolean isValidDocumentFile(MultipartFile file) {
+    public static boolean isValidDocumentFile(MultipartFile file) {
         String fileName = file.getOriginalFilename();
         if (fileName == null) return false;
 
@@ -57,7 +57,7 @@ public class FileUploadHandler {
     }
 
     // 根据数据库中的相对路径生成完整URL
-    public String generatePublicUrl(String relativePath) {
+    public static String generatePublicUrl(String relativePath) {
         // 移除相对路径前可能的斜杠（避免重复）
         if (relativePath.startsWith("/")) {
             relativePath = relativePath.substring(1);

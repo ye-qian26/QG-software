@@ -33,7 +33,11 @@ public class OrderController {
     private UserService userService;
 
 
-
+    /**
+     * 用户发起交易
+     * @param order
+     * @return
+     */
     @PostMapping("/buy")
     public Result buy(@RequestBody Order order) throws SocketException, UnknownHostException {
         long userId = order.getUserId();
@@ -65,7 +69,11 @@ public class OrderController {
     }
 
 
-
+    /**
+     * 用户查找自己所有的订单
+     * @param id
+     * @return
+     */
     @GetMapping("/findAllById/{id}")
     public Result findAllByUserId(@PathVariable Long id) {
         if (id <= 0) {
@@ -85,8 +93,10 @@ public class OrderController {
     }
 
 
-
-    //查看购买的订单
+    /**
+     * 查看购买的订单
+     * @return
+     */
     @GetMapping("/findAll")
     public Result findAll() {
         List<Order> orderList = orderService.selectAll();
