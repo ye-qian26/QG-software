@@ -64,6 +64,15 @@ public class SubscribeController {
         }
     }
 
+    /**
+     * @Author lrt
+     * @Description //TODO
+     * @Date 19:21 2025/7/24
+     * @Param  用户查看对开发商的关注状态
+     * @param userId
+     * @param developerId
+     * @return com.qg.domain.Result
+     **/
 
     @GetMapping("/isSubscribe")
     public Result isSubscribe (@RequestParam Long userId,@RequestParam Long developerId) {

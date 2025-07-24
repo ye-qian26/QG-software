@@ -171,7 +171,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateAvatar")
-    public Result updateAvatar(@RequestBody MultipartFile file,
+    public Result updateAvatar(@RequestParam("avatar") MultipartFile file,
                                @RequestParam("userId") Long userId) {
         try {
             // 验证文件是否为空
