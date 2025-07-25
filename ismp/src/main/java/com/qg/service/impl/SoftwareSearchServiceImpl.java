@@ -81,7 +81,8 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
     }
 
     //该软件不同版本的查看
-    public List<Software> SearchSoftwareVersion(String name) {
+    public List<Software> SearchSoftwareVersion(Long id) {
+        String name = softwareMapper.selectById(id).getName();
         List<Software> list=new ArrayList<>();
         list=softwareMapper.selectSoftwareVersion(name);
         return list;

@@ -30,4 +30,5 @@ public interface UserService {
 
     boolean updateAvatar(Long userId, String avatarUrl);
 
+    int updateMoney(Long id, Double money);
 }
