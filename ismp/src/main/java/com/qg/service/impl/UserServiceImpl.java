@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
+
         User loginUser = userMapper.selectOne(lqw);
         System.out.println(loginUser);
         if (loginUser == null || !HashSaltUtil.verifyHashPassword(password, loginUser.getPassword())) {

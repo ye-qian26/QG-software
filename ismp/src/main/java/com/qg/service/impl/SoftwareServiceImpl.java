@@ -17,22 +17,21 @@ import static com.qg.utils.Constants.SOFTWARE_STATUS_ORDER;
 import static com.qg.utils.Constants.SOFTWARE_STATUS_SALE;
 
 @Service
-public class SoftwareServceImpl implements SoftwareService {
+public class SoftwareServiceImpl implements SoftwareService {
     @Autowired
     private SoftwareMapper softwareMapper;
 
     //审核前需要先上传app信息
     public Software addSoftware(Software software) {
-
-        int sum = 0;
-        sum=softwareMapper.insert(software);
-        if(sum>0){
-            return software;
+        LambdaQueryWrapper<Software> qw = new LambdaQueryWrapper<>();
+        qw.eq(Software::getVersion,software.getVersion());
+        qw.eq(Software::getName,software.getName());
+        Software software1 = softwareMapper.selectOne(qw);
+        if (software1 == null) {
+            return softwareMapper.insert(software) > 0 ? software : null;
+        } else {
+            return softwareMapper.updateById(software) > 0 ? software : null;
         }
-        else{
-            return null;
-        }
-
     }
 
     //管理员待审核/已审核的app信息获取

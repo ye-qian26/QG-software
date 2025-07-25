@@ -175,6 +175,7 @@ public class ApplyDeveloperController {
      */
     @PutMapping("/agreeApplyDeveloper")
     public Result agreeApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+        System.out.println("agreeApplyDeveloper ===>>>" + applyDeveloper);
         if (applyDeveloper == null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }
@@ -195,6 +196,7 @@ public class ApplyDeveloperController {
      */
     @PutMapping("/disagreeApplyDeveloper")
     public Result disagreeApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+        System.out.println("disagreeApplyDeveloper ===>>>" + applyDeveloper);
         if (applyDeveloper == null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }
