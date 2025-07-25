@@ -36,7 +36,7 @@ public class FileUploadHandler {
         Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
         // 保存 绝对路径
-        return generatePublicUrl(uniqueFileName);
+        return generatePublicUrl(uniqueFileName, subDir);
     }
 
     // 验证图片文件类型
@@ -68,12 +68,12 @@ public class FileUploadHandler {
 
 
     // 根据数据库中的相对路径生成完整URL
-    public static String generatePublicUrl(String relativePath) {
+    public static String generatePublicUrl(String relativePath, String subDir) {
         // 移除相对路径前可能的斜杠（避免重复）
         if (relativePath.startsWith("/")) {
             relativePath = relativePath.substring(1);
         }
         // 拼接完整URL
-        return PUBLIC_URL + "/" + relativePath;
+        return PUBLIC_URL + "/" + UPLOAD_DIR + "/" + subDir + "/" + relativePath;
     }
 }
