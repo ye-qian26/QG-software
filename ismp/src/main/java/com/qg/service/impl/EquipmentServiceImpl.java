@@ -80,10 +80,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
-    @Override
-    public List<Equipment> selectAllAppointment() {
-        return equipmentMapper.selectList(null);
-    }
+
 
 
     /**
@@ -107,6 +104,12 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public boolean updateCode(Equipment equipment) {
         return equipmentMapper.updateById(equipment) > 0;
+    }
+
+    @Override
+    public int GetUserStatus(Long userId){
+        int status = equipmentMapper.selectById(userId).getStatus();
+        return status;
     }
 
 }
