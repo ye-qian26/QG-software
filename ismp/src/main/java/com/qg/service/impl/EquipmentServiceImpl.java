@@ -1,5 +1,6 @@
 package com.qg.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -101,7 +102,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException {
         String netWorkCode = NetWorkCode.getNetWorkCode();
-        System.out.println("===>addNetWorkCode：" + netWorkCode);
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Equipment::getUserId, equipment.getUserId())
                 .eq(Equipment::getSoftwareId, equipment.getSoftwareId())
@@ -111,7 +111,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         Equipment one = equipmentMapper.selectOne(queryWrapper);
 
         if (one == null) {
-            System.out.println("====>预约记录不存在");
             return false;
         }
 
@@ -124,16 +123,18 @@ public class EquipmentServiceImpl implements EquipmentService {
         }
 
         // 检查绑定数量是否已达上限
-        if (one.getCode1() != null && one.getCode2() != null && one.getCode3() != null) {
+        if (!StrUtil.isBlank(one.getCode1())
+                && !StrUtil.isBlank(one.getCode2())
+                && !StrUtil.isBlank(one.getCode3())) {
             System.out.println("绑定失败：设备已绑定3个网络码");
             return false;
         }
 
-        if (one.getCode1() == null) {
+        if (StrUtil.isBlank(one.getCode1())) {
             one.setCode1(netWorkCode);
-        } else if (one.getCode2() == null) {
+        } else if (StrUtil.isBlank(one.getCode2())) {
             one.setCode2(netWorkCode);
-        } else if (one.getCode3() == null) {
+        } else if (StrUtil.isBlank(one.getCode3())) {
             one.setCode3(netWorkCode);
         }
 

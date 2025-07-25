@@ -182,9 +182,8 @@ public class EquipmentController {
 
     @PutMapping("/addNetWorkCode")
     public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
-        System.out.println("看看我执行了吗" + equipment);
         boolean flag = equipmentService.addNetWorkCode(equipment);
-        return flag ? new Result(SUCCESS, "绑定成功") : new Result(BAD_GATEWAY, "绑定失败");
+        return flag ? new Result(SUCCESS, "绑定成功") : new Result(CONFLICT, "绑定失败");
     }
 
 
