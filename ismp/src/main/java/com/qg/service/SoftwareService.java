@@ -19,4 +19,6 @@ public interface SoftwareService {
     public int deleteSoftware(Long id);
 
     public int roleDelete(Long id);
+
+    Software changeSoftwareById(Software software);
 }
