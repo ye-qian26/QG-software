@@ -190,7 +190,7 @@ public class SoftwareController {
      */
     @PutMapping("/changeSoftwareById")
     public Result changeSoftwareById(@RequestBody Software software) {
-
+        System.out.println("changeSoftwareById ===>>>" + software);
         Software software1=softwareService.changeSoftwareById(software);
         if (software1 != null) {
             Result result = new Result(Code.SUCCESS, software1,"信息获取成功！");

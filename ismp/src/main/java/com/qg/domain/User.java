@@ -1,8 +1,7 @@
 package com.qg.domain;
 
 
-
-
+import com.baomidou.mybatisplus.annotation.TableLogic;
 
 public class User {
     private Long id;
@@ -14,11 +13,14 @@ public class User {
     private String role;
     private Double money;
 
+    @TableLogic
+    private int isDeleted;
+
 
     public User() {
     }
 
-    public User(Long id, String name, String password, String avatar, String email, String phone, String role, Double money) {
+    public User(Long id, String name, String password, String avatar, String email, String phone, String role, Double money, int isDeleted) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -27,6 +29,15 @@ public class User {
         this.phone = phone;
         this.role = role;
         this.money = money;
+        this.isDeleted = isDeleted;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     /**

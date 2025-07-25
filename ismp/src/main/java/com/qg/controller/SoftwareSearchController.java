@@ -170,7 +170,9 @@ public class SoftwareSearchController {
      * 管理 审核时 查看 软件详情
      */
     @GetMapping("/getSoftwareWithMaterial")
-    public Result getSoftwareWithMaterial(@RequestParam Long id, @RequestParam Long userId) {
+    public Result getSoftwareWithMaterial(@RequestParam("id") Long id, @RequestParam("authorId") Long userId) {
+        System.out.println(id + "<==controller");
+        System.out.println(userId + "<==controller");
         if (id == null) {
             return new Result(Code.BAD_REQUEST, "请求参数出错");
         }

@@ -131,6 +131,9 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
         softwareWrapper.eq(Software::getId, id);
         Software software = softwareMapper.selectOne(softwareWrapper);
+        if (software == null) {
+            return null;
+        }
         SoftwareVO softwareVO = new SoftwareVO();
 
         // 复制软件信息到 softwareVO
@@ -142,6 +145,9 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
                 .eq(ApplySoftware::getUserId, userId);
         ApplySoftware applySoftware = applySoftwareMapper.selectOne(applySoftwareWrapper);
 
+        if (applySoftware == null) {
+            return null;
+        }
         // 复制 申请软件 佐证材料 到 softwareVO
         BeanUtils.copyProperties(applySoftware, softwareVO);
 
