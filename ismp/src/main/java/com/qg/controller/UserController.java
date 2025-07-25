@@ -156,7 +156,7 @@ public class UserController {
      * @param email
      * @return
      */
-    @PostMapping("/sendCodeByEmail")
+    @GetMapping("/sendCodeByEmail")
     public Result sendCodeByEmail(@RequestParam("email") String email) {
         System.out.println(email);
         // 发送验证码到邮箱

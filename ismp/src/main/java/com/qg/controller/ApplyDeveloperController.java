@@ -41,7 +41,7 @@ public class ApplyDeveloperController {
      * @param applyDeveloperJson
      * @return
      */
-    @PostMapping
+    @GetMapping
     public Result add(@RequestParam("applyDeveloper") String applyDeveloperJson, @RequestParam("file") MultipartFile file) {
         try {
             // 判断 文件 类型
