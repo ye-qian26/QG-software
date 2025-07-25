@@ -36,9 +36,14 @@ public class SoftwareController {
     @PostMapping("/addSoftware")
     public Result addSoftware(@RequestParam(value = "software", required = false) String softwareJson, @RequestParam(value = "picture", required = false) MultipartFile picture, @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-            System.out.println(softwareJson);
-            System.out.println(picture.getOriginalFilename());
-            System.out.println(file.getOriginalFilename());
+            System.out.println("addSoftware ===>>>" + softwareJson);
+            System.out.println("addSoftware ===>>> 图片 文件名" + picture.getOriginalFilename());
+            System.out.println("addSoftware ===>>> 文档 文件名" + file.getOriginalFilename());
+            Software software = JsonParserUtil.fromJson(softwareJson, Software.class);
+            System.out.println("addSoftware ===>>> json解析后的software： " + software);
+            if (software == null) {
+                return new Result(Code.BAD_REQUEST, "软件信息解析失败");
+            }
             // 判断 文件类型
             if (!FileUploadHandler.isValidImageFile(picture) || !FileUploadHandler.isValidInstallFile(file)) {
                 // 文档 类型错误
@@ -47,11 +52,7 @@ public class SoftwareController {
             // 保存文件到服务器上，并获取绝对路径
             String picturePath = FileUploadHandler.saveFile(picture, IMAGE_DIR);
             String linkPath = FileUploadHandler.saveFile(file, INSTALL_DIR);
-            Software software = JsonParserUtil.fromJson(softwareJson, Software.class);
-            System.out.println(software);
-            if (software == null) {
-                return new Result(Code.BAD_REQUEST, "软件信息解析失败");
-            }
+
             //保存绝对路径到software的link变量里
             software.setPicture(picturePath);
             software.setLink(linkPath);
@@ -177,6 +178,26 @@ public class SoftwareController {
             return result;
         }else {
             Result result = new Result(Code.BAD_REQUEST, "信息修改失败！");
+            return result;
+        }
+    }
+
+    /**
+     * 第三方修改软件信息
+     *
+     * @param software
+     * @return
+     */
+    @PutMapping("/changeSoftwareById")
+    public Result changeSoftwareById(@RequestBody Software software) {
+        System.out.println("changeSoftwareById ===>>>" + software);
+        Software software1=softwareService.changeSoftwareById(software);
+        if (software1 != null) {
+            Result result = new Result(Code.SUCCESS, software1,"信息获取成功！");
+            return result;
+        }
+        else {
+            Result result = new Result(Code.BAD_REQUEST,"信息获取失败！");
             return result;
         }
     }

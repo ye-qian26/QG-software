@@ -40,7 +40,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
-
     @Autowired
     private EmailService emailService;
 

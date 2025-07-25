@@ -48,6 +48,7 @@ public class UserController {
         try {
             System.out.println(file.getOriginalFilename());
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            System.out.println(filePath);
             return new Result(Code.SUCCESS, filePath); // 返回文件路径
         } catch (IOException e) {
             return new Result(Code.INTERNAL_ERROR, "上传失败");

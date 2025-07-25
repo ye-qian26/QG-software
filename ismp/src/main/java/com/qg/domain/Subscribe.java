@@ -1,6 +1,7 @@
 package com.qg.domain;
 
 
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Subscribe {
@@ -10,6 +11,9 @@ public class Subscribe {
     private Long userId;
     private Long developerId;
 
+    @TableLogic
+    private Integer isDeleted;
+
 
     public Subscribe() {
     }
@@ -18,6 +22,14 @@ public class Subscribe {
         this.id = id;
         this.userId = userId;
         this.developerId = developerId;
+    }
+
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     /**

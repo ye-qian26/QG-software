@@ -1,10 +1,12 @@
 package com.qg.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.service.SoftwareSearchService;
 import com.qg.service.SoftwareService;
+import com.qg.vo.SoftwareVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -164,4 +166,19 @@ public class SoftwareSearchController {
         }
     }
 
+    /**
+     * 管理 审核时 查看 软件详情
+     */
+    @GetMapping("/getSoftwareWithMaterial")
+    public Result getSoftwareWithMaterial(@RequestParam("id") Long id, @RequestParam("authorId") Long userId) {
+        System.out.println(id + "<==controller");
+        System.out.println(userId + "<==controller");
+        if (id == null) {
+            return new Result(Code.BAD_REQUEST, "请求参数出错");
+        }
+        SoftwareVO softwareVO = softwareSearchService.getSoftwareWithMaterial(id, userId);
+        Integer code = softwareVO != null ? Code.SUCCESS : Code.NOT_FOUND;
+        String msg = softwareVO != null ? "" : "未查询到相关信息";
+        return new Result(code, softwareVO, msg);
+    }
 }
