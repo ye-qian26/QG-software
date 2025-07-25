@@ -31,4 +31,8 @@ public interface UserService {
     boolean updateAvatar(Long userId, String avatarUrl);
 
     int updateMoney(Long id, Double money);
+
+    boolean updatePhone(Long id, String phone);
+
+    boolean updateName(Long id, String name);
 }

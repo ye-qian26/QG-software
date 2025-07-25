@@ -49,9 +49,13 @@ public class UserServiceImpl implements UserService {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
+        System.out.println("登录邮箱：" + email);
 
         User loginUser = userMapper.selectOne(lqw);
+
         System.out.println(loginUser);
+
+
         if (loginUser == null || !HashSaltUtil.verifyHashPassword(password, loginUser.getPassword())) {
             return null;
         }
@@ -159,7 +163,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result update(User user, String code) {
-
         if (user == null) {
             return new Result(BAD_REQUEST, "表单为空");
         }
@@ -168,7 +171,6 @@ public class UserServiceImpl implements UserService {
         if (cacheCode == null || !cacheCode.equals(code)) {
             return new Result(NOT_FOUND, "验证码错误");
         }
-
         // 如果密码不为空，则加密
         if (user.getPassword() != null) {
             user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
@@ -290,6 +292,36 @@ public class UserServiceImpl implements UserService {
         user.setMoney(user.getMoney() + money);
 
         return userMapper.updateById(user);
+    }
+
+    @Override
+    public boolean updatePhone(Long id, String phone) {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getId, id);
+        User user = userMapper.selectOne(lqw);
+        if (user == null) {
+            return false;
+        }
+        System.out.println("更新手机号为：" + phone);
+
+        user.setPhone(phone);
+        return userMapper.updateById(user) > 0;
+
+    }
+
+    @Override
+    public boolean updateName(Long id, String name) {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getId, id);
+        User user = userMapper.selectOne(lqw);
+        if (user == null) {
+            System.out.println("用户不存在，无法更新用户名");
+            return false;
+        }
+        System.out.println("更新用户名为：" + name);
+
+        user.setName(name);
+        return userMapper.updateById(user) > 0;
     }
 
 
