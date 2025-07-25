@@ -180,4 +180,24 @@ public class SoftwareController {
             return result;
         }
     }
+
+    /**
+     * 第三方修改软件信息
+     *
+     * @param software
+     * @return
+     */
+    @PutMapping("/changeSoftwareById")
+    public Result changeSoftwareById(@RequestBody Software software) {
+
+        Software software1=softwareService.changeSoftwareById(software);
+        if (software1 != null) {
+            Result result = new Result(Code.SUCCESS, software1,"信息获取成功！");
+            return result;
+        }
+        else {
+            Result result = new Result(Code.BAD_REQUEST,"信息获取失败！");
+            return result;
+        }
+    }
 }
