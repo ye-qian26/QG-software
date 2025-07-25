@@ -80,10 +80,10 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
-    @Override
+    /*@Override
     public List<Equipment> selectAllAppointment() {
         return equipmentMapper.selectList(null);
-    }
+    }*/
 
 
     /**

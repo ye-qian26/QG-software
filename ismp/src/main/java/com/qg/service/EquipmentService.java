@@ -28,8 +28,6 @@ public interface EquipmentService {
 
 
 
-    List<Software> adminGetAllOrderSoftware();
-
     boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException;
 
 }
