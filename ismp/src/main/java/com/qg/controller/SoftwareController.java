@@ -34,10 +34,11 @@ public class SoftwareController {
      * @return
      */
     @PostMapping("/addSoftware")
-    public Result addSoftware(@RequestParam("software") String softwareJson, @RequestParam("picture") MultipartFile picture, @RequestParam("file") MultipartFile file) {
+    public Result addSoftware(@RequestParam(value = "software", required = false) String softwareJson, @RequestParam(value = "picture", required = false) MultipartFile picture, @RequestParam(value = "file", required = false) MultipartFile file) {
         try {
-
+            System.out.println(softwareJson);
             System.out.println(picture.getOriginalFilename());
+            System.out.println(file.getOriginalFilename());
             // 判断 文件类型
             if (!FileUploadHandler.isValidImageFile(picture) || !FileUploadHandler.isValidInstallFile(file)) {
                 // 文档 类型错误
@@ -47,10 +48,14 @@ public class SoftwareController {
             String picturePath = FileUploadHandler.saveFile(picture, IMAGE_DIR);
             String linkPath = FileUploadHandler.saveFile(file, INSTALL_DIR);
             Software software = JsonParserUtil.fromJson(softwareJson, Software.class);
-
+            System.out.println(software);
+            if (software == null) {
+                return new Result(Code.BAD_REQUEST, "软件信息解析失败");
+            }
             //保存绝对路径到software的link变量里
             software.setPicture(picturePath);
             software.setLink(linkPath);
+            System.out.println(software);
             //System.out.println(software.getAuthorId());
             Software software1 = softwareService.addSoftware(software);
             if (software1 != null) {
@@ -63,7 +68,6 @@ public class SoftwareController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     /**

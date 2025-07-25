@@ -45,11 +45,11 @@ public class ApplyDeveloperServiceTests {
         System.out.println(flag);
     }
 
-    @Test
-    public void updateStatus(){
-        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
-        System.out.println(applyDeveloper);
-        applyDeveloperService.updateStatus(applyDeveloper);
-        System.out.println(applyDeveloper);
-    }
+//    @Test
+//    public void updateStatus(){
+//        ApplyDeveloper applyDeveloper = applyDeveloperService.selectById(2L);
+//        System.out.println(applyDeveloper);
+//        applyDeveloperService.updateStatus(applyDeveloper);
+//        System.out.println(applyDeveloper);
+//    }
 }

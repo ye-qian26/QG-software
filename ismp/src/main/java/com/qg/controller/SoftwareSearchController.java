@@ -6,10 +6,7 @@ import com.qg.domain.Software;
 import com.qg.service.SoftwareSearchService;
 import com.qg.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -60,6 +57,7 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareType")
     public Result SearchSoftwareType(@RequestParam String type) {
+        System.out.println(type + "<==type");
         List<Software> softwareList = softwareSearchService.SearchSoftwareType(type);
         if (softwareList.size() > 0) {
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
@@ -94,7 +92,9 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareVersion")
     public Result SearchSoftwareVersion(@RequestParam Long id) {
+        System.out.println(id + "<==controller");
         List<Software> list = softwareSearchService.SearchSoftwareVersion(id);
+        System.out.println(list);
         if (list.size() > 0) {
             Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
             return result;
@@ -133,7 +133,9 @@ public class SoftwareSearchController {
      */
     @GetMapping("/selectLastRecordsPerName")
     public Result selectLastRecordsPerName(@RequestParam Long authorId){
+        System.out.println(authorId + "<==controller");
         List<Software> list = softwareSearchService.selectLastRecordsPerName(authorId);
+        System.out.println(list);
         if (list.size() > 0) {
             Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
             return result;
@@ -143,4 +145,23 @@ public class SoftwareSearchController {
             return result;
         }
     }
+
+
+    /**
+     *
+     * @param developerId
+     * @return
+     */
+    @GetMapping("/getSoftwareByDeveloperId/{developerId}")
+    public Result getSoftwareByDeveloperId(@PathVariable Long developerId){
+        System.out.println(developerId + "<==controller");
+        List<Software> list = softwareSearchService.getSoftwareByDeveloperId(developerId);
+        if (!list.isEmpty()) {
+            return new Result(Code.SUCCESS, list, "获取该开发商的所有产品成功！");
+        }
+        else {
+            return new Result(Code.BAD_REQUEST, "获取该开发商的所有产品失败！");
+        }
+    }
+
 }

@@ -51,6 +51,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- 重新引入jedis，解决redis断连问题 -->
         <dependency>
             <groupId>redis.clients</groupId>

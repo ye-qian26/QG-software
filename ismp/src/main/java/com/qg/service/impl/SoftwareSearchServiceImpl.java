@@ -82,8 +82,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
     //该软件不同版本的查看
     public List<Software> SearchSoftwareVersion(Long id) {
-        Software software = softwareMapper.selectById(id);
-        String name=software.getName();
+        String name = softwareMapper.selectById(id).getName();
         List<Software> list=new ArrayList<>();
         list=softwareMapper.selectSoftwareVersion(name);
         return list;
@@ -104,6 +103,18 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
     @Override
     public List<Software> getSoftwareByFuzzyName(String fuzzyName) {
         return softwareMapper.getSoftwareByFuzzyName(fuzzyName);
+    }
+
+
+    /**
+     * 获取某个开发商的所有软件信息
+     * @param developerId
+     * @return
+     */
+    @Override
+    public List<Software> getSoftwareByDeveloperId(Long developerId) {
+        System.out.println(developerId + "<==service");
+        return softwareMapper.getSoftwareByDeveloperId(developerId);
     }
 
 }

@@ -127,4 +127,10 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.updateById(equipment) > 0;
     }
 
+    @Override
+    public int GetUserStatus(Long userId){
+        int status = equipmentMapper.selectById(userId).getStatus();
+        return status;
+    }
+
 }
