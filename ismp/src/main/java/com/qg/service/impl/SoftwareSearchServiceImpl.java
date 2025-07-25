@@ -1,9 +1,16 @@
 package com.qg.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.qg.domain.ApplyDeveloper;
+import com.qg.domain.ApplySoftware;
 import com.qg.domain.Software;
+import com.qg.mapper.ApplyDeveloperMapper;
+import com.qg.mapper.ApplySoftwareMapper;
 import com.qg.mapper.SoftwareMapper;
 import com.qg.repository.SoftwareRedisRepository;
 import com.qg.service.SoftwareSearchService;
+import com.qg.vo.SoftwareVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +26,8 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
     private SoftwareMapper softwareMapper;
     @Autowired
     private SoftwareRedisRepository softwareRedisRepository;
+    @Autowired
+    private ApplySoftwareMapper applySoftwareMapper;
 
     //主页轮播图接口
     public List<Software> SearchSoftwareNew() {
@@ -115,6 +124,28 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
     public List<Software> getSoftwareByDeveloperId(Long developerId) {
         System.out.println(developerId + "<==service");
         return softwareMapper.getSoftwareByDeveloperId(developerId);
+    }
+
+    @Override
+    public SoftwareVO getSoftwareWithMaterial(Long id, Long userId) {
+        LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
+        softwareWrapper.eq(Software::getId, id);
+        Software software = softwareMapper.selectOne(softwareWrapper);
+        SoftwareVO softwareVO = new SoftwareVO();
+
+        // 复制软件信息到 softwareVO
+        BeanUtils.copyProperties(software, softwareVO);
+
+        // 查询 申请 软件 的 佐证材料
+        LambdaQueryWrapper<ApplySoftware> applySoftwareWrapper = new LambdaQueryWrapper<>();
+        applySoftwareWrapper.eq(ApplySoftware::getSoftwareId, id)
+                .eq(ApplySoftware::getUserId, userId);
+        ApplySoftware applySoftware = applySoftwareMapper.selectOne(applySoftwareWrapper);
+
+        // 复制 申请软件 佐证材料 到 softwareVO
+        BeanUtils.copyProperties(applySoftware, softwareVO);
+
+        return softwareVO;
     }
 
 }

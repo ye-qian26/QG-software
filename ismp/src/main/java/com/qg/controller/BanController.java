@@ -33,9 +33,9 @@ public class BanController {
      * @param ban
      * @return
      */
-    @PostMapping
+    @PostMapping("/add")
     public Result add(@RequestBody Ban ban){
-        System.out.println(ban);
+        System.out.println("bans/add ===>>> " + ban);
         boolean flag = banService.add(ban);
         Integer code = flag ? Code.SUCCESS : Code.CONFLICT;
         String msg = flag ? "" : "冻结账户失败，请稍后重试！";
@@ -49,6 +49,7 @@ public class BanController {
      */
     @DeleteMapping
     public Result delete(@RequestBody Ban ban){
+        System.out.println(ban.getUserId());
         boolean flag = banService.delete(ban);
         Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
         String msg = flag ? "" : "删除信息失败，请稍后重试！";
