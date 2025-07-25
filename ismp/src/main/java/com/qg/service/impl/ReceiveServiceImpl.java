@@ -24,19 +24,20 @@ public class ReceiveServiceImpl implements ReceiveService {
     @Override
     public String Permissions(String data) {
 
-        if (data == null || !data.contains("mac=") || !data.contains("email=")) {
+        if (data == null || !data.contains("mac=") || !data.contains("email=") || !data.contains("name=")) {
             System.out.println("信息不全");
             return "false";
         }
 
         String[] parts = data.split(";");
-        if (parts.length < 2) {
+        if (parts.length < 3) {
             System.out.println("长度不够");
             return "false";
         }
 
         String mac = parts[0].split("=", 2)[1];
         String email = parts[1].split("=", 2)[1];
+        String name = parts[2].split("=", 2)[1];
 
         LambdaQueryWrapper<User> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(User::getEmail, email);
@@ -49,8 +50,11 @@ public class ReceiveServiceImpl implements ReceiveService {
             return "false";
         }
 
+
+
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
+        queryWrapper2.eq(Equipment::getName, name);
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
 
         for (Equipment equipment : equipmentList) {

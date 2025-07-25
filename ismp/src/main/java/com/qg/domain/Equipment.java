@@ -11,6 +11,7 @@ public class Equipment {
     private String code1;
     private String code2;
     private String code3;
+    private String name;
 
     public Equipment() {
     }
@@ -20,15 +21,15 @@ public class Equipment {
         this.status = status;
     }
 
-    public Equipment(Long userId, Long softwareId, Integer status, String code1) {
+    public Equipment(Long userId, Long softwareId, Integer status,String name) {
         this.userId = userId;
         this.softwareId = softwareId;
         this.status = status;
-        this.code1 = code1;
+        this.name = name;
     }
 
 
-    public Equipment(Long id, Long userId, Long softwareId, Integer status, String code1, String code2, String code3) {
+    public Equipment(Long id, Long userId, Long softwareId, Integer status, String code1, String code2, String code3,String name) {
         this.id = id;
         this.userId = userId;
         this.softwareId = softwareId;
@@ -36,6 +37,7 @@ public class Equipment {
         this.code1 = code1;
         this.code2 = code2;
         this.code3 = code3;
+        this.name = name;
     }
 
     /**
@@ -150,7 +152,14 @@ public class Equipment {
         this.code3 = code3;
     }
 
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String toString() {
-        return "Equipment{id = " + id + ", userId = " + userId + ", softwareId = " + softwareId + ", status = " + status + ", code1 = " + code1 + ", code2 = " + code2 + ", code3 = " + code3 + "}";
+        return "Equipment{id = " + id + ", userId = " + userId + ", softwareId = " + softwareId + ", status = " + status + ", code1 = " + code1 + ", code2 = " + code2 + ", code3 = " + code3 + "name="+ name +"}";
     }
 }
