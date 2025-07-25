@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.ApplySoftware;
 import com.qg.mapper.ApplySoftwareMapper;
 import com.qg.service.ApplySoftwareService;
+import com.qg.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import static com.qg.utils.Constants.*;
 public class ApplySoftwareServiceImpl implements ApplySoftwareService {
     @Autowired
     private ApplySoftwareMapper applySoftwareMapper;
+    @Autowired
+    private MessageService messageService;
 
     @Override
     public List<ApplySoftware> selectAllOrderByTime() {
@@ -51,20 +54,22 @@ public class ApplySoftwareServiceImpl implements ApplySoftwareService {
         return applySoftwareMapper.selectById(id);
     }
 
-    @Override
-    public boolean updateStatus(ApplySoftware applySoftware) {
-        if (applySoftware.getStatus() == 0) {
-            applySoftware.setStatus(IS_HANDLED);
-        } else {
-            applySoftware.setStatus(IS_NOT_HANDLED);
-        }
-        return applySoftwareMapper.updateById(applySoftware) > 0;
-    }
+//    @Override
+//    public boolean updateStatus(ApplySoftware applySoftware) {
+//        if (applySoftware.getStatus() == 0) {
+//            applySoftware.setStatus(IS_HANDLED);
+//        } else {
+//            applySoftware.setStatus(IS_NOT_HANDLED);
+//        }
+//        return applySoftwareMapper.updateById(applySoftware) > 0;
+//    }
 
     @Override
     public boolean deleteById(Long id) {
         return applySoftwareMapper.deleteById(id) > 0;
     }
+
+
 
     @Override
     public boolean updateStatusById(Long id) {
@@ -72,8 +77,34 @@ public class ApplySoftwareServiceImpl implements ApplySoftwareService {
         if (applySoftware.getStatus() == 0) {
             applySoftware.setStatus(IS_HANDLED);
         } else {
-            applySoftware.setStatus(IS_NOT_HANDLED);
+            return false;
         }
         return applySoftwareMapper.updateById(applySoftware) > 0;
+    }
+
+
+
+    /**
+     * 同意
+     * 申请发布软件
+     * @param applySoftware
+     * @return
+     */
+    @Override
+    public boolean agreeApplySoftware(ApplySoftware applySoftware) {
+        return this.updateStatusById(applySoftware.getId())
+                && messageService.applySoftwareSuccess(applySoftware);
+    }
+
+    /**
+     * 驳回
+     * 申请发布软件
+     * @param applySoftware
+     * @return
+     */
+    @Override
+    public boolean disagreeApplySoftware(ApplySoftware applySoftware) {
+        return this.updateStatusById(applySoftware.getId())
+                && messageService.applySoftwareFailure(applySoftware);
     }
 }

@@ -35,8 +35,9 @@ public class BanController {
      */
     @PostMapping
     public Result add(@RequestBody Ban ban){
+        System.out.println(ban);
         boolean flag = banService.add(ban);
-        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+        Integer code = flag ? Code.SUCCESS : Code.CONFLICT;
         String msg = flag ? "" : "冻结账户失败，请稍后重试！";
         return new Result(code, msg);
     }

@@ -25,4 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
                                      "/softwares/SearchSoftwareVersion"
                         ); // 排除路径
     }
+
+
 }

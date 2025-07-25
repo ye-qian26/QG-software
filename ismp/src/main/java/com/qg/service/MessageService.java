@@ -22,10 +22,9 @@ public interface MessageService {
 
     boolean deleteAllRead(Long userId);
 
-    boolean applyDeveloperSuccess(ApplyDeveloper applyDeveloper);
+    boolean applyDeveloperSuccess(Long userId);
 
-    boolean applyDeveloperFailure(ApplyDeveloper applyDeveloper);
-
+    boolean applyDeveloperFailure(Long userId, String reason);
 
     boolean applySoftwareSuccess(ApplySoftware applySoftware);
 

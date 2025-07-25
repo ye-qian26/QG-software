@@ -26,8 +26,8 @@ public interface EquipmentService {
 
     boolean updateCode(Equipment equipment);
 
-
-
     boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException;
+
+    int GetUserStatus(Long userId);
 
 }

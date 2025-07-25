@@ -26,7 +26,7 @@ public class BanServiceImpl implements BanService {
 
     @Override
     public boolean add(Ban ban) {
-        return banMapper.insert(ban) > 0;
+        return !judgeBan(ban.getUserId()) && banMapper.insert(ban) > 0;
     }
 
     @Override

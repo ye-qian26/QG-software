@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.ApplyDeveloper;
 import com.qg.mapper.ApplyDeveloperMapper;
 import com.qg.service.ApplyDeveloperService;
+import com.qg.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,8 @@ import static com.qg.utils.Constants.*;
 public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
     @Autowired
     private ApplyDeveloperMapper applyDeveloperMapper;
+    @Autowired
+    private MessageService messageService;
 
     @Override
     public List<ApplyDeveloper> selectAllOrderByTime() {
@@ -52,15 +55,15 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
         return applyDeveloperMapper.selectById(id);
     }
 
-    @Override
-    public boolean updateStatus(ApplyDeveloper applyDeveloper) {
-        if (applyDeveloper.getStatus() == 0) {
-            applyDeveloper.setStatus(IS_HANDLED);
-        } else {
-            applyDeveloper.setStatus(IS_NOT_HANDLED);
-        }
-        return applyDeveloperMapper.updateById(applyDeveloper) > 0;
-    }
+//    @Override
+//    public boolean updateStatus(ApplyDeveloper applyDeveloper) {
+//        if (applyDeveloper.getStatus() == 0) {
+//            applyDeveloper.setStatus(IS_HANDLED);
+//        } else {
+//            return false;
+//        }
+//        return applyDeveloperMapper.updateById(applyDeveloper) > 0;
+//    }
 
     @Override
     public boolean deleteById(Long id) {
@@ -73,8 +76,34 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
         if (applyDeveloper.getStatus() == 0) {
             applyDeveloper.setStatus(IS_HANDLED);
         } else {
-            applyDeveloper.setStatus(IS_NOT_HANDLED);
+            return false;
         }
         return applyDeveloperMapper.updateById(applyDeveloper) > 0;
+    }
+
+
+    /**
+     * 同意
+     * 申请成为开发者
+     * @param applyDeveloper
+     * @return
+     */
+    @Override
+    public boolean agreeApplyDeveloper(ApplyDeveloper applyDeveloper) {
+        return this.updateStatusById(applyDeveloper.getId())
+                && messageService.applyDeveloperSuccess(applyDeveloper.getUserId());
+    }
+
+    /**
+     * 驳回
+     * 申请成为开发者
+     * @param applyDeveloper
+     * @return
+     */
+    @Override
+    public boolean disagreeApplyDeveloper(ApplyDeveloper applyDeveloper) {
+        return this.updateStatusById(applyDeveloper.getId())
+                && messageService.applyDeveloperFailure(
+                        applyDeveloper.getUserId(), applyDeveloper.getReason());
     }
 }

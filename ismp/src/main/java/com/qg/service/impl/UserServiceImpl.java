@@ -52,10 +52,9 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
         System.out.println(loginUser);
-        if (loginUser == null) {
+        if (loginUser == null || !HashSaltUtil.verifyHashPassword(password, loginUser.getPassword())) {
             return null;
         }
-
         //token验证
         String token = UUID.randomUUID().toString();
         UserDto userDto = BeanUtil.copyProperties(loginUser, UserDto.class);
@@ -89,8 +88,9 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User user = userMapper.selectOne(lqw);
         if (user == null) {
-            return new Result(NOT_FOUND, "该用户尚未未注册");
+            return new Result(NOT_FOUND, "该用户尚未注册");
         }
+
         // 从redis中取出验证码
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
@@ -118,26 +118,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result register(User user, String code) {
-        String email = user.getEmail();
+
+        // 判断参数非空
+        if (user == null || code == null) {
+            return new Result(BAD_REQUEST, "存在空参");
+        }
+        // 获取用户邮箱，并做正则验证
+        String email = user.getEmail().trim();
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+
+        // 再查看验证码是否正确
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
+        }
+
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
+
+        // 判断邮箱是否已经被注册
         User one = userMapper.selectOne(lqw);
         if (one != null) {
             return new Result(CONFLICT, "该邮箱已被注册！");
         }
 
-        if (RegexUtils.isEmailInvalid(email)) {
-            return new Result(BAD_REQUEST, "邮箱格式错误");
-        }
-
-        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
-        if (cacheCode == null || !cacheCode.equals(code)) {
-            return new Result(NOT_FOUND, "验证码错误");
-        }
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
-        userMapper.insert(user);
+        // 向数据库中添加数据
+        if (userMapper.insert(user) != 1) {
+            return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
+        }
+        // 注册成功后删除验证码
+        stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
 
         return new Result(CREATED, "恭喜你，注册成功！");
     }
@@ -211,9 +226,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectById(id);
     }
 
-
-
-
     @Override
     public Result sendCodeByEmail(String email) {
         // 判断是否是无效邮箱地址
@@ -223,17 +235,29 @@ public class UserServiceImpl implements UserService {
         // 符合，生成验证码
         String code = RandomUtil.randomNumbers(6);
         System.out.println("验证码：" + code);
-        // 保存验证码到 redis 中
-        stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+
         // 发送验证码到邮箱
-        emailService.sendSimpleEmail(email, "验证码", code);
-        System.out.println("已发送验证码到邮箱到 " + email);
-        return new Result(SUCCESS, "验证码发送成功~");
+        // 3. 调用邮件工具类发送验证码
+        boolean sendSuccess = emailService.sendSimpleEmail(
+                email,
+                "你的验证码",
+                "尊敬的用户，你的验证码是：" + code + "，有效期2分钟。"
+        );
+        if (sendSuccess) {
+            System.out.println("已发送验证码到邮箱到 " + email);
+            // 保存验证码到 redis 中
+            stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+            return new Result(SUCCESS, "验证码已发送至邮箱，请注意查收");
+        } else {
+            // 发送失败（可能是邮箱不存在或其他原因）
+            return new Result(BAD_REQUEST, "验证码发送失败，请检查邮箱地址是否正确");
+        }
     }
 
 
     /**
      * 更新用户头像
+     *
      * @param userId
      * @param avatarUrl
      * @return

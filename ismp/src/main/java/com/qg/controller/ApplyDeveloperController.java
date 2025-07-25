@@ -1,5 +1,6 @@
 package com.qg.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qg.domain.ApplyDeveloper;
 import com.qg.domain.Code;
@@ -26,11 +27,13 @@ public class ApplyDeveloperController {
 
     /**
      * 查询所有 成为开发商 申请（按时间降序排列）
+     *
      * @return
      */
     @GetMapping
     public Result selectAllOrderByTime() {
         List<ApplyDeveloper> applyDevelopers = applyDeveloperService.selectAllOrderByTime();
+        System.out.println("applyDevelopers ===>>>" + applyDevelopers);
         Integer code = applyDevelopers != null && !applyDevelopers.isEmpty() ? Code.SUCCESS : Code.NOT_FOUND;
         String msg = applyDevelopers != null && !applyDevelopers.isEmpty() ? "" : "暂时未有相关数据";
         return new Result(code, applyDevelopers, msg);
@@ -38,6 +41,7 @@ public class ApplyDeveloperController {
 
     /**
      * 添加 成为开发商 申请
+     *
      * @param applyDeveloperJson
      * @return
      */
@@ -67,6 +71,7 @@ public class ApplyDeveloperController {
 
     /**
      * 删除 成为开发商申请 （逻辑删除）
+     *
      * @param applyDeveloper
      * @return
      */
@@ -80,6 +85,7 @@ public class ApplyDeveloperController {
 
     /**
      * 根据 id 删除 成为开发商申请 （逻辑删除）
+     *
      * @param id
      * @return
      */
@@ -96,6 +102,7 @@ public class ApplyDeveloperController {
 
     /**
      * 根据 userId 查询 成为开发商 申请
+     *
      * @param userId
      * @return
      */
@@ -112,6 +119,7 @@ public class ApplyDeveloperController {
 
     /**
      * 根据 id 查询 成为开发商 申请
+     *
      * @param id
      * @return
      */
@@ -126,32 +134,77 @@ public class ApplyDeveloperController {
         return new Result(code, applyDeveloper, msg);
     }
 
+//    /**
+//     * 管理员 修改 申请 处理状态
+//     *
+//     * @param applyDeveloper
+//     * @return
+//     */
+//    @PutMapping("/updateStatus")
+//    public Result updateStatus(@RequestBody ApplyDeveloper applyDeveloper) {
+//        boolean flag = applyDeveloperService.updateStatus(applyDeveloper);
+//        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+//        String msg = flag ? "" : "更改状态失败，请稍后重试！";
+//        return new Result(code, msg);
+//    }
+//
+//    /**
+//     * 管理员根据 id 修改 申请 处理状态
+//     *
+//     * @param id
+//     * @return
+//     */
+//    @PutMapping("/updateStatus/{id}")
+//    public Result updateStatusById(@PathVariable Long id) {
+//        if (id == null) {
+//            return new Result(Code.BAD_REQUEST, "请求参数错误");
+//        }
+//        boolean flag = applyDeveloperService.updateStatusById(id);
+//        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+//        String msg = flag ? "" : "更改状态失败，请稍后重试！";
+//        return new Result(code, msg);
+//    }
+
+
     /**
-     * 管理员 修改 申请 处理状态
+     * 同意
+     * 申请成为开发者
+     *
      * @param applyDeveloper
      * @return
      */
-    @PutMapping("/updateStatus")
-    public Result updateStatus(@RequestBody ApplyDeveloper applyDeveloper) {
-        boolean flag = applyDeveloperService.updateStatus(applyDeveloper);
-        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
-        String msg = flag ? "" : "更改状态失败，请稍后重试！";
-        return new Result(code, msg);
-    }
-
-    /**
-     * 管理员根据 id 修改 申请 处理状态
-     * @param id
-     * @return
-     */
-    @PutMapping("/updateStatus/{id}")
-    public Result updateStatusById(@PathVariable Long id) {
-        if (id == null) {
+    @PutMapping("/agreeApplyDeveloper")
+    public Result agreeApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+        if (applyDeveloper == null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }
-        boolean flag = applyDeveloperService.updateStatusById(id);
-        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
-        String msg = flag ? "" : "更改状态失败，请稍后重试！";
-        return new Result(code, msg);
+        if (applyDeveloperService.agreeApplyDeveloper(applyDeveloper)) {
+            return new Result(Code.SUCCESS, "批准成功，已通知用户");
+        } else {
+            return new Result(Code.NOT_FOUND, "找不到相关申请请求，可能是用户不存在，也可能是已审核");
+        }
+    }
+
+
+    /**
+     * 驳回
+     * 申请成为开发者
+     *
+     * @param applyDeveloper
+     * @return
+     */
+    @PutMapping("/disagreeApplyDeveloper")
+    public Result disagreeApplyDeveloper(@RequestBody ApplyDeveloper applyDeveloper) {
+        if (applyDeveloper == null) {
+            return new Result(Code.BAD_REQUEST, "请求参数错误");
+        }
+        if (StrUtil.isBlank(applyDeveloper.getReason())) {
+            return new Result(Code.BAD_REQUEST, "请输入驳回理由");
+        }
+        if (applyDeveloperService.disagreeApplyDeveloper(applyDeveloper)) {
+            return new Result(Code.SUCCESS, "驳回成功，已通知用户");
+        } else {
+            return new Result(Code.NOT_FOUND, "找不到相关申请请求，可能是用户不存在，也可能是已审核");
+        }
     }
 }

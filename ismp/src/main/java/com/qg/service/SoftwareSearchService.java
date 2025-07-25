@@ -19,9 +19,11 @@ public interface SoftwareSearchService {
     public Software SearchSoftware(Long id);
 
     //不同版本的展示
-    public List<Software> SearchSoftwareVersion(Long id);
+    public List<Software> SearchSoftwareVersion(String name);
 
     List<Software> getSoftwareByFuzzyName(String fuzzyName);
 
     public List<Software> selectLastRecordsPerName(Long id);
+
+    List<Software> getSoftwareByDeveloperId(Long developerId);
 }

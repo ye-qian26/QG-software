@@ -97,4 +97,15 @@ public interface SoftwareMapper extends BaseMapper<Software> {
      */
     @Select("SELECT * FROM software WHERE name LIKE CONCAT('%', #{name}, '%') AND is_deleted = 0")
     List<Software> getSoftwareByFuzzyName(@Param("name") String name);
+
+
+    /**
+     * 获取某个开发商的所有软件信息
+     * @param developerId
+     * @return
+     */
+    @Select("SELECT s.*, u.name AS developer_name, u.email AS developer_email " +
+            "FROM software s JOIN user u ON s.author_id = u.id " +
+            "WHERE u.id = #{developerId} AND u.role = 2")
+    List<Software> getSoftwareByDeveloperId(@Param("developerId") Long developerId);
 }
