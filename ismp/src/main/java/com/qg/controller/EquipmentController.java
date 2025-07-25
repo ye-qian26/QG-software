@@ -151,8 +151,15 @@ public class EquipmentController {
      * 更新机械码
      *
      * @param equipment
+     * @param equipment
      * @return
+     * @return com.qg.domain.Result
+     * @Author lrt
+     * @Description //TODO 修改设备信息
+     * @Date 20:32 2025/7/25
+     * @Param
      */
+
     @PutMapping("/update")
     public Result update(@RequestBody Equipment equipment) {
         boolean flag = equipmentService.updateCode(equipment);
@@ -166,9 +173,16 @@ public class EquipmentController {
      * @return
      * @throws SocketException
      * @throws UnknownHostException
-     */
-    @PostMapping("/addNetWorkCode")
+     * @PostMapping("/addNetWorkCode")
+     * @Author lrt
+     * @Description //TODO 绑定网络码
+     * @Date 20:32 2025/7/25
+     * @Param
+     **/
+
+    @PutMapping("/addNetWorkCode")
     public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
+        System.out.println("看看我执行了吗" + equipment);
         boolean flag = equipmentService.addNetWorkCode(equipment);
         return flag ? new Result(SUCCESS, "绑定成功") : new Result(BAD_GATEWAY, "绑定失败");
     }

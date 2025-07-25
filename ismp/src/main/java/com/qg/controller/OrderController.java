@@ -5,9 +5,7 @@ import com.qg.domain.Equipment;
 import com.qg.domain.Order;
 import com.qg.domain.Result;
 
-import com.qg.service.EquipmentService;
-import com.qg.service.OrderService;
-import com.qg.service.UserService;
+import com.qg.service.*;
 import com.qg.utils.Constants;
 import com.qg.utils.NetWorkCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +30,9 @@ public class OrderController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SoftwareSearchService softwareSearchService;
+
 
 
     /**
@@ -48,10 +49,10 @@ public class OrderController {
 
         Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
 
+        String name = softwareSearchService.SearchSoftware(softwareId).getName();
 
-        String networkCode = NetWorkCode.getNetWorkCode();
 
-        Equipment equipment = new Equipment(userId, softwareId, status, networkCode);
+        Equipment equipment = new Equipment(userId, softwareId, status, name);
 
         System.out.println(equipment);
 

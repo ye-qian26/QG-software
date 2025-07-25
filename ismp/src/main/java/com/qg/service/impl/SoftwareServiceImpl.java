@@ -2,6 +2,8 @@ package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.qg.domain.Code;
+import com.qg.domain.Result;
 import com.qg.domain.Equipment;
 import com.qg.domain.Software;
 import com.qg.mapper.EquipmentMapper;
@@ -31,20 +33,18 @@ public class SoftwareServiceImpl implements SoftwareService {
 
     //审核前需要先上传app信息
     public Software addSoftware(Software software) {
-
-        int sum = 0;
-        sum = softwareMapper.insert(software);
-        if (sum > 0) {
-            return software;
-        } else {
-            return null;
+        LambdaQueryWrapper<Software> qw = new LambdaQueryWrapper<>();
+        qw.eq(Software::getVersion, software.getVersion());
+        qw.eq(Software::getName, software.getName());
+        Software software1 = softwareMapper.selectOne(qw);
+        if (software1 == null) {
+            return softwareMapper.insert(software) > 0 ? software : null;
         }
-
+        return software;
     }
 
     //管理员待审核/已审核的app信息获取
     public List<Software> CheckSoftwareList(Integer status) {
-
         List<Software> list = new ArrayList<Software>();
         QueryWrapper<Software> qw = new QueryWrapper<>();
         qw.lambda().eq(Software::getStatus, status);
@@ -52,7 +52,6 @@ public class SoftwareServiceImpl implements SoftwareService {
         //qw.eq("status",i);
         System.out.println(list);
         return list;
-
     }
 
 
@@ -106,17 +105,17 @@ public class SoftwareServiceImpl implements SoftwareService {
     }
 
 
-
     /**
      * 获取用户状态
-     *      * ====>设备状态：0：已预约；1：已购买
-     *      * ====>假设1:可以预约
-     *      * =======>可以预约，但是未预约，返回：1null，最后决定返回：1
-     *      * =======>可以预约，并且已预约，返回：10，最后决定返回：2
-     *      *
-     *      * ====>假设2:可以购买
-     *      * =======>可以购买，但是未购买，返回：2null，最后决定返回：3
-     *      * =======>可以购买，并且已购买，返回：21，最后决定返回：4
+     * * ====>设备状态：0：已预约；1：已购买
+     * * ====>假设1:可以预约
+     * * =======>可以预约，但是未预约，返回：1null，最后决定返回：1
+     * * =======>可以预约，并且已预约，返回：10，最后决定返回：2
+     * *
+     * * ====>假设2:可以购买
+     * * =======>可以购买，但是未购买，返回：2null，最后决定返回：3
+     * * =======>可以购买，并且已购买，返回：21，最后决定返回：4
+     *
      * @param userId
      * @param softwareId
      * @return

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.List;
+
 
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_BOUGHT;
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_ORDER;
@@ -31,14 +31,15 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public int saveEquipment(Equipment equipment) {
         equipment.setStatus(EQUIPMENT_STATUS_BOUGHT);
-
         Long softwareId = equipment.getSoftwareId();
         Software software = softwareMapper.selectById(softwareId);
+        equipment.setName(software.getName());
         return equipmentMapper.insert(equipment);
     }
 
     /**
      * 获取用户的所有已购买软件
+     *
      * @param userId
      * @return
      */
@@ -61,6 +62,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     /**
      * 获取用户的所有已预约软件
+     *
      * @param userId
      * @return
      */
@@ -85,10 +87,9 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
 
-
-
     /**
      * 管理员查看所有用户的预约软件
+     *
      * @return
      */
     @Override
@@ -100,9 +101,43 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException {
         String netWorkCode = NetWorkCode.getNetWorkCode();
-        equipment.setCode1(netWorkCode);
+        System.out.println("===>addNetWorkCode：" + netWorkCode);
+        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Equipment::getUserId, equipment.getUserId())
+                .eq(Equipment::getSoftwareId, equipment.getSoftwareId())
+                .eq(Equipment::getName, equipment.getName());
 
-        return equipmentMapper.updateById(equipment) > 0;
+
+        Equipment one = equipmentMapper.selectOne(queryWrapper);
+
+        if (one == null) {
+            System.out.println("====>预约记录不存在");
+            return false;
+        }
+
+        // 检查网络码是否已存在
+        if (netWorkCode.equals(one.getCode1()) ||
+                netWorkCode.equals(one.getCode2()) ||
+                netWorkCode.equals(one.getCode3())) {
+            System.out.println("绑定失败：网络码已存在");
+            return false;
+        }
+
+        // 检查绑定数量是否已达上限
+        if (one.getCode1() != null && one.getCode2() != null && one.getCode3() != null) {
+            System.out.println("绑定失败：设备已绑定3个网络码");
+            return false;
+        }
+
+        if (one.getCode1() == null) {
+            one.setCode1(netWorkCode);
+        } else if (one.getCode2() == null) {
+            one.setCode2(netWorkCode);
+        } else if (one.getCode3() == null) {
+            one.setCode3(netWorkCode);
+        }
+
+        return equipmentMapper.updateById(one) > 0;
     }
 
     @Override
@@ -111,7 +146,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     }
 
     @Override
-    public int GetUserStatus(Long userId){
+    public int GetUserStatus(Long userId) {
         int status = equipmentMapper.selectById(userId).getStatus();
         System.out.println("返回的状态码：" + status);
         return status;
