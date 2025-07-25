@@ -26,4 +26,6 @@ public interface SoftwareSearchService {
     public List<Software> selectLastRecordsPerName(Long id);
 
     List<Software> getSoftwareByDeveloperId(Long developerId);
+
+
 }
