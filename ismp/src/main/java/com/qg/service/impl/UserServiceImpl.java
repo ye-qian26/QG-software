@@ -52,10 +52,9 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User loginUser = userMapper.selectOne(lqw);
         System.out.println(loginUser);
-        if (loginUser == null) {
+        if (loginUser == null || !HashSaltUtil.verifyHashPassword(password, loginUser.getPassword())) {
             return null;
         }
-
         //token验证
         String token = UUID.randomUUID().toString();
         UserDto userDto = BeanUtil.copyProperties(loginUser, UserDto.class);
@@ -236,12 +235,23 @@ public class UserServiceImpl implements UserService {
         // 符合，生成验证码
         String code = RandomUtil.randomNumbers(6);
         System.out.println("验证码：" + code);
-        // 保存验证码到 redis 中
-        stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+
         // 发送验证码到邮箱
-        emailService.sendSimpleEmail(email, "验证码", code);
-        System.out.println("已发送验证码到邮箱到 " + email);
-        return new Result(SUCCESS, "验证码发送成功~");
+        // 3. 调用邮件工具类发送验证码
+        boolean sendSuccess = emailService.sendSimpleEmail(
+                email,
+                "你的验证码",
+                "尊敬的用户，你的验证码是：" + code + "，有效期2分钟。"
+        );
+        if (sendSuccess) {
+            System.out.println("已发送验证码到邮箱到 " + email);
+            // 保存验证码到 redis 中
+            stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + email, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
+            return new Result(SUCCESS, "验证码已发送至邮箱，请注意查收");
+        } else {
+            // 发送失败（可能是邮箱不存在或其他原因）
+            return new Result(BAD_REQUEST, "验证码发送失败，请检查邮箱地址是否正确");
+        }
     }
 
 

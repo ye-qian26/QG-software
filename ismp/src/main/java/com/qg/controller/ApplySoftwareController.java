@@ -41,8 +41,8 @@ public class ApplySoftwareController {
      * @param applySoftwareJson
      * @return
      */
-    @GetMapping
-    public Result add(@RequestParam("applySoftware") String applySoftwareJson, @RequestBody MultipartFile file) {
+    @PostMapping
+    public Result add(@RequestParam("applySoftware") String applySoftwareJson, @RequestParam("file") MultipartFile file) {
         try {
             // 判断 文件类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {

@@ -57,6 +57,7 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareType")
     public Result SearchSoftwareType(@RequestParam String type) {
+        System.out.println(type + "<==type");
         List<Software> softwareList = softwareSearchService.SearchSoftwareType(type);
         if (softwareList.size() > 0) {
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
@@ -91,7 +92,9 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareVersion")
     public Result SearchSoftwareVersion(@RequestParam Long id) {
+        System.out.println(id + "<==controller");
         List<Software> list = softwareSearchService.SearchSoftwareVersion(id);
+        System.out.println(list);
         if (list.size() > 0) {
             Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
             return result;
@@ -130,7 +133,9 @@ public class SoftwareSearchController {
      */
     @GetMapping("/selectLastRecordsPerName")
     public Result selectLastRecordsPerName(@RequestParam Long authorId){
+        System.out.println(authorId + "<==controller");
         List<Software> list = softwareSearchService.selectLastRecordsPerName(authorId);
+        System.out.println(list);
         if (list.size() > 0) {
             Result result = new Result(Code.SUCCESS, list, "获取信息成功！");
             return result;

@@ -31,6 +31,7 @@ public class ApplyDeveloperController {
     @GetMapping
     public Result selectAllOrderByTime() {
         List<ApplyDeveloper> applyDevelopers = applyDeveloperService.selectAllOrderByTime();
+        System.out.println("applyDevelopers ===>>>" + applyDevelopers);
         Integer code = applyDevelopers != null && !applyDevelopers.isEmpty() ? Code.SUCCESS : Code.NOT_FOUND;
         String msg = applyDevelopers != null && !applyDevelopers.isEmpty() ? "" : "暂时未有相关数据";
         return new Result(code, applyDevelopers, msg);
@@ -41,7 +42,7 @@ public class ApplyDeveloperController {
      * @param applyDeveloperJson
      * @return
      */
-    @GetMapping
+    @PostMapping
     public Result add(@RequestParam("applyDeveloper") String applyDeveloperJson, @RequestParam("file") MultipartFile file) {
         try {
             // 判断 文件 类型
