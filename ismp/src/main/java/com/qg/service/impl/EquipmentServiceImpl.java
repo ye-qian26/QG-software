@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.List;
+
 
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_BOUGHT;
 import static com.qg.utils.Constants.EQUIPMENT_STATUS_ORDER;
@@ -80,11 +80,6 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
-    /*@Override
-    public List<Equipment> selectAllAppointment() {
-        return equipmentMapper.selectList(null);
-    }*/
-
 
     /**
      * 管理员查看所有用户的预约软件
@@ -99,7 +94,30 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException {
         String netWorkCode = NetWorkCode.getNetWorkCode();
-        equipment.setCode1(netWorkCode);
+
+        LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Equipment::getUserId, equipment.getUserId())
+                .eq(Equipment::getSoftwareId, equipment.getSoftwareId())
+                .eq(Equipment::getName, equipment.getName());
+
+
+        Equipment one = equipmentMapper.selectOne(queryWrapper);
+
+        if (one == null) {
+            return false; // 预约记录不存在
+        }
+
+        if (one.getCode1() != null && one.getCode2() != null && one.getCode3() != null) {
+            return false; // 已经有三个网络码了
+        }
+
+        if (one.getCode1() == null) {
+            one.setCode1(netWorkCode);
+        }else if (one.getCode2() == null) {
+            one.setCode2(netWorkCode);
+        } else if (one.getCode3() == null) {
+            one.setCode3(netWorkCode);
+        }
 
         return equipmentMapper.updateById(equipment) > 0;
     }

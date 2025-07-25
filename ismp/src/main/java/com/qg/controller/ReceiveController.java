@@ -62,16 +62,17 @@ public class ReceiveController {
             System.out.println("收到解密后的明文: " + plainText);
 
             String[] parts = plainText.split("\\|");
-            if (parts.length != 2) {
+            if (parts.length != 3) {
                 return "false";
             }
             String email = parts[0];
             String mac = parts[1];
+            String name = parts[2];
 
-            String serviceData = "mac=" + mac + ";email=" + email;
+            String serviceData = "mac=" + mac + ";email=" + email + ";name=" + name;
             String message = receiveService.Permissions(serviceData);
 
-            System.out.println(email + "\n" + mac);
+            System.out.println(email + "\n" + mac + "\n" + name );
 
             return message;
         } catch (Exception e) {

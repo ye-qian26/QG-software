@@ -26,7 +26,6 @@ public class EquipmentController {
 
     /**
      * 获取用户的所有已购买软件
-     *
      * @param userId
      * @return
      */
@@ -147,19 +146,36 @@ public class EquipmentController {
     }
 
 
+    /**
+     * @Author lrt
+     * @Description //TODO 修改设备信息
+     * @Date 20:32 2025/7/25
+     * @Param
+ * @param equipment
+     * @return com.qg.domain.Result
+     **/
 
     @PutMapping("/update")
-
     public Result update(@RequestBody Equipment equipment) {
         boolean flag = equipmentService.updateCode(equipment);
         return flag ? new Result(SUCCESS, "修改成功") : new Result(BAD_GATEWAY, "修改失败");
     }
 
-    @PostMapping("/addNetWorkCode")
+    /**
+     * @Author lrt
+     * @Description //TODO 绑定网络码
+     * @Date 20:32 2025/7/25
+     * @Param
+     * */
+
+    @PutMapping("/addNetWorkCode")
     public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
         boolean flag = equipmentService.addNetWorkCode(equipment);
         return flag ? new Result(SUCCESS,"绑定成功") : new Result(BAD_GATEWAY,"绑定失败");
     }
+
+
+
 
 
 }
