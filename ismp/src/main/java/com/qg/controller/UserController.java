@@ -7,6 +7,7 @@ import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.domain.User;
 
+import com.qg.dto.RegisterDTO;
 import com.qg.dto.UserDto;
 import com.qg.service.BanService;
 import com.qg.service.UserService;
@@ -89,17 +90,17 @@ public class UserController {
      */
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
-        return userService.loginByCode(email, code);
+        return userService.loginByCode(email.trim(), code.trim());
     }
 
     /**
      * 用户注册
-     * @param user
+     * @param registerDTO
      * @return
      */
     @PostMapping("/register")
-    public Result register(@RequestBody User user, @RequestParam String code) {
-        return userService.register(user, code);
+    public Result register(@RequestBody RegisterDTO registerDTO) {
+        return userService.register(registerDTO.getUser(), registerDTO.getCode().trim());
     }
 
     /**
@@ -171,7 +172,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateAvatar")
-    public Result updateAvatar(@RequestBody MultipartFile file,
+    public Result updateAvatar(@RequestParam("avatar") MultipartFile file,
                                @RequestParam("userId") Long userId) {
         try {
             // 验证文件是否为空

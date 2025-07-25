@@ -1,5 +1,6 @@
 package com.qg.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.qg.utils.Constants;
@@ -72,6 +73,22 @@ public class SubscribeServiceImpl implements SubscribeService {
     @Override
     public List<SubscribeVO> getMySubscribe(Long userId) {
         return subscribeMapper.getMySubscribe(userId);
+    }
+
+
+
+    @Override
+    public boolean isSubscribe(Long userId, Long developerId) {
+        LambdaQueryWrapper<Subscribe> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Subscribe::getUserId, userId).eq(Subscribe::getDeveloperId, developerId);
+
+        Subscribe subscribe = subscribeMapper.selectOne(queryWrapper);
+
+        if (subscribe == null) {
+            return false;
+        }
+
+        return true;
     }
 
 }

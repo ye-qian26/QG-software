@@ -106,4 +106,16 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         return softwareMapper.getSoftwareByFuzzyName(fuzzyName);
     }
 
+
+    /**
+     * 获取某个开发商的所有软件信息
+     * @param developerId
+     * @return
+     */
+    @Override
+    public List<Software> getSoftwareByDeveloperId(Long developerId) {
+        System.out.println(developerId + "<==service");
+        return softwareMapper.getSoftwareByDeveloperId(developerId);
+    }
+
 }

@@ -4,6 +4,7 @@ import com.qg.domain.Result;
 import com.qg.domain.Review;
 import com.qg.service.EquipmentService;
 import com.qg.service.ReviewService;
+import com.qg.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,7 +56,7 @@ public class ReviewController {
         if (softwareId <= 0) {
             return new Result(BAD_REQUEST, "获取评论失败");
         }
-        List<Review> reviews = reviewService.selectBySoftware(softwareId);
+        List<ReviewVO> reviews = reviewService.selectBySoftware(softwareId);
 
         if (reviews == null || reviews.size() == 0) {
             return new Result(NOT_FOUND, "评论无法加载");

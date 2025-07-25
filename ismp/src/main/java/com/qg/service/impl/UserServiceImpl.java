@@ -89,8 +89,9 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User user = userMapper.selectOne(lqw);
         if (user == null) {
-            return new Result(NOT_FOUND, "该用户尚未未注册");
+            return new Result(NOT_FOUND, "该用户尚未注册");
         }
+
         // 从redis中取出验证码
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
@@ -118,26 +119,41 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result register(User user, String code) {
-        String email = user.getEmail();
+
+        // 判断参数非空
+        if (user == null || code == null) {
+            return new Result(BAD_REQUEST, "存在空参");
+        }
+        // 获取用户邮箱，并做正则验证
+        String email = user.getEmail().trim();
+        if (RegexUtils.isEmailInvalid(email)) {
+            return new Result(BAD_REQUEST, "邮箱格式错误");
+        }
+
+        // 再查看验证码是否正确
+        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        if (cacheCode == null || !cacheCode.equals(code)) {
+            return new Result(NOT_FOUND, "验证码错误");
+        }
+
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
         lqw.eq(User::getEmail, email);
+
+        // 判断邮箱是否已经被注册
         User one = userMapper.selectOne(lqw);
         if (one != null) {
             return new Result(CONFLICT, "该邮箱已被注册！");
         }
 
-        if (RegexUtils.isEmailInvalid(email)) {
-            return new Result(BAD_REQUEST, "邮箱格式错误");
-        }
-
-        String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
-        if (cacheCode == null || !cacheCode.equals(code)) {
-            return new Result(NOT_FOUND, "验证码错误");
-        }
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
-        userMapper.insert(user);
+        // 向数据库中添加数据
+        if (userMapper.insert(user) != 1) {
+            return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
+        }
+        // 注册成功后删除验证码
+        stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
 
         return new Result(CREATED, "恭喜你，注册成功！");
     }
@@ -211,9 +227,6 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectById(id);
     }
 
-
-
-
     @Override
     public Result sendCodeByEmail(String email) {
         // 判断是否是无效邮箱地址
@@ -234,6 +247,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 更新用户头像
+     *
      * @param userId
      * @param avatarUrl
      * @return
