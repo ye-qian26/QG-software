@@ -4,22 +4,32 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 
-
 @TableName("apply_developer")
 public class ApplyDeveloper {
     private Long id;
     private Long userId;
     private String applyTime;
-    private String reason;
+    private String reason;          // 驳回理由
     private String material;
     private Integer status;
     @TableLogic
     private int isDeleted;
+    private String applyReason;     // 申请理由
+
+    public ApplyDeveloper(Long id) {
+        this.id = id;
+    }
+
+    public ApplyDeveloper(Long id, String reason) {
+        this.id = id;
+        this.reason = reason;
+    }
 
     public ApplyDeveloper() {
     }
 
-    public ApplyDeveloper(Long id, Long userId, String applyTime, String reason, String material, Integer status, int isDeleted) {
+
+    public ApplyDeveloper(Long id, Long userId, String applyTime, String reason, String material, Integer status, int isDeleted, String applyReason) {
         this.id = id;
         this.userId = userId;
         this.applyTime = applyTime;
@@ -27,14 +37,7 @@ public class ApplyDeveloper {
         this.material = material;
         this.status = status;
         this.isDeleted = isDeleted;
-    }
-
-    public int getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(int isDeleted) {
-        this.isDeleted = isDeleted;
+        this.applyReason = applyReason;
     }
 
     /**
@@ -133,16 +136,39 @@ public class ApplyDeveloper {
         this.status = status;
     }
 
-    @Override
+    /**
+     * 获取
+     * @return isDeleted
+     */
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    /**
+     * 设置
+     * @param isDeleted
+     */
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    /**
+     * 获取
+     * @return applyReason
+     */
+    public String getApplyReason() {
+        return applyReason;
+    }
+
+    /**
+     * 设置
+     * @param applyReason
+     */
+    public void setApplyReason(String applyReason) {
+        this.applyReason = applyReason;
+    }
+
     public String toString() {
-        return "ApplyDeveloper{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", applyTime='" + applyTime + '\'' +
-                ", reason='" + reason + '\'' +
-                ", material='" + material + '\'' +
-                ", status=" + status +
-                ", isDeleted=" + isDeleted +
-                '}';
+        return "ApplyDeveloper{id = " + id + ", userId = " + userId + ", applyTime = " + applyTime + ", reason = " + reason + ", material = " + material + ", status = " + status + ", isDeleted = " + isDeleted + ", applyReason = " + applyReason + "}";
     }
 }

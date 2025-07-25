@@ -51,10 +51,10 @@ public class AdminController {
      */
     @GetMapping
     public Result getAllUser(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (!identify(token)) {
-            return new Result(Code.FORBIDDEN, "权限不足");
-        }
+//        String token = request.getHeader("Authorization");
+//        if (!identify(token)) {
+//            return new Result(Code.FORBIDDEN, "权限不足");
+//        }
         List<AdminManageUserVO> list = adminService.getAllUser();
         if (list == null || list.isEmpty()) {
             return new Result(Code.NOT_FOUND, "当前无用户信息");

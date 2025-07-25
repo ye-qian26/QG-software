@@ -112,7 +112,7 @@ public class MessageController {
         if (applyDeveloper == null) {
             return new Result(Code.BAD_REQUEST, "申请为空");
         }
-        if (messageService.applyDeveloperSuccess(applyDeveloper)) {
+        if (messageService.applyDeveloperSuccess(applyDeveloper.getUserId())) {
             return new Result(Code.SUCCESS, "已通知id为:"
                     + applyDeveloper.getUserId() + "的用户——申请成功");
         } else {
@@ -129,7 +129,7 @@ public class MessageController {
         if (applyDeveloper == null) {
             return new Result(Code.BAD_REQUEST, "申请为空");
         }
-        if (messageService.applyDeveloperFailure(applyDeveloper)) {
+        if (messageService.applyDeveloperFailure(applyDeveloper.getUserId(), applyDeveloper.getReason())) {
             return new Result(Code.SUCCESS, "已通知id为:"
                     + applyDeveloper.getUserId() + "的用户——申请失败");
         } else {

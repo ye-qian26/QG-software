@@ -24,4 +24,6 @@ public interface SoftwareSearchService {
     List<Software> getSoftwareByFuzzyName(String fuzzyName);
 
     public List<Software> selectLastRecordsPerName(Long id);
+
+    List<Software> getSoftwareByDeveloperId(Long developerId);
 }
