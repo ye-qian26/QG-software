@@ -88,34 +88,41 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /**
-     * @param applyDeveloper 成功
-     *                       申请成为开发者通知
+     * 成功
+     * 申请成为开发者通知
+     *
+     * @param userId
+     * @return
      */
     @Override
-    public boolean applyDeveloperSuccess(ApplyDeveloper applyDeveloper) {
-        if (userMapper.selectById(applyDeveloper.getUserId()) == null) {
+    public boolean applyDeveloperSuccess(Long userId) {
+        if (userMapper.selectById(userId) == null) {
             return false;
         }
         return messageMapper.insert(new Message(
-                null, applyDeveloper.getUserId()
+                null, userId
                 , 1L, "恭喜您，申请成为开发者成功！"
                 , null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
 
     /**
-     * @param applyDeveloper 失败
-     *                       申请成为开发者通知
+     * 失败
+     * 申请成为开发者通知
+     *
+     * @param userId
+     * @param reason
+     * @return
      */
     @Override
-    public boolean applyDeveloperFailure(ApplyDeveloper applyDeveloper) {
-        if (userMapper.selectById(applyDeveloper.getUserId()) == null) {
+    public boolean applyDeveloperFailure(Long userId, String reason) {
+        if (userMapper.selectById(userId) == null) {
             return false;
         }
         return messageMapper.insert(new Message(
-                null, applyDeveloper.getUserId()
+                null, userId
                 , 1L, "很遗憾，申请成为开发者失败！管理员驳回理由如下：\n"
-                + applyDeveloper.getReason(), null, Constants.MESSAGE_NO_READ)
+                + reason, null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
 
@@ -125,12 +132,15 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public boolean applySoftwareSuccess(ApplySoftware applySoftware) {
+        Software software = softwareMapper.selectById(applySoftware.getSoftwareId());
         if (userMapper.selectById(applySoftware.getUserId()) == null) {
             return false;
         }
         return messageMapper.insert(new Message(
                 null, applySoftware.getUserId()
-                , 1L, "恭喜您，申请发布软件成功！"
+                , 1L, "恭喜您，申请发布软件："
+                + software.getName() + "，版本号："
+                + software.getVersion() + "成功！"
                 , null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
@@ -141,13 +151,16 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public boolean applySoftwareFailure(ApplySoftware applySoftware) {
+        Software software = softwareMapper.selectById(applySoftware.getSoftwareId());
         if (userMapper.selectById(applySoftware.getUserId()) == null) {
             return false;
         }
         return messageMapper.insert(new Message(
                 null, applySoftware.getUserId()
-                , 1L, "很遗憾，申请发布软件失败！管理员驳回理由如下：\n"
-                + applySoftware.getReason(),null, Constants.MESSAGE_NO_READ)
+                , 1L, "很遗憾，申请发布软件："
+                + software.getName() + "，版本号："
+                + software.getVersion() + "失败！管理员驳回理由如下：\n"
+                + applySoftware.getReason(), null, Constants.MESSAGE_NO_READ)
         ) > 0;
     }
 
