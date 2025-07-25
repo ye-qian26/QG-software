@@ -110,32 +110,19 @@ public interface SoftwareMapper extends BaseMapper<Software> {
     List<Software> getSoftwareByDeveloperId(@Param("developerId") Long developerId);
 
 
-    /**
-     * 获取用户状态
-     *      * ====>设备状态：0：已预约；1：已购买
-     *      * ====>假设1:可以预约
-     *      * =======>可以预约，但是未预约，返回：1null，最后决定返回：1
-     *      * =======>可以预约，并且已预约，返回：10，最后决定返回：2
-     *      *
-     *      * ====>假设2:可以购买
-     *      * =======>可以购买，但是未购买，返回：2null，最后决定返回：3
-     *      * =======>可以购买，并且已购买，返回：21，最后决定返回：4
-     * @param userId
-     * @param softwareId
-     * @return
-     */
-    @Select("SELECT CASE " +
-            "WHEN s.status = 1 AND e.id IS NULL THEN 1 " +
-            "WHEN s.status = 1 AND e.status = 0 THEN 2 " +
-            "WHEN s.status = 2 AND e.id IS NULL THEN 3 " +
-            "WHEN s.status = 2 AND e.status = 1 THEN 4 " +
-            "ELSE NULL " +
-            "END AS result_status " +
-            "FROM software s " +
-            "LEFT JOIN equipment e " +
-            "ON e.software_id = s.id AND e.user_id = #{userId} " +
-            "WHERE s.id = #{softwareId} AND s.is_deleted = 0 " +
-            "LIMIT 1")
-    Integer checkSoftwareStatus(@Param("userId") Long userId,
-                                @Param("softwareId") Long softwareId);
+
+//    @Select("SELECT CASE " +
+//            "WHEN s.status = 1 AND e.id IS NULL THEN 1 " +
+//            "WHEN s.status = 1 AND e.status = 0 THEN 2 " +
+//            "WHEN s.status = 2 AND e.id IS NULL THEN 3 " +
+//            "WHEN s.status = 2 AND e.status = 1 THEN 4 " +
+//            "ELSE NULL " +
+//            "END AS result_status " +
+//            "FROM software s " +
+//            "LEFT JOIN equipment e " +
+//            "ON e.software_id = s.id AND e.user_id = #{userId} " +
+//            "WHERE s.id = #{softwareId} AND s.is_deleted = 0 " +
+//            "LIMIT 1")
+//    Integer checkSoftwareStatus(@Param("userId") Long userId,
+//                                @Param("softwareId") Long softwareId);
 }

@@ -31,6 +31,9 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public int saveEquipment(Equipment equipment) {
         equipment.setStatus(EQUIPMENT_STATUS_BOUGHT);
+
+        Long softwareId = equipment.getSoftwareId();
+        Software software = softwareMapper.selectById(softwareId);
         return equipmentMapper.insert(equipment);
     }
 
