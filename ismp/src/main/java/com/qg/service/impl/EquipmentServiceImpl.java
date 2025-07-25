@@ -80,6 +80,9 @@ public class EquipmentServiceImpl implements EquipmentService {
         return equipmentMapper.insert(equipment);
     }
 
+
+
+
     /**
      * 管理员查看所有用户的预约软件
      * @return
@@ -101,6 +104,12 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public boolean updateCode(Equipment equipment) {
         return equipmentMapper.updateById(equipment) > 0;
+    }
+
+    @Override
+    public int GetUserStatus(Long userId){
+        int status = equipmentMapper.selectById(userId).getStatus();
+        return status;
     }
 
 }
