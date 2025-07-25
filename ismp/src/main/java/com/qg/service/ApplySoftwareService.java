@@ -20,9 +20,13 @@ public interface ApplySoftwareService {
 
     ApplySoftware selectById(Long id);
 
-    boolean updateStatus(ApplySoftware ApplySoftware);
+    //   boolean updateStatus(ApplySoftware ApplySoftware);
 
     boolean deleteById(Long id);
 
     boolean updateStatusById(Long id);
+
+    boolean agreeApplySoftware(ApplySoftware applySoftware);
+
+    boolean disagreeApplySoftware(ApplySoftware applySoftware);
 }

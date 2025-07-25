@@ -13,6 +13,7 @@ public class ApplySoftware {
     private Integer status;
     private Long softwareId;
     private String applyTime;
+    private String applyReason;
 
     @TableLogic
     private Integer isDeleted;
@@ -21,7 +22,7 @@ public class ApplySoftware {
     public ApplySoftware() {
     }
 
-    public ApplySoftware(Long id, long userId, String reason, String material, Integer status, Long softwareId, String applyTime, Integer isDeleted) {
+    public ApplySoftware(Long id, long userId, String reason, String material, Integer status, Long softwareId, String applyTime, String applyReason, Integer isDeleted) {
         this.id = id;
         this.userId = userId;
         this.reason = reason;
@@ -29,22 +30,7 @@ public class ApplySoftware {
         this.status = status;
         this.softwareId = softwareId;
         this.applyTime = applyTime;
-        this.isDeleted = isDeleted;
-    }
-
-    public String getApplyTime() {
-        return applyTime;
-    }
-
-    public void setApplyTime(String applyTime) {
-        this.applyTime = applyTime;
-    }
-
-    public Integer getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Integer isDeleted) {
+        this.applyReason = applyReason;
         this.isDeleted = isDeleted;
     }
 
@@ -56,7 +42,6 @@ public class ApplySoftware {
         return id;
     }
 
-
     /**
      * 设置
      * @param id
@@ -64,7 +49,6 @@ public class ApplySoftware {
     public void setId(Long id) {
         this.id = id;
     }
-
 
     /**
      * 获取
@@ -82,7 +66,6 @@ public class ApplySoftware {
         this.userId = userId;
     }
 
-
     /**
      * 获取
      * @return reason
@@ -90,7 +73,6 @@ public class ApplySoftware {
     public String getReason() {
         return reason;
     }
-
 
     /**
      * 设置
@@ -100,7 +82,6 @@ public class ApplySoftware {
         this.reason = reason;
     }
 
-
     /**
      * 获取
      * @return material
@@ -108,7 +89,6 @@ public class ApplySoftware {
     public String getMaterial() {
         return material;
     }
-
 
     /**
      * 设置
@@ -126,7 +106,6 @@ public class ApplySoftware {
         return status;
     }
 
-
     /**
      * 设置
      * @param status
@@ -134,7 +113,6 @@ public class ApplySoftware {
     public void setStatus(Integer status) {
         this.status = status;
     }
-
 
     /**
      * 获取
@@ -152,17 +130,55 @@ public class ApplySoftware {
         this.softwareId = softwareId;
     }
 
-    @Override
+    /**
+     * 获取
+     * @return applyTime
+     */
+    public String getApplyTime() {
+        return applyTime;
+    }
+
+    /**
+     * 设置
+     * @param applyTime
+     */
+    public void setApplyTime(String applyTime) {
+        this.applyTime = applyTime;
+    }
+
+    /**
+     * 获取
+     * @return applyReason
+     */
+    public String getApplyReason() {
+        return applyReason;
+    }
+
+    /**
+     * 设置
+     * @param applyReason
+     */
+    public void setApplyReason(String applyReason) {
+        this.applyReason = applyReason;
+    }
+
+    /**
+     * 获取
+     * @return isDeleted
+     */
+    public Integer getIsDeleted() {
+        return isDeleted;
+    }
+
+    /**
+     * 设置
+     * @param isDeleted
+     */
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public String toString() {
-        return "ApplySoftware{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", reason='" + reason + '\'' +
-                ", material='" + material + '\'' +
-                ", status=" + status +
-                ", softwareId=" + softwareId +
-                ", applyTime='" + applyTime + '\'' +
-                ", isDeleted=" + isDeleted +
-                '}';
+        return "ApplySoftware{id = " + id + ", userId = " + userId + ", reason = " + reason + ", material = " + material + ", status = " + status + ", softwareId = " + softwareId + ", applyTime = " + applyTime + ", applyReason = " + applyReason + ", isDeleted = " + isDeleted + "}";
     }
 }

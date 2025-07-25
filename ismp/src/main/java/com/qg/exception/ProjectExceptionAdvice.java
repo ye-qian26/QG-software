@@ -5,18 +5,20 @@ import com.qg.domain.Result;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ProjectExceptionAdvice {
 
     @ExceptionHandler(SystemException.class)
     public Result doSystemException(SystemException ex) {
-        System.out.println("==>\n系统异常:\n" + ex.getMessage() + "\n<==");
+        System.out.println("==>\n系统异常:  "
+                + ex.getCode() + "\n" + ex.getMessage() + "\n<==");
         return new Result(ex.getCode(), ex.getMessage());
     }
 
     @ExceptionHandler(BusinessException.class)
     public Result doBusinessException(BusinessException ex) {
-        System.out.println("==>\n业务异常:\n" + ex.getMessage() + "\n<==");
+        System.out.println("==>\n业务异常: "
+                + ex.getCode() + "\n" + ex.getMessage() + "\n<==");
         return new Result(ex.getCode(), ex.getMessage());
     }
 
