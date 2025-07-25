@@ -267,4 +267,30 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateAvatar(userId, avatarUrl) > 0;
     }
 
+
+/**
+ * @Author lrt
+ * @Description //TODO 充值
+ * @Date 16:59 2025/7/25
+ * @Param
+ * @param id
+ * @param money
+ * @return int
+ **/
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public int updateMoney(Long id, Double money) {
+        LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(User::getId, id);
+        User user = userMapper.selectOne(lqw);
+        if (user == null) {
+            return 0;
+        }
+        user.setMoney(user.getMoney() + money);
+
+        return userMapper.updateById(user);
+    }
+
+
 }
