@@ -46,6 +46,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return softwareMapper.selectPurchased(page, userId);
     }
 
+
     @Override
     public boolean isPurchased(Long userId, Long softwareId) {
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
@@ -109,6 +110,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Override
     public int GetUserStatus(Long userId){
         int status = equipmentMapper.selectById(userId).getStatus();
+        System.out.println("返回的状态码：" + status);
         return status;
     }
 

@@ -38,6 +38,7 @@ public class ReceiveServiceImpl implements ReceiveService {
         String mac = parts[0].split("=", 2)[1];
         String email = parts[1].split("=", 2)[1];
 
+        // 获取email对应的User对象
         LambdaQueryWrapper<User> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(User::getEmail, email);
         System.out.println(mac);
@@ -49,6 +50,7 @@ public class ReceiveServiceImpl implements ReceiveService {
             return "false";
         }
 
+        // 在equipment表中，查出User的所有softwareId、以及code，但是会查出来status=0（预约状态）
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
