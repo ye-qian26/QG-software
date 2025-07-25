@@ -4,14 +4,17 @@ public class UserDto {
     private int id;
     private String name;
     private Integer role;
+    private String avatar;
+
 
     public UserDto() {
     }
 
-    public UserDto(int id, String name, Integer role) {
+    public UserDto(int id, String name, Integer role, String avatar) {
         this.id = id;
         this.name = name;
         this.role = role;
+        this.avatar = avatar;
     }
 
     /**
@@ -62,7 +65,23 @@ public class UserDto {
         this.role = role;
     }
 
+    /**
+     * 获取
+     * @return avatar
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * 设置
+     * @param avatar
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String toString() {
-        return "UserDto{id = " + id + ", name = " + name + ", role = " + role + "}";
+        return "UserDto{id = " + id + ", name = " + name + ", role = " + role + ", avatar = " + avatar + "}";
     }
 }

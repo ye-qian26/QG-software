@@ -1,7 +1,6 @@
 package com.qg.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.qg.domain.ApplyDeveloper;
+import cn.hutool.core.util.StrUtil;
 import com.qg.domain.ApplySoftware;
 import com.qg.domain.Code;
 import com.qg.domain.Result;
@@ -127,32 +126,78 @@ public class ApplySoftwareController {
         return new Result(code, applySoftware, msg);
     }
 
+
+
+//    /**
+//     * 管理员 修改 申请 处理状态
+//     * @param applySoftware
+//     * @return
+//     */
+//    @PutMapping("/updateStatus")
+//    public Result updateStatus(@RequestBody ApplySoftware applySoftware) {
+//        boolean flag = applySoftwareService.updateStatus(applySoftware);
+//        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+//        String msg = flag ? "" : "更改状态失败，请稍后重试！";
+//        return new Result(code, msg);
+//    }
+//
+//    /**
+//     * 管理根据 id 修改 处理状态
+//     * @param id
+//     * @return
+//     */
+//    @PutMapping("/updateStatus/{id}")
+//    public Result updateStatusById(@PathVariable Long id) {
+//        if (id == null) {
+//            return new Result(Code.BAD_REQUEST, "请求参数错误");
+//        }
+//        boolean flag = applySoftwareService.updateStatusById(id);
+//        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
+//        String msg = flag ? "" : "更改状态失败，请稍后重试！";
+//        return new Result(code, msg);
+//    }
+//
+
+
     /**
-     * 管理员 修改 申请 处理状态
+     * 同意
+     * 申请发布软件
+     *
      * @param applySoftware
      * @return
      */
-    @PutMapping("/updateStatus")
-    public Result updateStatus(@RequestBody ApplySoftware applySoftware) {
-        boolean flag = applySoftwareService.updateStatus(applySoftware);
-        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
-        String msg = flag ? "" : "更改状态失败，请稍后重试！";
-        return new Result(code, msg);
-    }
-
-    /**
-     * 管理根据 id 修改 处理状态
-     * @param id
-     * @return
-     */
-    @PutMapping("/updateStatus/{id}")
-    public Result updateStatusById(@PathVariable Long id) {
-        if (id == null) {
+    @PutMapping("/agreeApplySoftware")
+    public Result agreeApplySoftware(@RequestBody ApplySoftware applySoftware) {
+        if (applySoftware== null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }
-        boolean flag = applySoftwareService.updateStatusById(id);
-        Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
-        String msg = flag ? "" : "更改状态失败，请稍后重试！";
-        return new Result(code, msg);
+        if (applySoftwareService.agreeApplySoftware(applySoftware)) {
+            return new Result(Code.SUCCESS, "批准成功，已通知用户");
+        } else {
+            return new Result(Code.NOT_FOUND, "找不到相关申请请求，可能是用户不存在，也可能是已审核");
+        }
+    }
+
+
+    /**
+     * 驳回
+     * 申请发布软件
+     *
+     * @param applySoftware
+     * @return
+     */
+    @PutMapping("/disagreeApplySoftware")
+    public Result disagreeApplySoftware(@RequestBody ApplySoftware applySoftware) {
+        if (applySoftware == null) {
+            return new Result(Code.BAD_REQUEST, "请求参数错误");
+        }
+        if (StrUtil.isBlank(applySoftware.getReason())) {
+            return new Result(Code.BAD_REQUEST, "请输入驳回理由");
+        }
+        if (applySoftwareService.disagreeApplySoftware(applySoftware)) {
+            return new Result(Code.SUCCESS, "驳回成功，已通知用户");
+        } else {
+            return new Result(Code.NOT_FOUND, "找不到相关申请请求，可能是用户不存在，也可能是已审核");
+        }
     }
 }
