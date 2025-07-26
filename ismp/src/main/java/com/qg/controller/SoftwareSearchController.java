@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/softwares")
 public class SoftwareSearchController {
@@ -25,8 +26,10 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareNew")
     public Result SearchSoftwareNew() {
+        System.out.println("===>获取轮播图");
         List<Software> softwareList = softwareSearchService.SearchSoftwareNew();
         if (softwareList.size() > 0) {
+            System.out.println(softwareList);
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
         } else {
@@ -150,7 +153,7 @@ public class SoftwareSearchController {
 
 
     /**
-     *
+     *获得该开发商的所有产品
      * @param developerId
      * @return
      */
@@ -170,7 +173,9 @@ public class SoftwareSearchController {
      * 管理 审核时 查看 软件详情
      */
     @GetMapping("/getSoftwareWithMaterial")
-    public Result getSoftwareWithMaterial(@RequestParam Long id, @RequestParam Long userId) {
+    public Result getSoftwareWithMaterial(@RequestParam("id") Long id, @RequestParam("authorId") Long userId) {
+        System.out.println("id==> " + id + " <==controller");
+        System.out.println("userId==> " + userId + "<==controller");
         if (id == null) {
             return new Result(Code.BAD_REQUEST, "请求参数出错");
         }

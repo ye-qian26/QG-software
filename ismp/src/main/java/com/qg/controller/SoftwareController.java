@@ -36,8 +36,11 @@ public class SoftwareController {
      * @return
      */
     @PostMapping("/addSoftware")
-    public Result addSoftware(@RequestParam(value = "software", required = false) String softwareJson, @RequestParam(value = "picture", required = false) MultipartFile picture, @RequestParam(value = "file", required = false) MultipartFile file) {
+    public Result addSoftware(@RequestParam("software") String softwareJson, @RequestParam("picture") MultipartFile picture, @RequestParam("file") MultipartFile file) {
         try {
+            if (softwareJson == null || picture == null || file == null) {
+                return new Result(Code.BAD_REQUEST, "传递的请求参数为空值，请检查");
+            }
             System.out.println("addSoftware ===>>>" + softwareJson);
             System.out.println("addSoftware ===>>> 图片 文件名" + picture.getOriginalFilename());
             System.out.println("addSoftware ===>>> 文档 文件名" + file.getOriginalFilename());
@@ -135,8 +138,9 @@ public class SoftwareController {
      * @param software
      * @return
      */
-    @PostMapping("/roleUpdate")
+    @PutMapping("/roleUpdate")
     public Result roleUpdate(@RequestBody Software software) {
+        System.out.println("roleUpdate ===>>>" + software);
         Long id = software.getId();
         int sum = 0;
         sum = softwareService.roleUpdate(id);
@@ -147,7 +151,6 @@ public class SoftwareController {
             Result result = new Result(Code.BAD_REQUEST, "信息修改失败！");
             return result;
         }
-
     }
 
     /**
@@ -173,12 +176,12 @@ public class SoftwareController {
     /**
      * 管理员逻辑下架软件
      *
-     * @param software
+     * @param id
      * @return
      */
     @DeleteMapping("/roleDelete")
-    public Result roleDelete(@RequestBody Software software) {
-        Long id = software.getId();
+    public Result roleDelete(@RequestParam Long id) {
+        System.out.println("roleDelete ===>>>" + id);
         int sum = 0;
         sum = softwareService.roleDelete(id);
         if (sum > 0) {
@@ -242,7 +245,7 @@ public class SoftwareController {
      */
     @PutMapping("/changeSoftwareById")
     public Result changeSoftwareById(@RequestBody Software software) {
-
+        System.out.println("changeSoftwareById ===>>>" + software);
         Software software1=softwareService.changeSoftwareById(software);
         if (software1 != null) {
             Result result = new Result(Code.SUCCESS, software1,"信息获取成功！");

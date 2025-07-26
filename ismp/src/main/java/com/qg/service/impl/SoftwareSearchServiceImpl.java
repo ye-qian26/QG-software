@@ -31,7 +31,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
     //主页轮播图接口
     public List<Software> SearchSoftwareNew() {
-        System.out.println("package com.qg.service.impl.SearchSoftwareNew");
+        System.out.println("===>主页获取轮播图package com.qg.service.impl.SearchSoftwareNew");
         // 先尝试从Redis获取缓存数据
         List<Software> cachedList = softwareRedisRepository.getPublishedPicture();
         if (cachedList != null && !cachedList.isEmpty()) {
@@ -131,6 +131,9 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
         softwareWrapper.eq(Software::getId, id);
         Software software = softwareMapper.selectOne(softwareWrapper);
+        if (software == null) {
+            return null;
+        }
         SoftwareVO softwareVO = new SoftwareVO();
 
         // 复制软件信息到 softwareVO
@@ -142,6 +145,9 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
                 .eq(ApplySoftware::getUserId, userId);
         ApplySoftware applySoftware = applySoftwareMapper.selectOne(applySoftwareWrapper);
 
+        if (applySoftware == null) {
+            return null;
+        }
         // 复制 申请软件 佐证材料 到 softwareVO
         BeanUtils.copyProperties(applySoftware, softwareVO);
 

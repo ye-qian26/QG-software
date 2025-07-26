@@ -28,6 +28,7 @@ public class ReviewController {
      */
     @PostMapping("/addReview")
     public Result addReview(@RequestBody Review review) {
+        System.out.println("发表评论" + review);
         Long userId = review.getUserId();
         Long softwareId = review.getSoftwareId();
         String content = review.getContent();

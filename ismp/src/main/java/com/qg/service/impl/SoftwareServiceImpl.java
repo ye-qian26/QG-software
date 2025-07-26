@@ -108,6 +108,15 @@ public class SoftwareServiceImpl implements SoftwareService {
     public Software changeSoftwareById(Software software){
         int sum = 0;
         sum=softwareMapper.updateById(software);
+        Long id=software.getId();
+
+        if(sum>0){
+            Software softwareNew=softwareMapper.selectById(id);
+            return softwareNew;
+        }
+        else return null;
+    }
+
 
 
     /**
@@ -173,12 +182,70 @@ public class SoftwareServiceImpl implements SoftwareService {
         System.out.println("null");
         return null;
 
-        Long id=software.getId();
-        if(sum>0){
-            Software softwareNew=softwareMapper.selectById(id);
-            return softwareNew;
-        }
-        else return null;
+    }
 
+
+    /**
+     * 获取用户状态
+     * * ====>设备状态：0：已预约；1：已购买
+     * * ====>假设1:可以预约
+     * * =======>可以预约，但是未预约，返回：1null，最后决定返回：1
+     * * =======>可以预约，并且已预约，返回：10，最后决定返回：2
+     * *
+     * * ====>假设2:可以购买
+     * * =======>可以购买，但是未购买，返回：2null，最后决定返回：3
+     * * =======>可以购买，并且已购买，返回：21，最后决定返回：4
+     *
+     * @param userId
+     * @param softwareId
+     * @return
+     */
+    @Override
+    public Integer checkSoftwareStatus(Long userId, Long softwareId) {
+
+        // 从software表中获取对应的software对象
+        LambdaQueryWrapper<Software> softwareQueryWrapper = new LambdaQueryWrapper<>();
+        softwareQueryWrapper.eq(Software::getId, softwareId);
+        Software software = softwareMapper.selectOne(softwareQueryWrapper);
+        if (Objects.isNull(software)) {
+            System.out.println("Objects.isNull(software)");
+            return null;
+        }
+        Integer status = software.getStatus();
+        System.out.println("software.getStatus() = " + status);
+
+
+        // 从equipment表中获取对应的Equipment
+        LambdaQueryWrapper<Equipment> equipmentLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        equipmentLambdaQueryWrapper
+                .eq(Equipment::getSoftwareId, softwareId)
+                .eq(Equipment::getUserId, userId);
+        Equipment equipment = equipmentMapper.selectOne(equipmentLambdaQueryWrapper);
+        System.out.println("equipment = " + equipment);
+
+        // 1x，我们不希望查出来是11
+        if (Objects.equals(status, SOFTWARE_STATUS_ORDER)) {
+            if (equipment == null) {
+                System.out.println("1");
+                return 1;
+            }
+            if (Objects.equals(equipment.getStatus(), Constants.EQUIPMENT_STATUS_ORDER)) {
+                System.out.println("2");
+                return 2;
+            }
+        }
+        // 2x
+        if (Objects.equals(status, SOFTWARE_STATUS_SALE)) {
+            if (equipment == null) {
+                System.out.println("3");
+                return 3;
+            }
+            if (Objects.equals(equipment.getStatus(), Constants.EQUIPMENT_STATUS_BOUGHT)) {
+                System.out.println("4");
+                return 4;
+            }
+        }
+        System.out.println("null");
+        return null;
     }
 }

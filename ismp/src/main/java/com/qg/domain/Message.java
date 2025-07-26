@@ -13,6 +13,8 @@ public class Message {
     private String time;
     private Integer isRead;
 
+    @TableLogic
+    private Integer isDeleted;
 
     public Message() {
     }
