@@ -101,6 +101,8 @@ public class UserController {
      */
     @PostMapping("/register")
     public Result register(@RequestBody RegisterDTO registerDTO) {
+        System.out.println("开始注册用户");
+        System.out.println("RegisterDTO: " + registerDTO);
         return userService.register(registerDTO.getUser(), registerDTO.getCode().trim());
     }
 

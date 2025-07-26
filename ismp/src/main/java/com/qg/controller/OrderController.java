@@ -9,6 +9,7 @@ import com.qg.service.*;
 import com.qg.utils.Constants;
 import com.qg.utils.NetWorkCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.SocketException;
@@ -40,33 +41,39 @@ public class OrderController {
      * @param order
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("/buy")
-    public Result buy(@RequestBody Order order) throws SocketException, UnknownHostException {
+    public Result buy(@RequestBody Order order) throws Exception {
         long userId = order.getUserId();
         long authorId = order.getDeveloperId();
         double price = order.getPrice();
         long softwareId = order.getSoftwareId();
 
         Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
-
+        System.out.println("*****正在购买：" + order);
         String name = softwareSearchService.SearchSoftware(softwareId).getName();
 
         Equipment equipment = new Equipment(userId, softwareId, status, name);
 
         System.out.println(equipment);
 
-        if (userService.transaction(userId, authorId, price) <= 0) {
-            return new Result(BAD_REQUEST, "余额不足");
+        int transaction = userService.transaction(userId, authorId, price);
+        if (transaction <= 0) {
+            System.out.println("交易失败");
+            throw new SocketException("交易失败,请稍后再试！");
         }
 
-        if (orderService.saveOrder(order)<=0){
-            return new Result(BAD_REQUEST, "订单生成失败");
+        int orderSave = orderService.saveOrder(order);
+        if (orderSave <= 0) {
+            System.out.println("订单保存失败");
+            throw new UnknownHostException("订单保存失败,请稍后再试！");
         }
 
-        if(equipmentService.saveEquipment(equipment)<=0){
-            return new Result(CONFLICT, "新增设备机械码失败");
+        int equipmentSave = equipmentService.saveEquipment(equipment);
+        if (equipmentSave <= 0) {
+            System.out.println("设备保存失败");
+            throw new SocketException("设备保存失败,请稍后再试！");
         }
-
         return new Result(SUCCESS, "交易成功！");
     }
 
