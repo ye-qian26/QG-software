@@ -150,7 +150,7 @@ public class SoftwareSearchController {
 
 
     /**
-     *
+     *获得该开发商的所有产品
      * @param developerId
      * @return
      */
