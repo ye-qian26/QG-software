@@ -70,6 +70,8 @@ public class ReceiveController {
             String name = parts[2];
 
             String serviceData = "mac=" + mac + ";email=" + email + ";name=" + name;
+
+
             String message = receiveService.Permissions(serviceData);
 
             System.out.println(email + "\n" + mac + "\n" + name );

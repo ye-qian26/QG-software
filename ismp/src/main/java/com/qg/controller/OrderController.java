@@ -59,17 +59,19 @@ public class OrderController {
 
         int transaction = userService.transaction(userId, authorId, price);
         if (transaction <= 0) {
-            System.out.println("失败");
+            System.out.println("交易失败");
             throw new SocketException("交易失败,请稍后再试！");
         }
 
         int orderSave = orderService.saveOrder(order);
         if (orderSave <= 0) {
+            System.out.println("订单保存失败");
             throw new UnknownHostException("订单保存失败,请稍后再试！");
         }
 
         int equipmentSave = equipmentService.saveEquipment(equipment);
         if (equipmentSave <= 0) {
+            System.out.println("设备保存失败");
             throw new SocketException("设备保存失败,请稍后再试！");
         }
         return new Result(SUCCESS, "交易成功！");
