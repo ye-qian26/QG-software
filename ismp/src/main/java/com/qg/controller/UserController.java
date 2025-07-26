@@ -48,6 +48,7 @@ public class UserController {
         try {
             System.out.println(file.getOriginalFilename());
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
+            System.out.println(filePath);
             return new Result(Code.SUCCESS, filePath); // 返回文件路径
         } catch (IOException e) {
             return new Result(Code.INTERNAL_ERROR, "上传失败");
@@ -146,6 +147,7 @@ public class UserController {
     @GetMapping("/getInformation/{id}")
     public Result getInformation(@PathVariable Long id) {
         User user = userService.getUser(id);
+        System.out.println(user);
         if (user == null) {
             return new Result(BAD_GATEWAY, "获取失败");
         }
@@ -209,13 +211,63 @@ public class UserController {
      * @Author lrt
      * @Description //TODO 充值
      * @Date 17:00 2025/7/25
-     * @param id
-     * @param money
+     * @Param
      * @return com.qg.domain.Result
      **/
-    @PutMapping
-    public Result updateMoney(@RequestParam Long id, @RequestParam Double money) {
+    @PutMapping("/updateMoney")
+    public Result updateMoney(@RequestBody User user) {
+        Long id = user.getId();
+        double money = user.getMoney();
+        if (id <= 0 || money <= 0) {
+            System.out.println("请求参数错误");
+            return new Result(BAD_REQUEST, "请求参数错误");
+        }
+
         int i = userService.updateMoney(id,money);
         return i > 0 ? new Result(SUCCESS, "充值成功") : new Result(NOT_FOUND,"充值失败");
     }
+
+    /**
+     * @Author lrt
+     * @Description //TODO 更新手机号
+     * @Date 0:21 2025/7/26
+     * @Param
+ * @param user
+     * @return com.qg.domain.Result
+     **/
+    @PutMapping("/updatePhone")
+    public Result updatePhone(@RequestBody User user) {
+        Long id = user.getId();
+        String phone = user.getPhone();
+        System.out.println("id: " + id + ", phone: " + phone);
+        if (id <= 0) {
+            System.out.println("请求参数错误");
+            return new Result(BAD_REQUEST, "请求参数错误");
+        }
+        boolean flag = userService.updatePhone(id, phone);
+        return flag ? new Result(SUCCESS, "手机号更新成功") : new Result(NOT_FOUND, "手机号更新失败");
+    }
+
+    /**
+     * @Author lrt
+     * @Description //TODO 更新用户名
+     * @Date 0:23 2025/7/26
+     * @Param
+ * @param user
+     * @return com.qg.domain.Result
+     **/
+    @PutMapping("/updateName")
+    public Result updateName(@RequestBody User user) {
+        Long id = user.getId();
+        String name = user.getName();
+
+        System.out.println("id: " + id + ", name: " + name);
+        if (id <= 0 || name == null || name.isEmpty()) {
+            return new Result(BAD_REQUEST, "请求参数错误");
+        }
+
+        boolean flag = userService.updateName(id, name);
+        return flag ? new Result(SUCCESS, "用户名更新成功") : new Result(NOT_FOUND, "用户名更新失败");
+    }
+
 }

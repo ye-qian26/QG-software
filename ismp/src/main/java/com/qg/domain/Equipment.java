@@ -1,7 +1,7 @@
 package com.qg.domain;
 
 
-
+import com.baomidou.mybatisplus.annotation.TableLogic;
 
 public class Equipment {
     private Long id;
@@ -12,6 +12,8 @@ public class Equipment {
     private String code2;
     private String code3;
     private String name;
+    @TableLogic
+    private int isDeleted;
 
     public Equipment() {
     }
@@ -38,6 +40,14 @@ public class Equipment {
         this.code2 = code2;
         this.code3 = code3;
         this.name = name;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     /**

@@ -104,6 +104,18 @@ public class SoftwareServiceImpl implements SoftwareService {
         return sum;
     }
 
+    //第三方修改software信息
+    public Software changeSoftwareById(Software software){
+        int sum = 0;
+        sum=softwareMapper.updateById(software);
+              Long id=software.getId();
+        if(sum>0){
+            Software softwareNew=softwareMapper.selectById(id);
+            return softwareNew;
+        }
+        else return null;
+    }
+
 
     /**
      * 获取用户状态

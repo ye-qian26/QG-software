@@ -23,5 +23,6 @@ public interface SoftwareService {
 
     public int roleDelete(Long id);
 
-    Integer checkSoftwareStatus(Long userId, Long softwareId);
+    Software changeSoftwareById(Software software);
+
 }
