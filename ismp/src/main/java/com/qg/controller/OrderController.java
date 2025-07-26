@@ -37,6 +37,7 @@ public class OrderController {
 
     /**
      * 用户发起交易
+     *
      * @param order
      * @return
      */
@@ -51,7 +52,6 @@ public class OrderController {
         Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
 
         String name = softwareSearchService.SearchSoftware(softwareId).getName();
-
 
         Equipment equipment = new Equipment(userId, softwareId, status, name);
 
@@ -80,6 +80,7 @@ public class OrderController {
 
     /**
      * 用户查找自己所有的订单
+     *
      * @param id
      * @return
      */
@@ -95,7 +96,7 @@ public class OrderController {
             return new Result(NOT_FOUND, "订单加载失败！");
         }
         if (orders.size() == 0) {
-            return new Result(NOT_FOUND,null,"尚未有订单");
+            return new Result(NOT_FOUND, null, "尚未有订单");
         }
 
         return new Result(SUCCESS, orders, "订单查询成功！");
@@ -104,11 +105,12 @@ public class OrderController {
 
     /**
      * 查看购买的订单
+     *
      * @return
      */
     @GetMapping("/findAll")
     public Result findAll() {
         List<Order> orderList = orderService.selectAll();
-        return orderList!=null ? new Result(SUCCESS,orderList,"查询成功") : new Result(BAD_GATEWAY,"查询失败");
+        return orderList != null ? new Result(SUCCESS, orderList, "查询成功") : new Result(BAD_GATEWAY, "查询失败");
     }
 }

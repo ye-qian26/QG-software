@@ -1,5 +1,6 @@
 package com.qg.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,12 +31,17 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public int saveEquipment(Equipment equipment) {
+        System.out.println("==>新增设备机械码" + equipment);
         equipment.setStatus(EQUIPMENT_STATUS_BOUGHT);
+        Long softwareId = equipment.getSoftwareId();
+        Software software = softwareMapper.selectById(softwareId);
+        equipment.setName(software.getName());
         return equipmentMapper.insert(equipment);
     }
 
     /**
      * 获取用户的所有已购买软件
+     *
      * @param userId
      * @return
      */
@@ -45,6 +51,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         Page<Software> page = new Page<>(current, size);
         return softwareMapper.selectPurchased(page, userId);
     }
+
 
     @Override
     public boolean isPurchased(Long userId, Long softwareId) {
@@ -57,6 +64,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     /**
      * 获取用户的所有已预约软件
+     *
      * @param userId
      * @return
      */
@@ -83,6 +91,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     /**
      * 管理员查看所有用户的预约软件
+     *
      * @return
      */
     @Override
@@ -146,8 +155,9 @@ public class EquipmentServiceImpl implements EquipmentService {
     }*/
 
     @Override
-    public int GetUserStatus(Long userId){
+    public int GetUserStatus(Long userId) {
         int status = equipmentMapper.selectById(userId).getStatus();
+        System.out.println("返回的状态码：" + status);
         return status;
     }
 
