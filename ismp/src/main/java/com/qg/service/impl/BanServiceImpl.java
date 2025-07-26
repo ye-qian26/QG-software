@@ -26,7 +26,14 @@ public class BanServiceImpl implements BanService {
 
     @Override
     public boolean add(Ban ban) {
-        return !judgeBan(ban.getUserId()) && banMapper.insert(ban) > 0;
+        if (judgeBan(ban.getUserId())) {
+            return false;
+        } else {
+            LambdaQueryWrapper<Ban> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(Ban::getUserId, ban.getUserId());
+            banMapper.delete(wrapper);
+        }
+        return banMapper.insert(ban) > 0;
     }
 
     @Override

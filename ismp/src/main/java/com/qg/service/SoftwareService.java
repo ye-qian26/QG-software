@@ -2,9 +2,12 @@ package com.qg.service;
 
 import com.qg.domain.Result;
 import com.qg.domain.Software;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+
+@Transactional
 public interface SoftwareService {
     public Software addSoftware(Software software);
 
@@ -20,5 +23,8 @@ public interface SoftwareService {
 
     public int roleDelete(Long id);
 
+    Integer checkSoftwareStatus(Long userId, Long softwareId);
+
     Software changeSoftwareById(Software software);
+
 }
