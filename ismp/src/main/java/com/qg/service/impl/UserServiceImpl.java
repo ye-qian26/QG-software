@@ -4,10 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.qg.domain.Result;
-import com.qg.domain.User;
+import com.qg.domain.*;
 import com.qg.dto.UserDto;
-import com.qg.mapper.UserMapper;
+import com.qg.mapper.*;
 import com.qg.service.UserService;
 import com.qg.utils.EmailService;
 import com.qg.utils.HashSaltUtil;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -43,16 +43,45 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ApplyDeveloperMapper applyDeveloperMapper;
+
+    @Autowired
+    private ApplySoftwareMapper applySoftwareMapper;
+
+    @Autowired
+    private BanMapper banMapper;
+
+    @Autowired
+    private EquipmentMapper equipmentMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
+
+    @Autowired
+    private SoftwareMapper softwareMapper;
+
+    @Autowired
+    private SubscribeMapper subscribeMapper;
 
     @Override
     public Map<String, Object> loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+
         lqw.eq(User::getEmail, email);
         System.out.println("登录邮箱：" + email);
 
+        //List<User> list= userMapper.selectList(lqw);
         User loginUser = userMapper.selectOne(lqw);
-
+        //System.out.println(list);
+        //System.out.println(loginUser);
         System.out.println(loginUser);
 
 
@@ -78,6 +107,7 @@ public class UserServiceImpl implements UserService {
         map.put("token", token);
         map.put("user", loginUser);
         return map;
+//        return null;
     }
 
     @Override
@@ -199,6 +229,41 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result delete(Long id) {
         int i = userMapper.deleteById(id);
+        LambdaQueryWrapper<ApplyDeveloper> applyDeveloperWrapper = new LambdaQueryWrapper<>();
+        applyDeveloperWrapper.eq(ApplyDeveloper::getUserId, id);
+        applyDeveloperMapper.delete(applyDeveloperWrapper);
+
+        LambdaQueryWrapper<ApplySoftware> applySoftwareWrapper = new LambdaQueryWrapper<>();
+        applySoftwareWrapper.eq(ApplySoftware::getUserId, id);
+        applySoftwareMapper.delete(applySoftwareWrapper);
+
+        LambdaQueryWrapper<Ban> banWrapper = new LambdaQueryWrapper<>();
+        banWrapper.eq(Ban::getUserId, id);
+        banMapper.delete(banWrapper);
+
+        LambdaQueryWrapper<Equipment> equipmentWrapper = new LambdaQueryWrapper<>();
+        equipmentWrapper.eq(Equipment::getUserId, id);
+        equipmentMapper.delete(equipmentWrapper);
+
+        LambdaQueryWrapper<Message> messageWrapper = new LambdaQueryWrapper<>();
+        messageWrapper.eq(Message::getReceiverId, id).or().eq(Message::getPosterId, id);
+        messageMapper.delete(messageWrapper);
+
+        LambdaQueryWrapper<Order> orderWrapper = new LambdaQueryWrapper<>();
+        orderWrapper.eq(Order::getUserId, id).or().eq(Order::getDeveloperId, id);
+        orderMapper.delete(orderWrapper);
+
+        LambdaQueryWrapper<Review> reviewWrapper = new LambdaQueryWrapper<>();
+        reviewWrapper.eq(Review::getUserId, id);
+        reviewMapper.delete(reviewWrapper);
+
+        LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
+        softwareWrapper.eq(Software::getAuthorId, id);
+        softwareMapper.delete(softwareWrapper);
+
+        LambdaQueryWrapper<Subscribe> subscribeWrapper = new LambdaQueryWrapper<>();
+        subscribeWrapper.eq(Subscribe::getUserId, id).or().eq(Subscribe::getDeveloperId, id);
+        subscribeMapper.delete(subscribeWrapper);
         return i > 0 ? new Result(SUCCESS, "删除成功！") : new Result(NOT_FOUND, "删除错误！");
     }
 
@@ -214,14 +279,19 @@ public class UserServiceImpl implements UserService {
         User author = userMapper.selectOne(lqw2);
 
         if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
+            System.out.println("用户不存在或余额不足");
             return 0;
         }
 
+        System.out.println("==>用户准备扣钱" + customer.getMoney());
         customer.setMoney(customer.getMoney() - price);
         int customerResult = userMapper.updateById(customer);
+        System.out.println("==>用户已经扣钱" + customer.getMoney());
 
+        System.out.println("==>开发商准备收款" + author.getMoney());
         author.setMoney(author.getMoney() + price);
         int authorResult = userMapper.updateById(author);
+        System.out.println("==>开发商已经收款" + author.getMoney());
 
         if (customerResult > 0 && authorResult > 0) {
             return 1;
@@ -283,15 +353,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
-/**
- * @Author lrt
- * @Description //TODO 充值
- * @Date 16:59 2025/7/25
- * @Param
- * @param id
- * @param money
- * @return int
- **/
+    /**
+     * @param id
+     * @param money
+     * @return int
+     * @Author lrt
+     * @Description //TODO 充值
+     * @Date 16:59 2025/7/25
+     * @Param
+     **/
 
     @Transactional(rollbackFor = Exception.class)
     @Override

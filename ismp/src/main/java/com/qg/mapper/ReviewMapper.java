@@ -23,6 +23,6 @@ public interface ReviewMapper extends BaseMapper<Review> {
             ", r.is_deleted AS isDeleted, u.avatar, u.name AS username " +
             "FROM review r " +
             "INNER JOIN user u ON u.id = r.user_id " +
-            "WHERE r.software_id = #{softwareId}")
+            "WHERE r.software_id = #{softwareId} and r.is_deleted = 0")
     List<ReviewVO> getAllReviewBySoftwareId(@Param("softwareId")Long softwareId);
 }

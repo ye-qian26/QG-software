@@ -108,4 +108,21 @@ public interface SoftwareMapper extends BaseMapper<Software> {
             "FROM software s JOIN user u ON s.author_id = u.id " +
             "WHERE u.id = #{developerId} AND u.role = 2")
     List<Software> getSoftwareByDeveloperId(@Param("developerId") Long developerId);
+
+
+
+//    @Select("SELECT CASE " +
+//            "WHEN s.status = 1 AND e.id IS NULL THEN 1 " +
+//            "WHEN s.status = 1 AND e.status = 0 THEN 2 " +
+//            "WHEN s.status = 2 AND e.id IS NULL THEN 3 " +
+//            "WHEN s.status = 2 AND e.status = 1 THEN 4 " +
+//            "ELSE NULL " +
+//            "END AS result_status " +
+//            "FROM software s " +
+//            "LEFT JOIN equipment e " +
+//            "ON e.software_id = s.id AND e.user_id = #{userId} " +
+//            "WHERE s.id = #{softwareId} AND s.is_deleted = 0 " +
+//            "LIMIT 1")
+//    Integer checkSoftwareStatus(@Param("userId") Long userId,
+//                                @Param("softwareId") Long softwareId);
 }

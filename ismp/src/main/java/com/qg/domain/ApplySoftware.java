@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("apply_software")
 public class ApplySoftware {
     private Long id;
-    private long userId;
+    private Long userId;
     private String reason;
     private String material;
     private Integer status;
@@ -22,7 +22,7 @@ public class ApplySoftware {
     public ApplySoftware() {
     }
 
-    public ApplySoftware(Long id, long userId, String reason, String material, Integer status, Long softwareId, String applyTime, String applyReason, Integer isDeleted) {
+    public ApplySoftware(Long id, Long userId, String reason, String material, Integer status, Long softwareId, String applyTime, String applyReason, Integer isDeleted) {
         this.id = id;
         this.userId = userId;
         this.reason = reason;
@@ -32,6 +32,11 @@ public class ApplySoftware {
         this.applyTime = applyTime;
         this.applyReason = applyReason;
         this.isDeleted = isDeleted;
+    }
+
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     /**
@@ -54,7 +59,7 @@ public class ApplySoftware {
      * 获取
      * @return userId
      */
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
