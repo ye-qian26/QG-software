@@ -37,7 +37,6 @@ public class BanController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody Ban ban){
-
         System.out.println("bans/add ===>>> " + ban);
         boolean flag = banService.add(ban);
         Integer code = flag ? Code.SUCCESS : Code.CONFLICT;

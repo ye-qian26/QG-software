@@ -24,6 +24,7 @@ public class ReceiveServiceImpl implements ReceiveService {
     @Override
     public String Permissions(String data) {
 
+        System.out.println(data);
         if (data == null || !data.contains("mac=") || !data.contains("email=") || !data.contains("name=")) {
             System.out.println("信息不全");
             return "false";
@@ -41,8 +42,10 @@ public class ReceiveServiceImpl implements ReceiveService {
 
         LambdaQueryWrapper<User> queryWrapper1 = new LambdaQueryWrapper<>();
         queryWrapper1.eq(User::getEmail, email);
-        System.out.println(mac);
-        System.out.println(email);
+        System.out.println("==================================================\n");
+        System.out.println("mac:" + mac + "<==");
+        System.out.println("email:" + email + "<==");
+        System.out.println("name:" + name + "<==");
         User user = userMapper.selectOne(queryWrapper1);
 
         if (user == null) {
@@ -50,12 +53,19 @@ public class ReceiveServiceImpl implements ReceiveService {
             return "false";
         }
 
-
+        System.out.println("用户信息：" + user);
 
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
         queryWrapper2.eq(Equipment::getName, name);
+        System.out.println("name: " + name);
+        System.out.println("userId: " + user.getId());
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
+
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            System.out.println("没有对应的设备");
+            return "false";
+        }
 
         for (Equipment equipment : equipmentList) {
             System.out.println(equipment);
@@ -63,8 +73,6 @@ public class ReceiveServiceImpl implements ReceiveService {
                 return "true";
             }
         }
-
-
         System.out.println("未知错误");
         return "false";
     }
