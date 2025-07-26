@@ -90,8 +90,10 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
      */
     @Override
     public boolean agreeApplyDeveloper(ApplyDeveloper applyDeveloper) {
+
         return this.updateStatusById(applyDeveloper.getId())
-                && messageService.applyDeveloperSuccess(applyDeveloper.getUserId());
+                && messageService.applyDeveloperSuccess(applyDeveloper.getUserId())
+                && applyDeveloperMapper.deleteById(applyDeveloper.getId()) > 0;
     }
 
     /**
@@ -104,6 +106,7 @@ public class ApplyDeveloperServiceImpl implements ApplyDeveloperService {
     public boolean disagreeApplyDeveloper(ApplyDeveloper applyDeveloper) {
         return this.updateStatusById(applyDeveloper.getId())
                 && messageService.applyDeveloperFailure(
-                        applyDeveloper.getUserId(), applyDeveloper.getReason());
+                        applyDeveloper.getUserId(), applyDeveloper.getReason())
+                && applyDeveloperMapper.deleteById(applyDeveloper.getId()) > 0;
     }
 }

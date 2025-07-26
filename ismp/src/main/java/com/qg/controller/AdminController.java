@@ -59,6 +59,7 @@ public class AdminController {
 //            return new Result(Code.FORBIDDEN, "权限不足");
 //        }
         List<AdminManageUserVO> list = adminService.getAllUser();
+        System.out.println("getAllUser ==> " + list);
         if (list == null || list.isEmpty()) {
             return new Result(Code.NOT_FOUND, "当前无用户信息");
         } else {

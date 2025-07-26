@@ -9,7 +9,7 @@ public interface BanService {
 
     boolean add(Ban ban);
 
-    boolean delete(Ban ban);
+    boolean delete(Long userId);
 
     Ban selectByUserId(Long userId);
 
