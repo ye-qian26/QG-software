@@ -3,6 +3,7 @@ package com.qg.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.*;
 import com.qg.dto.UserDto;
@@ -181,14 +182,36 @@ public class UserServiceImpl implements UserService {
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
+        // 自动生成一个初始姓名
+        user.setName("用户：" + RandomUtil.randomString(6));
+
         // 向数据库中添加数据
         if (userMapper.insert(user) != 1) {
             return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
         }
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getEmail, email);
+        user= userMapper.selectOne(wrapper);
         // 注册成功后删除验证码
         stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
+        // 随机生成token，作为的登录令牌
+        String token = cn.hutool.core.lang.UUID.randomUUID().toString(true);
+        // 7.2.将User对象转换为HashMap存储
+        UserDto userDTO = BeanUtil.copyProperties(user, UserDto.class);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
+        // 7.3.存储
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 7.4.设置token有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userDTO);
+        map.put("token", token);
 
-        return new Result(CREATED, "恭喜你，注册成功！");
+        return new Result(CREATED, map, "恭喜你，注册成功！");
     }
 
     @Override

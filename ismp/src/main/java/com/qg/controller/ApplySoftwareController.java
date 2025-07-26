@@ -50,6 +50,7 @@ public class ApplySoftwareController {
             }
             // 解析 JSON 字符串为 Software 对象
             ApplySoftware applySoftware = JsonParserUtil.fromJson(applySoftwareJson, ApplySoftware.class);
+            System.out.println("applySoftware ==> " + applySoftware);
 
             if (applySoftware == null) {
                 return new Result(Code.BAD_REQUEST, "json解析出现错误");
@@ -65,6 +66,7 @@ public class ApplySoftwareController {
 
             // 将 绝对路径 保存 到 applySoftware 中
             applySoftware.setMaterial(filePath);
+
 
             boolean flag = applySoftwareService.add(applySoftware);
             Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;

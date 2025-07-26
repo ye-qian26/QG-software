@@ -196,13 +196,14 @@ public class UserController {
 
             // 判断头像是否上传成功返回相应的结果
             if (userService.updateAvatar(userId, avatarUrl)) {
+                System.out.println("上传头像成功，url=====>" + avatarUrl);
                 return new Result(SUCCESS, avatarUrl, "头像上传成功");
             } else {
                 return new Result(NOT_FOUND, "用户不存在");
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             return new Result(INTERNAL_ERROR, "头像上传失败");
         }
     }

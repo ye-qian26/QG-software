@@ -1,5 +1,6 @@
 package com.qg.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.qg.domain.*;
 
@@ -96,10 +97,13 @@ public class MessageServiceImpl implements MessageService {
      */
     @Override
     public boolean applyDeveloperSuccess(Long userId) {
-        if (userMapper.selectById(userId) == null) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
             return false;
         }
-        return messageMapper.insert(new Message(
+        user.setRole(Constants.USER_ROLE_DEVELOPER);
+        return userMapper.updateById(user) > 0 &&
+                messageMapper.insert(new Message(
                 null, userId
                 , 1L, "恭喜您，申请成为开发者成功！"
                 , null, Constants.MESSAGE_NO_READ)

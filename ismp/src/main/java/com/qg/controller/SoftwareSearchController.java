@@ -67,6 +67,7 @@ public class SoftwareSearchController {
     public Result SearchSoftwareType(@RequestParam String type) {
         System.out.println(type + "<==type");
         List<Software> softwareList = softwareSearchService.SearchSoftwareType(type);
+        System.out.println("SearchSoftwareType ==> " + softwareList);
         if (softwareList.size() > 0) {
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
@@ -141,7 +142,7 @@ public class SoftwareSearchController {
      */
     @GetMapping("/selectLastRecordsPerName")
     public Result selectLastRecordsPerName(@RequestParam Long authorId){
-        System.out.println(authorId + "<==controller");
+        System.out.println(authorId + "<==controller (selectLastRecordsPerName)");
         List<Software> list = softwareSearchService.selectLastRecordsPerName(authorId);
         System.out.println(list);
         if (list.size() > 0) {
@@ -185,6 +186,7 @@ public class SoftwareSearchController {
         SoftwareVO softwareVO = softwareSearchService.getSoftwareWithMaterial(id, userId);
         Integer code = softwareVO != null ? Code.SUCCESS : Code.NOT_FOUND;
         String msg = softwareVO != null ? "" : "未查询到相关信息";
+
         return new Result(code, softwareVO, msg);
     }
 }
