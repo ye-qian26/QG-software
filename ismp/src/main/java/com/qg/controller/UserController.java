@@ -110,11 +110,11 @@ public class UserController {
      * 用户修改信息
      * @param user
      * @return
-     */
+     *//*
     @PutMapping("/update")
     public Result update(@RequestBody User user, @RequestParam String code) {
         return userService.update(user, code);
-    }
+    }*/
 
     /**
      * 用户逻辑删除
@@ -273,4 +273,25 @@ public class UserController {
         return flag ? new Result(SUCCESS, "用户名更新成功") : new Result(NOT_FOUND, "用户名更新失败");
     }
 
+
+    /**
+     * @Author lrt
+     * @Description //TODO 更新密码
+     * @Date 20:40 2025/7/26
+     * @Param
+ * @param user
+ * @param code
+     * @return com.qg.domain.Result
+     **/
+    @PutMapping("/updatePassword/{code}")
+    public Result updatePassword(@RequestBody User user, @PathVariable String code) {
+        System.out.println("开始更新密码");
+        System.out.println("user: " + user);
+        System.out.println("code: " + code);
+        String password = user.getPassword();
+        User existingUser = userService.getUserByEmail(user.getEmail());
+
+        // 调用用户服务更新密码
+        return userService.update(existingUser, code, password);
+    }
 }
