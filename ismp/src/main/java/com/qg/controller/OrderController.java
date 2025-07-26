@@ -50,7 +50,7 @@ public class OrderController {
         long softwareId = order.getSoftwareId();
 
         Integer status = Constants.EQUIPMENT_STATUS_BOUGHT;
-
+        System.out.println("*****正在购买：" + order);
         String name = softwareSearchService.SearchSoftware(softwareId).getName();
 
         Equipment equipment = new Equipment(userId, softwareId, status, name);

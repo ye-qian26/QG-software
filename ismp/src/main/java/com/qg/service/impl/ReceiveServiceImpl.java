@@ -24,6 +24,7 @@ public class ReceiveServiceImpl implements ReceiveService {
     @Override
     public String Permissions(String data) {
 
+        System.out.println(data);
         if (data == null || !data.contains("mac=") || !data.contains("email=") || !data.contains("name=")) {
             System.out.println("信息不全");
             return "false";
@@ -57,13 +58,16 @@ public class ReceiveServiceImpl implements ReceiveService {
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
         queryWrapper2.eq(Equipment::getName, name);
+
         System.out.println("name:" + name);
         System.out.println("userId:" + user.getId());
+
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
 
         if (equipmentList == null || equipmentList.isEmpty()) {
             System.out.println("没有对应的设备");
             return "false";
+
         }
 
 
@@ -82,6 +86,7 @@ public class ReceiveServiceImpl implements ReceiveService {
                 return "true";
             }
         }
+
         System.out.println("未知错误");
         return "false";
     }
