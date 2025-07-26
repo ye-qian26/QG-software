@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/softwares")
 public class SoftwareSearchController {
@@ -25,8 +26,10 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareNew")
     public Result SearchSoftwareNew() {
+        System.out.println("===>获取轮播图");
         List<Software> softwareList = softwareSearchService.SearchSoftwareNew();
         if (softwareList.size() > 0) {
+            System.out.println(softwareList);
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
         } else {

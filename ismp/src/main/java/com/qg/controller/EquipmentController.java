@@ -26,6 +26,7 @@ public class EquipmentController {
 
     /**
      * 获取用户的所有已购买软件
+     *
      * @param userId
      * @return
      */
@@ -147,54 +148,43 @@ public class EquipmentController {
 
 
     /**
+     * 更新机械码
+     *
+     * @param equipment
+     * @param equipment
+     * @return
+     * @return com.qg.domain.Result
      * @Author lrt
      * @Description //TODO 修改设备信息
      * @Date 20:32 2025/7/25
      * @Param
- * @param equipment
-     * @return com.qg.domain.Result
-     **/
+     */
 
     @PutMapping("/update")
-
     public Result update(@RequestBody Equipment equipment) {
         boolean flag = equipmentService.updateCode(equipment);
         return flag ? new Result(SUCCESS, "修改成功") : new Result(BAD_GATEWAY, "修改失败");
     }
 
     /**
+     * 绑定机械码
+     *
+     * @param equipment
+     * @return
+     * @throws SocketException
+     * @throws UnknownHostException
+     * @PostMapping("/addNetWorkCode")
      * @Author lrt
      * @Description //TODO 绑定网络码
      * @Date 20:32 2025/7/25
      * @Param
-     * */
+     **/
 
     @PutMapping("/addNetWorkCode")
     public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
         boolean flag = equipmentService.addNetWorkCode(equipment);
-        return flag ? new Result(SUCCESS,"绑定成功") : new Result(BAD_GATEWAY,"绑定失败");
+        return flag ? new Result(SUCCESS, "绑定成功") : new Result(CONFLICT, "绑定失败");
     }
-
-    /**
-     * 获取用户对软件的状态 0——已预约 1——已购买 2——已下载
-     * @param userId
-     * @return
-     */
-    @GetMapping("/GetUserStatus")
-    public Result GetUserStatus(@RequestParam Long userId) {
-            int status = -1;
-            status = equipmentService.GetUserStatus(userId);
-            if(status != -1) {
-                Result result = new Result(SUCCESS,status,"信息传输成功");
-                return result;
-            }
-            else{
-                Result result = new Result(BAD_REQUEST,"信息传输失败！");
-                return result;
-            }
-    }
-
-
 
 
 }

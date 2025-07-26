@@ -31,7 +31,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
 
     //主页轮播图接口
     public List<Software> SearchSoftwareNew() {
-        System.out.println("package com.qg.service.impl.SearchSoftwareNew");
+        System.out.println("===>主页获取轮播图package com.qg.service.impl.SearchSoftwareNew");
         // 先尝试从Redis获取缓存数据
         List<Software> cachedList = softwareRedisRepository.getPublishedPicture();
         if (cachedList != null && !cachedList.isEmpty()) {
