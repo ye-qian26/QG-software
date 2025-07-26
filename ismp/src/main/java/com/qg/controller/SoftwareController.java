@@ -155,13 +155,11 @@ public class SoftwareController {
 
     /**
      * 第三方逻辑下架软件
-     *
-     * @param software
+     * @param id
      * @return
      */
     @DeleteMapping("/deleteSoftware")
-    public Result deleteSoftware(@RequestBody Software software) {
-        Long id = software.getId();
+    public Result deleteSoftware(@RequestParam Long id) {
         int sum = 0;
         sum = softwareService.deleteSoftware(id);
         if (sum > 0) {
@@ -256,5 +254,4 @@ public class SoftwareController {
             return result;
         }
     }
-
 }

@@ -54,6 +54,7 @@ public class ReviewController {
      */
     @GetMapping ("/reviewOfSoftware/{softwareId}")
     public Result reviewOfSoftware(@PathVariable Long softwareId) {
+        System.out.println("reviewOfSoftware==> " + softwareId);
         if (softwareId <= 0) {
             return new Result(BAD_REQUEST, "获取评论失败");
         }
@@ -74,7 +75,7 @@ public class ReviewController {
     @GetMapping("/getAllReviews")
     public Result getAllReviews() {
         List<Review> list = reviewService.selectAll();
-
+        System.out.println(list);
         return list!= null ? new Result(SUCCESS,list,"查询成功") : new Result(NOT_FOUND,"查询失败");
     }
 
@@ -85,6 +86,7 @@ public class ReviewController {
      */
     @DeleteMapping("/deleteReview/{id}")
     public Result deleteReview(@PathVariable Long id) {
+        System.out.println("deleteReview==> " + id);
         if (id <= 0) {
             return new Result(BAD_REQUEST,"删除失败");
         }

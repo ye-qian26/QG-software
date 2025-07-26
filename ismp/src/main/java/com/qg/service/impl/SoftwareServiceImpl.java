@@ -2,12 +2,12 @@ package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.qg.domain.Code;
-import com.qg.domain.Result;
+import com.qg.domain.*;
+import com.qg.mapper.EquipmentMapper;
+import com.qg.mapper.OrderMapper;
+import com.qg.mapper.ReviewMapper;
 import com.qg.domain.Equipment;
 import com.qg.domain.Software;
-import com.qg.mapper.EquipmentMapper;
-import com.qg.mapper.MessageMapper;
 import com.qg.mapper.SoftwareMapper;
 import com.qg.service.MessageService;
 import com.qg.service.SoftwareService;
@@ -31,6 +31,13 @@ public class SoftwareServiceImpl implements SoftwareService {
     @Autowired
     private MessageService messageService;
 
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
+
     //审核前需要先上传app信息
     public Software addSoftware(Software software) {
         LambdaQueryWrapper<Software> qw = new LambdaQueryWrapper<>();
@@ -39,8 +46,10 @@ public class SoftwareServiceImpl implements SoftwareService {
         Software software1 = softwareMapper.selectOne(qw);
         if (software1 == null) {
             return softwareMapper.insert(software) > 0 ? software : null;
+        } else {
+            return softwareMapper.updateById(software) > 0 ? software : null;
         }
-        return software;
+
     }
 
     //管理员待审核/已审核的app信息获取
@@ -93,14 +102,40 @@ public class SoftwareServiceImpl implements SoftwareService {
     //第三方逻辑删除
     public int deleteSoftware(Long id) {
         int sum = 0;
-        sum = softwareMapper.deleteById(id);
+        sum=softwareMapper.deleteById(id);
+        System.out.println(id);
+        System.out.println(sum);
+
+        LambdaQueryWrapper<Equipment> eqw = new LambdaQueryWrapper<>();
+        eqw.eq(Equipment::getSoftwareId, id);
+        equipmentMapper.delete(eqw);
+
+        LambdaQueryWrapper<Order> orw = new LambdaQueryWrapper<>();
+        orw.eq(Order::getSoftwareId, id);
+        orderMapper.delete(orw);
+
+        LambdaQueryWrapper<Review> rw = new LambdaQueryWrapper<>();
+        rw.eq(Review::getSoftwareId, id);
+        reviewMapper.delete(rw);
         return sum;
     }
 
     //管理员逻辑删除
     public int roleDelete(Long id) {
         int sum = 0;
-        sum = softwareMapper.deleteById(id);
+        sum=softwareMapper.deleteById(id);
+
+        LambdaQueryWrapper<Equipment> eqw = new LambdaQueryWrapper<>();
+        eqw.eq(Equipment::getSoftwareId, id);
+        equipmentMapper.delete(eqw);
+
+        LambdaQueryWrapper<Order> orw = new LambdaQueryWrapper<>();
+        orw.eq(Order::getSoftwareId, id);
+        orderMapper.delete(orw);
+
+        LambdaQueryWrapper<Review> rw = new LambdaQueryWrapper<>();
+        rw.eq(Review::getSoftwareId, id);
+        reviewMapper.delete(rw);
         return sum;
     }
 

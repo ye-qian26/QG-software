@@ -46,11 +46,14 @@ public class SoftwareSearchController {
     @GetMapping("/SearchTypeNew")
     public Result SearchTypeNew(@RequestParam String type) {
         List<Software> softwareList = softwareSearchService.SearchTypeNew(type);
+        System.out.println("SearchTypeNew==> ");
         if (softwareList.size() > 0) {
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
+            System.out.println("SearchTypeNew==> 成功");
             return result;
         } else {
             Result result = new Result(Code.BAD_REQUEST, "获取信息失败！");
+            System.out.println("SearchTypeNew==> 失败");
             return result;
         }
     }

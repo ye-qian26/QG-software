@@ -49,18 +49,22 @@ public class ApplyDeveloperController {
      */
     @PostMapping
     public Result add(@RequestParam("applyDeveloper") String applyDeveloperJson, @RequestParam("file") MultipartFile file) {
+        System.out.println("已经进来申请了");
         try {
             if (applyDeveloperJson == null || file == null) {
+                System.out.println("传递的请求参数为空值，请检查");
                 return new Result(Code.BAD_REQUEST, "传递的请求参数为空值，请检查");
             }
 
             // 解析 JSON 字符串为 Software 对象
             ApplyDeveloper applyDeveloper = JsonParserUtil.fromJson(applyDeveloperJson, ApplyDeveloper.class);
             if (applyDeveloper == null) {
+                System.out.println("json解析出现错误");
                 return new Result(Code.BAD_REQUEST, "json解析出现错误");
             }
             // 判断 文件 类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {
+                System.out.println("文档错误");
                 return new Result(Code.BAD_REQUEST, "文档格式错误");
             }
             // 保存文件到服务器上，并获取绝对路径
@@ -72,6 +76,7 @@ public class ApplyDeveloperController {
             boolean flag = applyDeveloperService.add(applyDeveloper);
             Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
             String msg = flag ? "" : "添加失败，请稍后重试！";
+            System.out.println("添加 成为开发商 申请结果：" + msg);
             return new Result(code, msg);
         } catch (IOException e) {
             throw new RuntimeException(e);

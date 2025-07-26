@@ -58,21 +58,35 @@ public class ReceiveServiceImpl implements ReceiveService {
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
         queryWrapper2.eq(Equipment::getName, name);
-        System.out.println("name: " + name);
-        System.out.println("userId: " + user.getId());
+
+        System.out.println("name:" + name);
+        System.out.println("userId:" + user.getId());
+
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
 
         if (equipmentList == null || equipmentList.isEmpty()) {
             System.out.println("没有对应的设备");
             return "false";
+
         }
 
-        for (Equipment equipment : equipmentList) {
-            System.out.println(equipment);
-            if (mac.equals(equipment.getCode1()) || mac.equals(equipment.getCode2()) || mac.equals(equipment.getCode3())) {
+
+        for (Equipment e : equipmentList) {
+            if (e.getCode1() == null || e.getCode1().isEmpty() || e.getCode1().equals(mac)) {
+                e.setCode1(mac);
+                equipmentMapper.updateById(e);
+                return "true";
+            } else if (e.getCode2() == null || e.getCode2().isEmpty() || e.getCode2().equals(mac)) {
+                e.setCode2(mac);
+                equipmentMapper.updateById(e);
+                return "true";
+            } else if (e.getCode3() == null || e.getCode3().isEmpty() || e.getCode3().equals(mac)) {
+                e.setCode3(mac);
+                equipmentMapper.updateById(e);
                 return "true";
             }
         }
+
         System.out.println("未知错误");
         return "false";
     }

@@ -4,10 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.qg.domain.Result;
-import com.qg.domain.User;
+import com.qg.domain.*;
 import com.qg.dto.UserDto;
-import com.qg.mapper.UserMapper;
+import com.qg.mapper.*;
 import com.qg.service.UserService;
 import com.qg.utils.EmailService;
 import com.qg.utils.HashSaltUtil;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -43,16 +43,45 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ApplyDeveloperMapper applyDeveloperMapper;
+
+    @Autowired
+    private ApplySoftwareMapper applySoftwareMapper;
+
+    @Autowired
+    private BanMapper banMapper;
+
+    @Autowired
+    private EquipmentMapper equipmentMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
+
+    @Autowired
+    private SoftwareMapper softwareMapper;
+
+    @Autowired
+    private SubscribeMapper subscribeMapper;
 
     @Override
     public Map<String, Object> loginByPassword(String email, String password) {
 
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+
         lqw.eq(User::getEmail, email);
         System.out.println("登录邮箱：" + email);
 
+        //List<User> list= userMapper.selectList(lqw);
         User loginUser = userMapper.selectOne(lqw);
-
+        //System.out.println(list);
+        //System.out.println(loginUser);
         System.out.println(loginUser);
 
 
@@ -78,6 +107,7 @@ public class UserServiceImpl implements UserService {
         map.put("token", token);
         map.put("user", loginUser);
         return map;
+//        return null;
     }
 
     @Override
@@ -125,17 +155,23 @@ public class UserServiceImpl implements UserService {
 
         // 判断参数非空
         if (user == null || code == null) {
+            System.out.println("存在空参");
             return new Result(BAD_REQUEST, "存在空参");
+
         }
         // 获取用户邮箱，并做正则验证
         String email = user.getEmail().trim();
         if (RegexUtils.isEmailInvalid(email)) {
+            System.out.println("邮箱格式错误");
             return new Result(BAD_REQUEST, "邮箱格式错误");
         }
 
         // 再查看验证码是否正确
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
+            System.out.println(cacheCode);
+            System.out.println("用户输入的验证码：" + code);
+            System.out.println("验证码错误");
             return new Result(NOT_FOUND, "验证码错误");
         }
 
@@ -145,6 +181,7 @@ public class UserServiceImpl implements UserService {
         // 判断邮箱是否已经被注册
         User one = userMapper.selectOne(lqw);
         if (one != null) {
+            System.out.println("该邮箱已被注册");
             return new Result(CONFLICT, "该邮箱已被注册！");
         }
 
@@ -153,12 +190,14 @@ public class UserServiceImpl implements UserService {
 
         // 向数据库中添加数据
         if (userMapper.insert(user) != 1) {
+            System.out.println("注册失败，请稍后重试");
             return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
         }
         // 注册成功后删除验证码
         stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
+        System.out.println("注册成功，恭喜你！");
 
-        return new Result(CREATED, "恭喜你，注册成功！");
+        return new Result(CREATED, user,"恭喜你，注册成功！");
     }
 
     @Override
@@ -168,6 +207,10 @@ public class UserServiceImpl implements UserService {
         }
         String email = user.getEmail();
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        System.out.println("缓存中的验证码：" + cacheCode);
+        System.out.println("用户输入的验证码：" + code);
+        System.out.println("用户邮箱：" + email);
+
         if (cacheCode == null || !cacheCode.equals(code)) {
             return new Result(NOT_FOUND, "验证码错误");
         }
@@ -186,6 +229,41 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result delete(Long id) {
         int i = userMapper.deleteById(id);
+        LambdaQueryWrapper<ApplyDeveloper> applyDeveloperWrapper = new LambdaQueryWrapper<>();
+        applyDeveloperWrapper.eq(ApplyDeveloper::getUserId, id);
+        applyDeveloperMapper.delete(applyDeveloperWrapper);
+
+        LambdaQueryWrapper<ApplySoftware> applySoftwareWrapper = new LambdaQueryWrapper<>();
+        applySoftwareWrapper.eq(ApplySoftware::getUserId, id);
+        applySoftwareMapper.delete(applySoftwareWrapper);
+
+        LambdaQueryWrapper<Ban> banWrapper = new LambdaQueryWrapper<>();
+        banWrapper.eq(Ban::getUserId, id);
+        banMapper.delete(banWrapper);
+
+        LambdaQueryWrapper<Equipment> equipmentWrapper = new LambdaQueryWrapper<>();
+        equipmentWrapper.eq(Equipment::getUserId, id);
+        equipmentMapper.delete(equipmentWrapper);
+
+        LambdaQueryWrapper<Message> messageWrapper = new LambdaQueryWrapper<>();
+        messageWrapper.eq(Message::getReceiverId, id).or().eq(Message::getPosterId, id);
+        messageMapper.delete(messageWrapper);
+
+        LambdaQueryWrapper<Order> orderWrapper = new LambdaQueryWrapper<>();
+        orderWrapper.eq(Order::getUserId, id).or().eq(Order::getDeveloperId, id);
+        orderMapper.delete(orderWrapper);
+
+        LambdaQueryWrapper<Review> reviewWrapper = new LambdaQueryWrapper<>();
+        reviewWrapper.eq(Review::getUserId, id);
+        reviewMapper.delete(reviewWrapper);
+
+        LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
+        softwareWrapper.eq(Software::getAuthorId, id);
+        softwareMapper.delete(softwareWrapper);
+
+        LambdaQueryWrapper<Subscribe> subscribeWrapper = new LambdaQueryWrapper<>();
+        subscribeWrapper.eq(Subscribe::getUserId, id).or().eq(Subscribe::getDeveloperId, id);
+        subscribeMapper.delete(subscribeWrapper);
         return i > 0 ? new Result(SUCCESS, "删除成功！") : new Result(NOT_FOUND, "删除错误！");
     }
 
@@ -196,9 +274,13 @@ public class UserServiceImpl implements UserService {
         lqw1.eq(User::getId, userId);
         User customer = userMapper.selectOne(lqw1);
 
+        System.out.println("用户信息1：" + customer);
+
         LambdaQueryWrapper<User> lqw2 = new LambdaQueryWrapper<>();
         lqw2.eq(User::getId, authorId);
         User author = userMapper.selectOne(lqw2);
+
+        System.out.println("用户信息2：" + author);
 
         if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
             System.out.println("用户不存在或余额不足");
@@ -219,7 +301,7 @@ public class UserServiceImpl implements UserService {
             return 1;
         }
 
-        return 0;
+        throw new RuntimeException("交易失败，可能是余额不足或其他错误");
 
     }
 
