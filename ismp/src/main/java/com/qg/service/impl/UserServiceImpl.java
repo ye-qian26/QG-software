@@ -201,10 +201,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result update(User user, String code) {
+    public Result update(User user, String code,String password) {
         if (user == null) {
             return new Result(BAD_REQUEST, "表单为空");
         }
+
         String email = user.getEmail();
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         System.out.println("缓存中的验证码：" + cacheCode);
@@ -216,7 +217,7 @@ public class UserServiceImpl implements UserService {
         }
         // 如果密码不为空，则加密
         if (user.getPassword() != null) {
-            user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
+            user.setPassword(HashSaltUtil.creatHashPassword(password));
         }
 
         if (userMapper.updateById(user) > 0) {
@@ -409,6 +410,18 @@ public class UserServiceImpl implements UserService {
 
         user.setName(name);
         return userMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+
+    LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+    lqw.eq(User::getEmail, email);
+    User user = userMapper.selectOne(lqw);
+    if (user != null) {
+        return user;
+    }
+        return null;
     }
 
 

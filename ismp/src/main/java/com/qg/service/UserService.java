@@ -14,7 +14,7 @@ public interface UserService {
 
     Result register(User user, String code);
 
-    Result update(User user, String code);
+    Result update(User user, String code,String password);
 
     Result delete(Long id);
 
@@ -35,4 +35,6 @@ public interface UserService {
     boolean updatePhone(Long id, String phone);
 
     boolean updateName(Long id, String name);
+
+    User getUserByEmail(String email);
 }
