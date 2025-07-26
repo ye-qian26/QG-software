@@ -201,14 +201,19 @@ public class UserServiceImpl implements UserService {
         User author = userMapper.selectOne(lqw2);
 
         if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
+            System.out.println("用户不存在或余额不足");
             return 0;
         }
 
+        System.out.println("==>用户准备扣钱" + customer.getMoney());
         customer.setMoney(customer.getMoney() - price);
         int customerResult = userMapper.updateById(customer);
+        System.out.println("==>用户已经扣钱" + customer.getMoney());
 
+        System.out.println("==>开发商准备收款" + author.getMoney());
         author.setMoney(author.getMoney() + price);
         int authorResult = userMapper.updateById(author);
+        System.out.println("==>开发商已经收款" + author.getMoney());
 
         if (customerResult > 0 && authorResult > 0) {
             return 1;
@@ -270,15 +275,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
-/**
- * @Author lrt
- * @Description //TODO 充值
- * @Date 16:59 2025/7/25
- * @Param
- * @param id
- * @param money
- * @return int
- **/
+    /**
+     * @param id
+     * @param money
+     * @return int
+     * @Author lrt
+     * @Description //TODO 充值
+     * @Date 16:59 2025/7/25
+     * @Param
+     **/
 
     @Transactional(rollbackFor = Exception.class)
     @Override
