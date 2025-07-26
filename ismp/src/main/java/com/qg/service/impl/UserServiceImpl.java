@@ -200,7 +200,7 @@ public class UserServiceImpl implements UserService {
         lqw2.eq(User::getId, authorId);
         User author = userMapper.selectOne(lqw2);
 
-        if (author == null || customer == null || price <= 0 || price > author.getMoney()) {
+        if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
             return 0;
         }
 
