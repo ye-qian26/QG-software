@@ -2,9 +2,10 @@ package com.qg.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.qg.domain.Code;
-import com.qg.domain.Result;
-import com.qg.domain.Software;
+import com.qg.domain.*;
+import com.qg.mapper.EquipmentMapper;
+import com.qg.mapper.OrderMapper;
+import com.qg.mapper.ReviewMapper;
 import com.qg.mapper.SoftwareMapper;
 import com.qg.service.SoftwareService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,15 @@ import static com.qg.utils.Constants.SOFTWARE_STATUS_SALE;
 public class SoftwareServiceImpl implements SoftwareService {
     @Autowired
     private SoftwareMapper softwareMapper;
+
+    @Autowired
+    private EquipmentMapper equipmentMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    @Autowired
+    private ReviewMapper reviewMapper;
 
     //审核前需要先上传app信息
     public Software addSoftware(Software software) {
@@ -74,6 +84,20 @@ public class SoftwareServiceImpl implements SoftwareService {
     public int deleteSoftware(Long id){
         int sum = 0;
         sum=softwareMapper.deleteById(id);
+        System.out.println(id);
+        System.out.println(sum);
+
+        LambdaQueryWrapper<Equipment> eqw = new LambdaQueryWrapper<>();
+        eqw.eq(Equipment::getSoftwareId, id);
+        equipmentMapper.delete(eqw);
+
+        LambdaQueryWrapper<Order> orw = new LambdaQueryWrapper<>();
+        orw.eq(Order::getSoftwareId, id);
+        orderMapper.delete(orw);
+
+        LambdaQueryWrapper<Review> rw = new LambdaQueryWrapper<>();
+        rw.eq(Review::getSoftwareId, id);
+        reviewMapper.delete(rw);
         return sum;
     }
 
@@ -81,6 +105,18 @@ public class SoftwareServiceImpl implements SoftwareService {
     public int roleDelete(Long id){
         int sum = 0;
         sum=softwareMapper.deleteById(id);
+
+        LambdaQueryWrapper<Equipment> eqw = new LambdaQueryWrapper<>();
+        eqw.eq(Equipment::getSoftwareId, id);
+        equipmentMapper.delete(eqw);
+
+        LambdaQueryWrapper<Order> orw = new LambdaQueryWrapper<>();
+        orw.eq(Order::getSoftwareId, id);
+        orderMapper.delete(orw);
+
+        LambdaQueryWrapper<Review> rw = new LambdaQueryWrapper<>();
+        rw.eq(Review::getSoftwareId, id);
+        reviewMapper.delete(rw);
         return sum;
     }
 
