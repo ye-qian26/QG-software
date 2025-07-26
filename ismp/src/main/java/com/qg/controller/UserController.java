@@ -211,12 +211,17 @@ public class UserController {
      * @Description //TODO 充值
      * @Date 17:00 2025/7/25
      * @Param
- * @param id
- * @param money
      * @return com.qg.domain.Result
      **/
-    @PutMapping
-    public Result updateMoney(@RequestParam Long id, @RequestParam Double money) {
+    @PutMapping("/updateMoney")
+    public Result updateMoney(@RequestBody User user) {
+        Long id = user.getId();
+        double money = user.getMoney();
+        if (id <= 0 || money <= 0) {
+            System.out.println("请求参数错误");
+            return new Result(BAD_REQUEST, "请求参数错误");
+        }
+
         int i = userService.updateMoney(id,money);
         return i > 0 ? new Result(SUCCESS, "充值成功") : new Result(NOT_FOUND,"充值失败");
     }
