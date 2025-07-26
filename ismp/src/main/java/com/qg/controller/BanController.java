@@ -4,11 +4,13 @@ import com.qg.domain.Ban;
 import com.qg.domain.Code;
 import com.qg.domain.Result;
 import com.qg.service.BanService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/bans")
 public class BanController {
@@ -35,6 +37,7 @@ public class BanController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody Ban ban){
+
         System.out.println("bans/add ===>>> " + ban);
         boolean flag = banService.add(ban);
         Integer code = flag ? Code.SUCCESS : Code.CONFLICT;

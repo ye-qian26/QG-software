@@ -147,6 +147,7 @@ public class UserController {
     @GetMapping("/getInformation/{id}")
     public Result getInformation(@PathVariable Long id) {
         User user = userService.getUser(id);
+        System.out.println(user);
         if (user == null) {
             return new Result(BAD_GATEWAY, "获取失败");
         }

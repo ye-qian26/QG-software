@@ -7,6 +7,7 @@ import com.qg.domain.Result;
 import com.qg.service.ApplySoftwareService;
 import com.qg.utils.FileUploadHandler;
 import com.qg.utils.JsonParserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.qg.utils.FileUploadHandler.DOCUMENT_DIR;
 
+@Slf4j
 @RestController
 @RequestMapping("/applySoftwares")
 public class ApplySoftwareController {
@@ -43,6 +45,15 @@ public class ApplySoftwareController {
     @PostMapping
     public Result add(@RequestParam("applySoftware") String applySoftwareJson, @RequestParam("file") MultipartFile file) {
         try {
+            if (applySoftwareJson == null || file == null) {
+                return new Result(Code.BAD_REQUEST, "传递的请求参数为空值，请检查");
+            }
+            // 解析 JSON 字符串为 Software 对象
+            ApplySoftware applySoftware = JsonParserUtil.fromJson(applySoftwareJson, ApplySoftware.class);
+
+            if (applySoftware == null) {
+                return new Result(Code.BAD_REQUEST, "json解析出现错误");
+            }
             // 判断 文件类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {
                 // 文档 类型错误
@@ -50,8 +61,7 @@ public class ApplySoftwareController {
             }
             // 保存文件到服务器上，并获取绝对路径
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
-            // 1. 解析 JSON 字符串为 Software 对象
-            ApplySoftware applySoftware = JsonParserUtil.fromJson(applySoftwareJson, ApplySoftware.class);
+
 
             // 将 绝对路径 保存 到 applySoftware 中
             applySoftware.setMaterial(filePath);
@@ -168,6 +178,7 @@ public class ApplySoftwareController {
      */
     @PutMapping("/agreeApplySoftware")
     public Result agreeApplySoftware(@RequestBody ApplySoftware applySoftware) {
+        System.out.println("agreeApplySoftware ===>>>" + applySoftware);
         if (applySoftware== null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }
@@ -188,6 +199,7 @@ public class ApplySoftwareController {
      */
     @PutMapping("/disagreeApplySoftware")
     public Result disagreeApplySoftware(@RequestBody ApplySoftware applySoftware) {
+        System.out.println("disagreeApplySoftware ===>>>" + applySoftware);
         if (applySoftware == null) {
             return new Result(Code.BAD_REQUEST, "请求参数错误");
         }

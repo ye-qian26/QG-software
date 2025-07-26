@@ -6,6 +6,7 @@ import com.qg.service.AdminService;
 import com.qg.utils.Constants;
 import com.qg.vo.AdminManageUserVO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/admins")
 public class AdminController {
@@ -34,6 +36,7 @@ public class AdminController {
     public boolean identify(String token) {
         String redisKey = "login:user:" + token;
         String role = (String) stringRedisTemplate.opsForHash().get(redisKey, "role");
+
         System.out.println("当前用户token" + redisKey + "\n身份" + role);
         try {
             return role != null && role.equals(Constants.USER_ROLE_ADMIN);
