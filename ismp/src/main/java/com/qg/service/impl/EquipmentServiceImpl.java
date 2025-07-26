@@ -31,6 +31,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public int saveEquipment(Equipment equipment) {
+        System.out.println("==>新增设备机械码" + equipment);
         equipment.setStatus(EQUIPMENT_STATUS_BOUGHT);
         Long softwareId = equipment.getSoftwareId();
         Software software = softwareMapper.selectById(softwareId);
@@ -104,8 +105,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         String netWorkCode = NetWorkCode.getNetWorkCode();
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Equipment::getUserId, equipment.getUserId())
-                .eq(Equipment::getSoftwareId, equipment.getSoftwareId())
-                .eq(Equipment::getName, equipment.getName());
+                .eq(Equipment::getSoftwareId, equipment.getSoftwareId());
 
 
         Equipment one = equipmentMapper.selectOne(queryWrapper);

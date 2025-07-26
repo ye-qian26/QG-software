@@ -33,12 +33,13 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
     private ForeignKeyDeleteUtils foreignKeyDeleteUtils;
     @Autowired
     private ApplicationContext applicationContext;
-    
+
     private final Map<String, Object> tableMapperMap = new HashMap<>();
     private final Map<String, TableInfo> tableInformationMap = new HashMap<>();
 
     /**
-     * 执行级联逻辑删除
+     * 在每次更新之前
+     *
      * @param executor
      * @param mappedStatement
      * @param parameter
@@ -55,6 +56,7 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
                 if (idValue != null) {
                     // 执行级联逻辑删除
                     cascadeLogicDelete(tableInfo.getTableName(), idValue);
+                    System.out.println("执行级联逻辑删除的主键值：" +idValue);
                 }
             }
         }
@@ -62,6 +64,7 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 判断是否是逻辑删除操作
+     *
      * @param mappedStatement
      * @param parameter
      * @return
@@ -95,6 +98,7 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 根据参数获取表信息
+     *
      * @param parameter 方法参数
      * @return 表信息
      */
@@ -110,6 +114,7 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 获取表信息
+     *
      * @param mappedStatement MappedStatement对象
      * @return 表信息
      */
@@ -130,7 +135,6 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
                 }
             }
         } catch (Exception e) {
-            // 日志记录：获取表信息失败
             System.err.println(e.getMessage());
         }
         return null;
@@ -138,26 +142,29 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 获取被删除记录的主键值
+     *
      * @param parameter 方法参数
      * @param tableInfo 表信息
      * @return 主键值
      */
     private Object getDeleteIdValue(Object parameter, TableInfo tableInfo) {
-        // 处理deleteById方法的参数（直接是ID值）
+        // 如果是id值直接返回
         if (parameter != null && isSimpleType(parameter.getClass())) {
             return parameter;
         }
 
-        // 处理其他情况（参数为实体对象）
+        // 如果是对象，获取它的id
         if (parameter != null) {
             return tableInfo.getPropertyValue(parameter, tableInfo.getKeyProperty());
         }
-
         return null;
     }
 
     /**
-     * 判断是否是简单类型（基本类型及其包装类、String）
+     * 判断是否为简单类
+     *
+     * @param clazz
+     * @return
      */
     private boolean isSimpleType(Class<?> clazz) {
         return clazz.isPrimitive() ||
@@ -174,8 +181,9 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 执行级联逻辑删除
+     *
      * @param tableName 主表名
-     * @param idValue 主表被删除记录的主键值
+     * @param idValue   主表被删除记录的主键值
      */
     private void cascadeLogicDelete(String tableName, Object idValue) {
         // 获取当前表的所有外键关联信息
@@ -188,16 +196,17 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
             // 执行当前外键表的逻辑删除
             executeLogicDelete(fkTable, fkColumn, idValue);
 
-            // 递归处理外键表的关联表（实现多级级联删除）
+            // 递归处理外键表的关联表
             cascadeLogicDelete(fkTable, idValue);
         }
     }
 
     /**
      * 执行单个表的逻辑删除
-     * @param tableName 表名
+     *
+     * @param tableName  表名
      * @param columnName 外键列名
-     * @param idValue 主表主键值
+     * @param idValue    主表主键值
      */
     private void executeLogicDelete(String tableName, String columnName, Object idValue) {
         // 获取表对应的Mapper
@@ -219,24 +228,32 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
         // 设置外键条件
         updateWrapper.eq(getColumnFunction(tableInfo, columnName), idValue);
         // 设置逻辑删除字段值
-        updateWrapper.setSql(tableInfo.getLogicDeleteFieldInfo().getColumn() + " = " + tableInfo.getLogicDeleteFieldInfo().getLogicDeleteValue());
+        updateWrapper.setSql(tableInfo.getLogicDeleteFieldInfo().getColumn()
+                + " = " + tableInfo.getLogicDeleteFieldInfo().getLogicDeleteValue());
 
-        // 使用反射调用update方法
+        // 调用update方法
         try {
-            Method updateMethod = mapper.getClass().getMethod("update", Object.class, com.baomidou.mybatisplus.core.conditions.Wrapper.class);
+            Method updateMethod = mapper
+                    .getClass()
+                    .getMethod(
+                            "update", Object.class
+                            , com.baomidou.mybatisplus.core.conditions.Wrapper.class
+                    );
             updateMethod.invoke(mapper, null, updateWrapper);
         } catch (Exception e) {
-            throw new RuntimeException("执行级联删除失败", e);
+            System.err.println(e.getMessage());
         }
     }
 
     /**
      * 获取字段对应的Lambda函数
-     * @param tableInfo 表信息
+     *
+     * @param tableInfo  表信息
      * @param columnName 数据库列名
      * @return 字段对应的Lambda函数
      */
-    private com.baomidou.mybatisplus.core.toolkit.support.SFunction<Object, ?> getColumnFunction(TableInfo tableInfo, String columnName) {
+    private com.baomidou.mybatisplus.core.toolkit.support.SFunction<Object, ?>
+    getColumnFunction(TableInfo tableInfo, String columnName) {
         // 查找列名对应的属性名
         String propertyName = null;
         for (TableFieldInfo fieldInfo : tableInfo.getFieldList()) {
@@ -265,18 +282,19 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
                 }
             };
         } catch (Exception e) {
-            throw new RuntimeException("生成字段 " + propertyName + " 的Lambda表达式失败", e);
+            throw new RuntimeException("生成字段 " + propertyName + " 的Lambda表达式失败" + e.getMessage());
         }
     }
 
     /**
      * 根据表名获取Mapper
+     *
      * @param tableName 表名
      * @return Mapper对象
      */
     private Object getMapperByTableName(String tableName) {
         return tableMapperMap.computeIfAbsent(tableName, key -> {
-            // 将表名转换为Mapper Bean名称（例如：user_info -> userInfoMapper）
+            // 进行表名转换
             String mapperBeanName = convertTableNameToMapperBeanName(tableName);
             return applicationContext.getBean(mapperBeanName);
         });
@@ -284,6 +302,7 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 根据表名获取表信息
+     *
      * @param tableName 表名
      * @return 表信息
      */
@@ -297,12 +316,13 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
 
     /**
      * 获取Mapper的实体类
+     * @param mapper
+     * @return
      */
     private Class<?> getEntityClass(Object mapper) {
         Type[] interfaces = mapper.getClass().getGenericInterfaces();
         for (Type type : interfaces) {
-            if (type instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) type;
+            if (type instanceof ParameterizedType parameterizedType) {
                 // 第一个泛型参数是实体类
                 return (Class<?>) parameterizedType.getActualTypeArguments()[0];
             }
@@ -311,8 +331,10 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
     }
 
     /**
-     * 将表名转换为Mapper Bean名称
-     * 规则：下划线转驼峰，首字母小写，加上"Mapper"后缀
+     * 表名转换
+     * 下划线转驼峰，首字母小写，加上"Mapper"后缀
+     * @param tableName
+     * @return
      */
     private String convertTableNameToMapperBeanName(String tableName) {
         String[] parts = tableName.split("_");
@@ -327,6 +349,11 @@ public class ForeignKeyDeleteInterceptor implements InnerInterceptor {
         return StringUtils.firstToLowerCase(beanName.toString()) + "Mapper";
     }
 
+    /**
+     * 首字母大写
+     * @param str
+     * @return
+     */
     private String capitalize(String str) {
         if (StrUtil.isBlank(str)) {
             return str;
