@@ -36,6 +36,7 @@ public class OrderController {
 
     /**
      * 用户发起交易
+     *
      * @param order
      * @return
      */
@@ -50,20 +51,20 @@ public class OrderController {
 
         String name = softwareSearchService.SearchSoftware(softwareId).getName();
 
-
         Equipment equipment = new Equipment(userId, softwareId, status, name);
 
         System.out.println(equipment);
 
-        int transaction = userService.transaction(userId, authorId, price);
+        if (userService.transaction(userId, authorId, price) <= 0) {
+            return new Result(BAD_REQUEST, "余额不足");
+        }
 
-        int orderSave = orderService.saveOrder(order);
+        if (orderService.saveOrder(order)<=0){
+            return new Result(BAD_REQUEST, "订单生成失败");
+        }
 
-        int equipmentSave = equipmentService.saveEquipment(equipment);
-
-
-        if (transaction <= 0 || orderSave <= 0 || equipmentSave <= 0) {
-            return new Result(CONFLICT, "交易失败,请稍后再试！");
+        if(equipmentService.saveEquipment(equipment)<=0){
+            return new Result(CONFLICT, "新增设备机械码失败");
         }
 
         return new Result(SUCCESS, "交易成功！");
@@ -72,6 +73,7 @@ public class OrderController {
 
     /**
      * 用户查找自己所有的订单
+     *
      * @param id
      * @return
      */
@@ -87,7 +89,7 @@ public class OrderController {
             return new Result(NOT_FOUND, "订单加载失败！");
         }
         if (orders.size() == 0) {
-            return new Result(NOT_FOUND,null,"尚未有订单");
+            return new Result(NOT_FOUND, null, "尚未有订单");
         }
 
         return new Result(SUCCESS, orders, "订单查询成功！");
@@ -96,11 +98,12 @@ public class OrderController {
 
     /**
      * 查看购买的订单
+     *
      * @return
      */
     @GetMapping("/findAll")
     public Result findAll() {
         List<Order> orderList = orderService.selectAll();
-        return orderList!=null ? new Result(SUCCESS,orderList,"查询成功") : new Result(BAD_GATEWAY,"查询失败");
+        return orderList != null ? new Result(SUCCESS, orderList, "查询成功") : new Result(BAD_GATEWAY, "查询失败");
     }
 }
