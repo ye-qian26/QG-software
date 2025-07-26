@@ -209,9 +209,13 @@ public class UserServiceImpl implements UserService {
         lqw1.eq(User::getId, userId);
         User customer = userMapper.selectOne(lqw1);
 
+        System.out.println("用户信息1：" + customer);
+
         LambdaQueryWrapper<User> lqw2 = new LambdaQueryWrapper<>();
         lqw2.eq(User::getId, authorId);
         User author = userMapper.selectOne(lqw2);
+
+        System.out.println("用户信息2：" + author);
 
         if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
             return 0;

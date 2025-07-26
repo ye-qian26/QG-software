@@ -91,41 +91,59 @@ public class EquipmentServiceImpl implements EquipmentService {
         return softwareMapper.adminGetAllOrderSoftware(page);
     }
 
-    @Override
-    public boolean addNetWorkCode(Equipment equipment) throws SocketException, UnknownHostException {
-        String netWorkCode = NetWorkCode.getNetWorkCode();
+    /*@Override
+    public boolean addNetWorkCode(Equipment equipment) {
+        String netWorkCode = null;
+        try {
+            netWorkCode = NetWorkCode.getNetWorkCode();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         LambdaQueryWrapper<Equipment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Equipment::getUserId, equipment.getUserId())
                 .eq(Equipment::getSoftwareId, equipment.getSoftwareId())
                 .eq(Equipment::getName, equipment.getName());
 
+        System.out.println("==>netWorkCode: " + netWorkCode);
+
 
         Equipment one = equipmentMapper.selectOne(queryWrapper);
 
+        System.out.println("==>one: " + one);
+
         if (one == null) {
-            return false; // 预约记录不存在
+            System.out.println("没有找到对应的购买记录");
+            return false;
         }
 
         if (one.getCode1() != null && one.getCode2() != null && one.getCode3() != null) {
+            System.out.println("已经有三个网络码了");
             return false; // 已经有三个网络码了
         }
 
         if (one.getCode1() == null) {
+            System.out.println("添加第一个网络码");
             one.setCode1(netWorkCode);
         }else if (one.getCode2() == null) {
+            System.out.println("添加第二个网络码");
             one.setCode2(netWorkCode);
         } else if (one.getCode3() == null) {
+            System.out.println("添加第三个网络码");
             one.setCode3(netWorkCode);
         }
+        else {
+            System.out.println("所有网络码都已存在");
+            return false; // 所有网络码都已存在
+        }
+        System.out.println("更新后的设备信息：" + one);
+        return equipmentMapper.updateById(one) > 0;
+    }*/
 
-        return equipmentMapper.updateById(equipment) > 0;
-    }
-
-    @Override
+    /*@Override
     public boolean updateCode(Equipment equipment) {
         return equipmentMapper.updateById(equipment) > 0;
-    }
+    }*/
 
     @Override
     public int GetUserStatus(Long userId){

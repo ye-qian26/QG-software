@@ -155,25 +155,26 @@ public class EquipmentController {
      * @return com.qg.domain.Result
      **/
 
-    @PutMapping("/update")
+/*    @PutMapping("/update")
 
     public Result update(@RequestBody Equipment equipment) {
         boolean flag = equipmentService.updateCode(equipment);
         return flag ? new Result(SUCCESS, "修改成功") : new Result(BAD_GATEWAY, "修改失败");
-    }
+    }*/
 
-    /**
+/*    *//**
      * @Author lrt
      * @Description //TODO 绑定网络码
      * @Date 20:32 2025/7/25
      * @Param
-     * */
+     * *//*
 
     @PutMapping("/addNetWorkCode")
     public Result addNetWorkCode(@RequestBody Equipment equipment) throws SocketException, UnknownHostException {
+        System.out.println("设备信息：" + equipment);
         boolean flag = equipmentService.addNetWorkCode(equipment);
         return flag ? new Result(SUCCESS,"绑定成功") : new Result(BAD_GATEWAY,"绑定失败");
-    }
+    }*/
 
     /**
      * 获取用户对软件的状态 0——已预约 1——已购买 2——已下载
