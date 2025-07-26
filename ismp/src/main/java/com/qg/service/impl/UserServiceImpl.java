@@ -155,17 +155,23 @@ public class UserServiceImpl implements UserService {
 
         // 判断参数非空
         if (user == null || code == null) {
+            System.out.println("存在空参");
             return new Result(BAD_REQUEST, "存在空参");
+
         }
         // 获取用户邮箱，并做正则验证
         String email = user.getEmail().trim();
         if (RegexUtils.isEmailInvalid(email)) {
+            System.out.println("邮箱格式错误");
             return new Result(BAD_REQUEST, "邮箱格式错误");
         }
 
         // 再查看验证码是否正确
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
+            System.out.println(cacheCode);
+            System.out.println("用户输入的验证码：" + code);
+            System.out.println("验证码错误");
             return new Result(NOT_FOUND, "验证码错误");
         }
 
@@ -175,6 +181,7 @@ public class UserServiceImpl implements UserService {
         // 判断邮箱是否已经被注册
         User one = userMapper.selectOne(lqw);
         if (one != null) {
+            System.out.println("该邮箱已被注册");
             return new Result(CONFLICT, "该邮箱已被注册！");
         }
 
@@ -183,12 +190,14 @@ public class UserServiceImpl implements UserService {
 
         // 向数据库中添加数据
         if (userMapper.insert(user) != 1) {
+            System.out.println("注册失败，请稍后重试");
             return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
         }
         // 注册成功后删除验证码
         stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
+        System.out.println("注册成功，恭喜你！");
 
-        return new Result(CREATED, "恭喜你，注册成功！");
+        return new Result(CREATED, user,"恭喜你，注册成功！");
     }
 
     @Override
@@ -198,6 +207,10 @@ public class UserServiceImpl implements UserService {
         }
         String email = user.getEmail();
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
+        System.out.println("缓存中的验证码：" + cacheCode);
+        System.out.println("用户输入的验证码：" + code);
+        System.out.println("用户邮箱：" + email);
+
         if (cacheCode == null || !cacheCode.equals(code)) {
             return new Result(NOT_FOUND, "验证码错误");
         }
@@ -284,7 +297,7 @@ public class UserServiceImpl implements UserService {
             return 1;
         }
 
-        return 0;
+        throw new RuntimeException("交易失败，可能是余额不足或其他错误");
 
     }
 

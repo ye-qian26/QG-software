@@ -50,12 +50,13 @@ public class ReceiveServiceImpl implements ReceiveService {
             return "false";
         }
 
-
+        System.out.println("用户信息：" + user);
 
         LambdaQueryWrapper<Equipment> queryWrapper2 = new LambdaQueryWrapper<>();
         queryWrapper2.eq(Equipment::getUserId, user.getId());
         queryWrapper2.eq(Equipment::getName, name);
         List<Equipment> equipmentList = equipmentMapper.selectList(queryWrapper2);
+
 
         for (Equipment equipment : equipmentList) {
             System.out.println(equipment);
