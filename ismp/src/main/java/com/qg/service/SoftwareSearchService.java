@@ -1,6 +1,7 @@
 package com.qg.service;
 
 import com.qg.domain.Software;
+import com.qg.vo.SoftwareVO;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface SoftwareSearchService {
     public List<Software> selectLastRecordsPerName(Long id);
 
     List<Software> getSoftwareByDeveloperId(Long developerId);
+
+    SoftwareVO getSoftwareWithMaterial(Long id, Long userId);
 }
