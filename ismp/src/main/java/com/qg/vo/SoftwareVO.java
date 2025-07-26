@@ -8,6 +8,7 @@ public class SoftwareVO {
     private Long id;
     @JsonProperty("author_id")
     private Long authorId;
+    private Long softwareId;
     private Double price;
     private String introduction;
     private String version;
@@ -20,6 +21,33 @@ public class SoftwareVO {
     private int isDeleted;
     // 佐证材料
     private String material;
+
+    public SoftwareVO() {
+    }
+
+    public SoftwareVO(Long id, Long authorId, Long softwareId, Double price, String introduction,
+                      String version, Integer status, String picture, String type, String name, int isDeleted, String material) {
+        this.id = id;
+        this.authorId = authorId;
+        this.softwareId = softwareId;
+        this.price = price;
+        this.introduction = introduction;
+        this.version = version;
+        this.status = status;
+        this.picture = picture;
+        this.type = type;
+        this.name = name;
+        this.isDeleted = isDeleted;
+        this.material = material;
+    }
+
+    public Long getSoftwareId() {
+        return softwareId;
+    }
+
+    public void setSoftwareId(Long softwareId) {
+        this.softwareId = softwareId;
+    }
 
     public Long getId() {
         return id;

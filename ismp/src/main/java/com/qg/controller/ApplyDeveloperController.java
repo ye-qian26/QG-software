@@ -9,6 +9,7 @@ import com.qg.domain.Software;
 import com.qg.service.ApplyDeveloperService;
 import com.qg.utils.FileUploadHandler;
 import com.qg.utils.JsonParserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static com.qg.utils.FileUploadHandler.DOCUMENT_DIR;
 
+@Slf4j
 @RestController
 @RequestMapping("/applyDevelopers")
 public class ApplyDeveloperController {
@@ -48,6 +50,15 @@ public class ApplyDeveloperController {
     @PostMapping
     public Result add(@RequestParam("applyDeveloper") String applyDeveloperJson, @RequestParam("file") MultipartFile file) {
         try {
+            if (applyDeveloperJson == null || file == null) {
+                return new Result(Code.BAD_REQUEST, "传递的请求参数为空值，请检查");
+            }
+
+            // 解析 JSON 字符串为 Software 对象
+            ApplyDeveloper applyDeveloper = JsonParserUtil.fromJson(applyDeveloperJson, ApplyDeveloper.class);
+            if (applyDeveloper == null) {
+                return new Result(Code.BAD_REQUEST, "json解析出现错误");
+            }
             // 判断 文件 类型
             if (!FileUploadHandler.isValidDocumentFile(file)) {
                 return new Result(Code.BAD_REQUEST, "文档格式错误");
@@ -55,8 +66,6 @@ public class ApplyDeveloperController {
             // 保存文件到服务器上，并获取绝对路径
             String filePath = FileUploadHandler.saveFile(file, DOCUMENT_DIR);
 
-            // 1. 解析 JSON 字符串为 Software 对象
-            ApplyDeveloper applyDeveloper = JsonParserUtil.fromJson(applyDeveloperJson, ApplyDeveloper.class);
             // 添加绝对路径到 applyDeveloper 中
             applyDeveloper.setMaterial(filePath);
 
