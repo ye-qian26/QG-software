@@ -5,10 +5,12 @@ import com.qg.domain.Result;
 import com.qg.domain.Software;
 import com.qg.service.SoftwareSearchService;
 import com.qg.service.SoftwareService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/softwares")
@@ -23,8 +25,10 @@ public class SoftwareSearchController {
      */
     @GetMapping("/SearchSoftwareNew")
     public Result SearchSoftwareNew() {
+        System.out.println("===>获取轮播图");
         List<Software> softwareList = softwareSearchService.SearchSoftwareNew();
         if (softwareList.size() > 0) {
+            System.out.println(softwareList);
             Result result = new Result(Code.SUCCESS, softwareList, "获取信息成功！");
             return result;
         } else {

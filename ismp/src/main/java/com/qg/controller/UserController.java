@@ -209,9 +209,8 @@ public class UserController {
      * @Author lrt
      * @Description //TODO 充值
      * @Date 17:00 2025/7/25
-     * @Param
- * @param id
- * @param money
+     * @param id
+     * @param money
      * @return com.qg.domain.Result
      **/
     @PutMapping
