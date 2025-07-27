@@ -123,12 +123,16 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User user = userMapper.selectOne(lqw);
         if (user == null) {
+            System.out.println("该用户尚未注册");
             return new Result(NOT_FOUND, "该用户尚未注册");
         }
 
+        System.out.println("用户输入的验证码: " + code);
         // 从redis中取出验证码
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
+            System.out.println(cacheCode);
+            System.out.println("验证码错误");
             return new Result(NOT_FOUND, "验证码错误");
         }
 
@@ -142,12 +146,14 @@ public class UserServiceImpl implements UserService {
                         .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
         // 7.3.存储
         String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.delete(tokenKey); // 删除旧的token
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
         // 7.4.设置token有效期
         stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
         Map<String, Object> map = new HashMap<>();
         map.put("user", userDTO);
         map.put("token", token);
+        System.out.println("登录成功，token：" + token);
         return new Result(SUCCESS, map, "");
     }
 
