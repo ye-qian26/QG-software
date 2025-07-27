@@ -91,6 +91,7 @@ public class UserController {
      */
     @GetMapping("/code")
     public Result loginByCode(@RequestParam String email, @RequestParam String code) {
+        System.out.println("开始通过验证码登录");
         return userService.loginByCode(email.trim(), code.trim());
     }
 
@@ -133,11 +134,15 @@ public class UserController {
      */
     @GetMapping("/getPrice/{id}")
     public Result getPriceById(@PathVariable Long id) {
+        System.out.println("获取用户余额，id: " + id);
         if (id <= 0) {
+            System.out.println("请求参数错误");
             return new Result(BAD_REQUEST, "获取失败！");
         }
+
         double price = userService.getPriceById(id);
 
+        System.out.println("用户余额: " + price);
         return new Result(SUCCESS, String.valueOf(price), "获取成功！");
     }
 

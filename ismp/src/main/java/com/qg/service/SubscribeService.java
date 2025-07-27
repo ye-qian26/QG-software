@@ -3,6 +3,7 @@ package com.qg.service;
 import com.qg.domain.Subscribe;
 
 import com.qg.domain.User;
+import com.qg.vo.FanVO;
 import com.qg.vo.SubscribeVO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,4 +19,5 @@ public interface SubscribeService {
 
     List<SubscribeVO> getMySubscribe(Long userId);
 
+    List<FanVO> getFansCount(Long developerId);
 }

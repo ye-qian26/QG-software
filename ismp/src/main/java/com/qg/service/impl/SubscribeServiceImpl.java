@@ -9,6 +9,7 @@ import com.qg.domain.User;
 import com.qg.mapper.SubscribeMapper;
 import com.qg.mapper.UserMapper;
 import com.qg.service.SubscribeService;
+import com.qg.vo.FanVO;
 import com.qg.vo.SubscribeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class SubscribeServiceImpl implements SubscribeService {
         // 检查关注的开发者是否存在、是否真的是开发者
         User developer = userMapper.selectById(subscribe.getDeveloperId());
         if (developer == null || !developer.getRole().equals(Constants.USER_ROLE_DEVELOPER)) {
+            System.out.println("关注失败：开发者不存在或不是开发者角色");
             return false;
         }
 
@@ -41,6 +43,8 @@ public class SubscribeServiceImpl implements SubscribeService {
         QueryWrapper<Subscribe> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", subscribe.getUserId())
                 .eq("developer_id", subscribe.getDeveloperId());
+
+
 
         // 已关注，直接返回false; 未关注，执行关注操作
         return subscribeMapper.selectCount(queryWrapper) <= 0
@@ -75,6 +79,10 @@ public class SubscribeServiceImpl implements SubscribeService {
         return subscribeMapper.getMySubscribe(userId);
     }
 
+    @Override
+    public List<FanVO> getFansCount(Long developerId) {
+        return subscribeMapper.getMyFan(developerId);
+    }
 
 
     @Override
