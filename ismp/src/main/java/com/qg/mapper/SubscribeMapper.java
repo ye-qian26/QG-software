@@ -20,26 +20,13 @@ public interface SubscribeMapper extends BaseMapper<Subscribe> {
      * @return
      */
     @Select("SELECT u.id, u.name, u.avatar, " +
-
-            // DISTINCT确保只计算一次
-            "COUNT(DISTINCT s1.id) AS followers_count, " +
-            "COUNT(DISTINCT sw.id) AS software_count " +
+            "(SELECT COUNT(*) FROM subscribe WHERE developer_id = u.id AND is_deleted = 0) AS followers_count, " +
+            "(SELECT COUNT(*) FROM software WHERE author_id = u.id AND is_deleted = 0) AS software_count " +
             "FROM user u " +
-            // s用于获取用户关注的所有开发者
-            "LEFT JOIN " +
-            "subscribe s ON u.id = s.developer_id " +
-
-            // s1用于计算粉丝数
-            "LEFT JOIN " +
-            "subscribe s1 ON u.id = s1.developer_id " +
-
-            // sw用于计算该开发者的软件数量
-            "LEFT JOIN " +
-            "software sw ON u.id = sw.author_id AND sw.is_deleted = 0 " +
-
-            // s用于保留该用户关注的开发商
+            "INNER JOIN subscribe s ON u.id = s.developer_id " +
             "WHERE s.user_id = #{userId} " +
-            "GROUP BY u.id, u.name, u.avatar")
+            "AND u.is_deleted = 0 " +
+            "AND s.is_deleted = 0")
     List<SubscribeVO> getMySubscribe(@Param("userId") Long userId);
 
 
@@ -51,8 +38,12 @@ public interface SubscribeMapper extends BaseMapper<Subscribe> {
      */
     @Select("SELECT u.id, u.name, u.avatar, u.role " +
             "FROM user u " +
-        
-            "INNER JOIN subscribe s ON u.id = s.user_id " +
-            "WHERE s.developer_id = #{userId}")
+            "WHERE EXISTS (" +
+            "  SELECT 1 FROM subscribe " +
+            "  WHERE user_id = u.id " +
+            "  AND developer_id = #{userId}" +
+            "  AND is_deleted = 0 " +
+            ")" +
+            "AND u.is_deleted = 0 ")
     List<FanVO> getMyFan(@Param("userId") Long userId);
 }

@@ -120,6 +120,7 @@ public class SoftwareController {
     @PutMapping("/updateSoftware")
     public Result updateSoftware(@RequestBody Software software) {
         Long id = software.getId();
+        System.out.println("updateSoftware ==> " + id);
         int sum = 0;
         sum = softwareService.updateSoftware(id);
         if (sum > 0) {
