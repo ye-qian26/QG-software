@@ -21,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         String content = review.getContent();
 
-        String [] badWord =   {"垃圾","去你妈","屎","操","",""};
+        String [] badWord =   {"垃圾","去你妈","屎","操"};
 
         for (String regex : badWord) {
             if (content.contains(regex)) {
