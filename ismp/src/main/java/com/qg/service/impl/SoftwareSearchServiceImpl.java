@@ -131,6 +131,7 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         LambdaQueryWrapper<Software> softwareWrapper = new LambdaQueryWrapper<>();
         softwareWrapper.eq(Software::getId, id);
         Software software = softwareMapper.selectOne(softwareWrapper);
+        System.out.println("getSoftwareWithMaterial ==> " + software);
         if (software == null) {
             return null;
         }
@@ -139,18 +140,20 @@ public class SoftwareSearchServiceImpl implements SoftwareSearchService {
         // 复制软件信息到 softwareVO
         BeanUtils.copyProperties(software, softwareVO);
 
+        System.out.println("first copy ==>" + softwareVO);
         // 查询 申请 软件 的 佐证材料
         LambdaQueryWrapper<ApplySoftware> applySoftwareWrapper = new LambdaQueryWrapper<>();
         applySoftwareWrapper.eq(ApplySoftware::getSoftwareId, id)
                 .eq(ApplySoftware::getUserId, userId);
         ApplySoftware applySoftware = applySoftwareMapper.selectOne(applySoftwareWrapper);
+        System.out.println("getSoftwareWithMaterial ==> " + applySoftware);
 
         if (applySoftware == null) {
             return null;
         }
         // 复制 申请软件 佐证材料 到 softwareVO
         BeanUtils.copyProperties(applySoftware, softwareVO);
-
+        System.out.println("second copy ==>" + softwareVO);
         return softwareVO;
     }
 

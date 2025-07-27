@@ -6,6 +6,7 @@ import com.qg.domain.Result;
 import com.qg.domain.Subscribe;
 import com.qg.domain.User;
 import com.qg.service.SubscribeService;
+import com.qg.vo.FanVO;
 import com.qg.vo.SubscribeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -83,4 +84,17 @@ public class SubscribeController {
 
         return flag ? new Result(SUCCESS,true,"已关注") : new Result(SUCCESS, false , "未关注");
     }
+
+
+    @GetMapping("/fan/{developerId}")
+    public Result getFansCount(@PathVariable Long developerId) {
+        if (developerId <= 0) {
+            return new Result(BAD_REQUEST, "请求参数错误");
+        }
+         List<FanVO> fanVOList = subscribeService.getFansCount(developerId);
+        return new Result(SUCCESS, fanVOList, "获取粉丝数量成功");
+    }
+
+
+
 }

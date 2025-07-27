@@ -3,6 +3,7 @@ package com.qg.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.RandomUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qg.domain.*;
 import com.qg.dto.UserDto;
@@ -123,12 +124,16 @@ public class UserServiceImpl implements UserService {
         lqw.eq(User::getEmail, email);
         User user = userMapper.selectOne(lqw);
         if (user == null) {
+            System.out.println("该用户尚未注册");
             return new Result(NOT_FOUND, "该用户尚未注册");
         }
 
+        System.out.println("用户输入的验证码: " + code);
         // 从redis中取出验证码
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         if (cacheCode == null || !cacheCode.equals(code)) {
+            System.out.println(cacheCode);
+            System.out.println("验证码错误");
             return new Result(NOT_FOUND, "验证码错误");
         }
 
@@ -142,12 +147,14 @@ public class UserServiceImpl implements UserService {
                         .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
         // 7.3.存储
         String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.delete(tokenKey); // 删除旧的token
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
         // 7.4.设置token有效期
         stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
         Map<String, Object> map = new HashMap<>();
         map.put("user", userDTO);
         map.put("token", token);
+        System.out.println("登录成功，token：" + token);
         return new Result(SUCCESS, map, "");
     }
 
@@ -189,23 +196,45 @@ public class UserServiceImpl implements UserService {
         // 对密码进行加密处理
         user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
 
+        // 自动生成一个初始姓名
+        user.setName("用户：" + RandomUtil.randomString(6));
+
         // 向数据库中添加数据
         if (userMapper.insert(user) != 1) {
             System.out.println("注册失败，请稍后重试");
             return new Result(INTERNAL_ERROR, "注册失败，请稍后重试");
         }
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getEmail, email);
+        user= userMapper.selectOne(wrapper);
         // 注册成功后删除验证码
         stringRedisTemplate.delete(LOGIN_CODE_KEY + user.getEmail());
-        System.out.println("注册成功，恭喜你！");
+        // 随机生成token，作为的登录令牌
+        String token = cn.hutool.core.lang.UUID.randomUUID().toString(true);
+        // 7.2.将User对象转换为HashMap存储
+        UserDto userDTO = BeanUtil.copyProperties(user, UserDto.class);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fileName, fileValue) -> fileValue.toString()));
+        // 7.3.存储
+        String tokenKey = LOGIN_USER_KEY + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 7.4.设置token有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.MINUTES);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userDTO);
+        map.put("token", token);
 
-        return new Result(CREATED, user,"恭喜你，注册成功！");
+        return new Result(CREATED, map, "恭喜你，注册成功！");
     }
 
     @Override
-    public Result update(User user, String code) {
+    public Result update(User user, String code,String password) {
         if (user == null) {
             return new Result(BAD_REQUEST, "表单为空");
         }
+
         String email = user.getEmail();
         String cacheCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + email);
         System.out.println("缓存中的验证码：" + cacheCode);
@@ -217,7 +246,7 @@ public class UserServiceImpl implements UserService {
         }
         // 如果密码不为空，则加密
         if (user.getPassword() != null) {
-            user.setPassword(HashSaltUtil.creatHashPassword(user.getPassword()));
+            user.setPassword(HashSaltUtil.creatHashPassword(password));
         }
 
         if (userMapper.updateById(user) > 0) {
@@ -275,9 +304,13 @@ public class UserServiceImpl implements UserService {
         lqw1.eq(User::getId, userId);
         User customer = userMapper.selectOne(lqw1);
 
+        System.out.println("用户信息1：" + customer);
+
         LambdaQueryWrapper<User> lqw2 = new LambdaQueryWrapper<>();
         lqw2.eq(User::getId, authorId);
         User author = userMapper.selectOne(lqw2);
+
+        System.out.println("用户信息2：" + author);
 
         if (author == null || customer == null || price <= 0 || price > customer.getMoney()) {
             System.out.println("用户不存在或余额不足");
@@ -406,6 +439,18 @@ public class UserServiceImpl implements UserService {
 
         user.setName(name);
         return userMapper.updateById(user) > 0;
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+
+    LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
+    lqw.eq(User::getEmail, email);
+    User user = userMapper.selectOne(lqw);
+    if (user != null) {
+        return user;
+    }
+        return null;
     }
 
 

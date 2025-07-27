@@ -37,8 +37,10 @@ public class BanServiceImpl implements BanService {
     }
 
     @Override
-    public boolean delete(Ban ban) {
-        return banMapper.deleteById(ban) > 0;
+    public boolean delete(Long userId) {
+        LambdaQueryWrapper<Ban> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Ban::getUserId, userId);
+        return banMapper.delete(wrapper) > 0;
     }
 
     @Override

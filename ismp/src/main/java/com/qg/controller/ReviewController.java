@@ -61,7 +61,7 @@ public class ReviewController {
             return new Result(BAD_REQUEST, "获取评论失败");
         }
         List<ReviewVO> reviews = reviewService.selectBySoftware(softwareId);
-
+        System.out.println(reviews);
         if (reviews == null || reviews.size() == 0) {
             return new Result(NOT_FOUND, "评论无法加载");
         }

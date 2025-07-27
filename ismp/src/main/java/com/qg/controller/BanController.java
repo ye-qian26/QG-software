@@ -25,6 +25,7 @@ public class BanController {
     @GetMapping()
     public Result getAll(){
         List<Ban> bans = banService.selectAll();
+        System.out.println("bans/getAll ===>>> " + bans);
         Integer code = bans != null && !bans.isEmpty() ? Code.SUCCESS : Code.NOT_FOUND;
         String msg = bans != null && !bans.isEmpty() ? "" : "暂时未有相关数据";
         return new Result(code, bans, msg);
@@ -37,7 +38,6 @@ public class BanController {
      */
     @PostMapping("/add")
     public Result add(@RequestBody Ban ban){
-
         System.out.println("bans/add ===>>> " + ban);
         boolean flag = banService.add(ban);
         Integer code = flag ? Code.SUCCESS : Code.CONFLICT;
@@ -47,13 +47,13 @@ public class BanController {
 
     /**
      * 删除 冻结账户 信息
-     * @param ban
+     * @param userId
      * @return
      */
     @DeleteMapping
-    public Result delete(@RequestBody Ban ban){
-        System.out.println(ban.getUserId());
-        boolean flag = banService.delete(ban);
+    public Result delete(@RequestParam Long userId){
+        System.out.println("bans/delete ===>>> " + userId);
+        boolean flag = banService.delete(userId);
         Integer code = flag ? Code.SUCCESS : Code.INTERNAL_ERROR;
         String msg = flag ? "" : "删除信息失败，请稍后重试！";
         return new Result(code, msg);
