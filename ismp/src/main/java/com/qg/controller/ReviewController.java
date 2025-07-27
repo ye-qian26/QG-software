@@ -34,11 +34,13 @@ public class ReviewController {
         String content = review.getContent();
 
         if (!equipmentService.isPurchased(userId, softwareId)) {
+
             return new Result(FORBIDDEN, "你尚未购买此软件");
         }
 
 
         if (userId <= 0 || softwareId <= 0 || content == null || "".equals(content)) {
+            System.out.println("评论失败！");
             return new Result(BAD_REQUEST, "评论失败");
         }
 
